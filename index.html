@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0e0c">
+  <meta name="description" content="42-day offline-ready calisthenics + gym training companion, inspired by Chris Heria and Jeff Nippard principles.">
+  <title>HYBRID / 42 — Six-Week Training System</title>
+  <style>
+:root{--bg:#0b0e0c;--panel:#141915;--panel-hi:#1a201b;--panel2:#1d241e;--line:#29322a;--ink:#f4f6f0;--muted:#a1aca0;--dim:#6c786d;--accent:#bafa6c;--accent2:#d7ffa2;--cyan:#8dbfe9;--purple:#bb9aff;--amber:#f4c374;--shadow:0 20px 70px rgba(0,0,0,.16);--radius:18px;--font:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 var(--font);-webkit-font-smoothing:antialiased}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}a{color:inherit}::selection{background:var(--accent);color:#10160f}
+.app-shell{display:flex;min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;flex:0 0 246px;width:246px;display:flex;flex-direction:column;padding:26px 18px 22px;border-right:1px solid #263027;background:#0e120f}.brand{display:flex;align-items:center;gap:12px;padding:4px 6px 30px}.brand-mark{display:flex;align-items:center;gap:1px;width:58px;height:45px;border:1px solid #45593d;border-radius:12px;justify-content:center;font-size:19px;font-weight:900;letter-spacing:-1px;color:var(--accent)}.brand-slash{opacity:.45}.brand strong{display:block;font-size:13px;letter-spacing:.07em}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.19em;margin-top:2px}.sidebar-small,.sidebar-bottom .eyebrow,.eyebrow{letter-spacing:.16em;color:var(--dim);font-size:10px;font-weight:800}.sidebar-small{padding:0 15px;margin-bottom:12px}.side-nav{display:grid;gap:6px}.nav-button{border:0;background:transparent;color:#9fa99f;padding:12px 13px;display:flex;gap:14px;align-items:center;text-align:left;width:100%;border-radius:10px;font-size:13px;font-weight:650;transition:background .2s,color .2s}.nav-button:hover{background:#1d251e;color:white}.nav-button.active{background:var(--accent);color:#17200f;font-weight:850}.nav-icon{width:22px;font-size:18px;line-height:1;text-align:center}.sidebar-bottom{position:relative;margin-top:auto;padding:22px 13px 0;overflow:hidden}.sidebar-bottom .eyebrow{color:var(--accent)}.sidebar-bottom p{font-size:18px;line-height:1.2;font-weight:550;margin:10px 0}.sidebar-bottom b{color:var(--accent)}.sidebar-bottom small{color:var(--dim);font-size:11px;line-height:1.55;display:block}.sidebar-glow{position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,#bafa6c16,transparent 65%);right:-65px;top:-20px;pointer-events:none}.main-area{flex:1;min-width:0;max-width:1600px;margin:0 auto;padding:0 clamp(18px,3.2vw,52px)}.topbar{height:83px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px}.topbar-context{font-size:10px;color:#97a497;font-weight:800;letter-spacing:.145em;display:flex;align-items:center;gap:10px}.status-dot{width:7px;height:7px;background:var(--accent);border-radius:50%;box-shadow:0 0 16px #bafa6c85}.top-actions{display:flex;align-items:center;gap:9px}.live-date{font-size:12px;font-weight:700;color:var(--muted);margin-right:9px}.button{border:1px solid var(--line);border-radius:9px;background:#1b231b;color:var(--ink);font-weight:750;padding:10px 14px;transition:transform .12s,background .15s,border-color .15s;display:inline-flex;align-items:center;justify-content:center;gap:8px}.button:hover{border-color:#53664b;background:#253025}.button:active{transform:scale(.985)}.button-ghost{background:transparent;border-color:#2b352d;color:#d2dbce}.button-primary{background:var(--accent);border-color:var(--accent);color:#1a2312}.button-primary:hover{background:#d3ff9b;border-color:#d3ff9b}.button-secondary{background:#273028;border-color:#43513d}.button-outline{background:transparent}.button-danger{color:#ffa3a0;border-color:#62423d;background:transparent}.button-sm{font-size:11px;padding:7px 10px}.button-wide{width:100%}.view{padding:35px 0 58px}.view[hidden]{display:none}.section-head{margin-bottom:24px}.section-topline{display:flex;gap:10px;align-items:center;color:var(--accent);font-weight:850;font-size:11px;letter-spacing:.2em;margin-bottom:14px}.section-topline .rule{height:1px;width:28px;background:var(--accent)}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(37px,5vw,76px);line-height:1.02;letter-spacing:-.062em;margin:0 0 18px;font-weight:900}h2{font-size:clamp(23px,2.7vw,34px);letter-spacing:-.045em;line-height:1.15;margin:0}h3{font-size:17px;letter-spacing:-.025em;line-height:1.25}.subtitle{font-size:14px;color:var(--muted);line-height:1.8;max-width:730px}.accent{color:var(--accent)}.muted{color:var(--muted)}.caption{font-size:11px;color:var(--muted)}.mini{font-size:12px}.micro{font-size:10px}.strong{font-weight:850}.section-label{letter-spacing:.16em;font-size:10px;font-weight:900;color:var(--dim)}.panel{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);padding:22px;box-shadow:var(--shadow)}.soft-panel{background:var(--panel-hi)}.panel h3{margin:0 0 10px}.panel + .panel{margin-top:16px}.panel-title-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.surface-note{background:#1b261d;border-left:3px solid var(--accent);padding:13px 15px;border-radius:0 10px 10px 0;color:#d6e0d1;font-size:12px}.surface-note.amber{border-color:var(--amber);background:#2a2419}.chip{font-size:10px;letter-spacing:.11em;font-weight:850;border:1px solid #364333;border-radius:100px;color:#c6d2be;padding:6px 10px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.chip.lime{border-color:#526744;color:var(--accent);background:#263322}.chip.blue{border-color:#395366;color:var(--cyan);background:#17232e}.chip.purple{border-color:#54436a;color:var(--purple);background:#261f32}.chip.amber{border-color:#64533a;color:var(--amber);background:#2b241c}.chip.dim{background:#171d18;color:var(--muted)}.chip.complete{background:#233c22;color:#bef2aa;border-color:#52814b}.hero{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(122deg,#1b291b 0%,#131b14 48%,#101712 100%);border-radius:24px;border:1px solid #314233;padding:clamp(28px,4vw,56px);margin-bottom:22px}.hero:before{content:"42";position:absolute;right:-30px;top:-76px;font-weight:1000;letter-spacing:-.12em;font-size:clamp(210px,34vw,420px);line-height:1;color:#bafa6c09;z-index:-1;pointer-events:none}.hero:after{content:"";width:500px;height:500px;position:absolute;right:-280px;bottom:-330px;border-radius:50%;border:95px solid #bafa6c08;z-index:-1}.hero h1{max-width:850px}.hero .subtitle{max-width:600px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}.overline{color:var(--accent);font-weight:850;font-size:11px;letter-spacing:.2em;text-transform:uppercase}.hero-profile{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.hero-profile .chip{background:#1b2c1b}.metrics-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.metric{padding:19px 21px;border-radius:14px;background:#151b16;border:1px solid var(--line)}.metric .label{font-size:11px;color:var(--muted);font-weight:700}.metric .value{font-size:clamp(26px,3vw,35px);font-weight:900;line-height:1.25;margin:5px 0;letter-spacing:-.05em}.metric small{color:var(--dim);font-size:11px}.grid-2{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(290px,.88fr);gap:16px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.row{display:flex;align-items:center;gap:12px}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.spacer{height:16px}.progress-track{height:9px;border-radius:99px;background:#2c382c;overflow:hidden}.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#7ccb37,var(--accent));transition:width .3s}.day-mini-list{display:grid;gap:9px}.day-mini{width:100%;text-align:left;background:#1a221b;color:var(--ink);border:1px solid var(--line);padding:11px 12px;border-radius:11px;display:flex;align-items:center;gap:12px}.day-mini:hover{border-color:#658257}.day-mini.today{border-color:var(--accent)}.day-mini .day-name{width:35px;color:var(--accent);font-weight:850;font-size:11px}.day-mini .day-main{flex:1;font-size:12px;font-weight:750}.day-mini .day-side{font-size:10px;color:var(--muted)}.done-circle{border-radius:50%;height:20px;width:20px;border:1px solid #455348;display:grid;place-items:center;font-size:12px;color:#97a797}.done-circle.yes{background:var(--accent);color:#13200e;border-color:var(--accent)}.week-steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}.week-step{text-align:left;padding:14px 10px;border:1px solid var(--line);border-radius:10px;background:#171e18;color:var(--ink);min-width:0}.week-step strong{display:block;font-size:21px}.week-step span{display:block;font-size:9px;letter-spacing:.08em;color:var(--dim);overflow-wrap:anywhere}.week-step.active{border-color:var(--accent);background:#233322}.week-step.active strong,.week-step.active span{color:var(--accent)}.week-step:hover{border-color:#819870}.workout-navigation{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:18px 0 16px}.week-select{border-radius:10px;background:#1b251c;color:#f3f6ed;border:1px solid #3e4d3b;padding:11px 13px;font-weight:800;min-width:145px}.day-tabs{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.day-tab{min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:4px;padding:12px 9px;border-radius:13px;border:1px solid var(--line);background:#171d18;color:var(--ink)}.day-tab:hover{border-color:#607653}.day-tab.active{border-color:var(--accent);background:#253724;box-shadow:inset 0 0 0 1px #bafa6c21}.day-tab .dow{color:var(--muted);font-size:10px;font-weight:850;letter-spacing:.08em}.day-tab .date-num{font-size:21px;font-weight:900;letter-spacing:-.04em;line-height:1.2}.day-tab .tab-label{font-size:10px;color:var(--muted);white-space:normal;line-height:1.3}.day-tab .tab-dot{height:6px;width:6px;border-radius:50%;background:#414e40;margin-left:auto}.day-tab .tab-dot.complete{background:var(--accent)}.day-tab .tab-dot.partial{background:var(--amber)}.session-hero{background:linear-gradient(110deg,#1b281e,#161e18);border:1px solid #3b4d38;border-radius:18px;padding:26px;margin:16px 0;position:relative;overflow:hidden}.session-hero:after{content:"";position:absolute;right:-75px;top:-80px;width:240px;height:240px;border:45px solid #bafa6c06;border-radius:50%;pointer-events:none}.session-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}.session-hero h2{font-size:clamp(26px,3vw,39px);margin:8px 0 10px;max-width:700px}.session-hero .subtitle{margin:0 0 18px}.session-stats{display:flex;gap:10px;flex-wrap:wrap}.stat-pill{border:1px solid #405342;border-radius:8px;padding:8px 12px;background:#1a271c;font-size:11px;color:#c9d8ca}.stat-pill strong{color:white}.group-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:26px 0 12px}.group-title h3{margin:0;font-size:18px}.group-title small{color:var(--muted)}.checkline-list{display:grid;gap:8px}.checkline{display:flex;align-items:flex-start;gap:10px;background:#1a211b;border:1px solid #2b342d;border-radius:9px;padding:11px 13px;font-size:12px;color:#d4ded0}.checkline input{accent-color:var(--accent);width:15px;height:15px;flex:0 0 15px;margin:2px 0 0}.checkline.checked{color:#81907d;text-decoration:line-through}.exercise-list{display:grid;gap:12px}.exercise-card{background:#141b15;border:1px solid var(--line);border-radius:15px;overflow:hidden}.exercise-card.is-complete{border-color:#385f36}.exercise-top{display:flex;align-items:flex-start;gap:12px;padding:17px 18px 10px}.exercise-index{background:#273527;border-radius:9px;color:var(--accent);width:35px;height:35px;flex:0 0 35px;display:grid;place-items:center;font-size:12px;font-weight:900}.exercise-summary{flex:1;min-width:0}.exercise-summary h3{margin:1px 0 3px;font-size:17px}.exercise-summary .subtitle{font-size:11px;line-height:1.45;margin:0}.exercise-dose{white-space:nowrap;font-size:12px;font-weight:900;color:var(--accent);margin-top:3px;text-align:right}.exercise-dose small{display:block;color:var(--dim);font-size:10px;font-weight:600;margin-top:4px}.exercise-note{border-left:2px solid #43583f;padding:7px 11px;margin:0 18px 10px 65px;color:#bac9b8;font-size:11px;line-height:1.6;background:#1b231b}.exercise-controls{display:flex;align-items:center;gap:8px;padding:0 18px 11px 65px;flex-wrap:wrap}.inline-button{border:0;background:none;color:var(--accent);font-weight:800;padding:3px 0;font-size:11px}.inline-button:hover{text-decoration:underline}.rest-mark{font-size:10px;color:var(--muted)}.set-table{border-top:1px solid var(--line);padding:0 18px 13px}.set-header,.set-row{display:grid;grid-template-columns:38px minmax(78px,1fr) 102px 102px 46px;gap:8px;align-items:center}.set-header{font-size:10px;color:var(--dim);letter-spacing:.05em;padding:12px 0 6px;font-weight:800}.set-row{padding:5px 0}.set-id{font-size:11px;color:var(--muted);font-weight:800}.set-target{font-size:12px;font-weight:750}.log-input{width:100%;background:#0e150f;border:1px solid #344135;border-radius:8px;color:#f1f5ee;padding:9px 8px;min-width:0;outline:0;font-size:12px}.log-input:focus,.note-textarea:focus,.filter-input:focus,.checkin-input:focus{border-color:var(--accent);box-shadow:0 0 0 2px #bafa6c1c}.log-input::placeholder{color:#647063}.log-input:disabled{opacity:.28}.set-check{appearance:none;width:25px;height:25px;border:1px solid #53634e;background:#1f2920;border-radius:7px;cursor:pointer;position:relative;justify-self:center}.set-check:checked{background:var(--accent);border-color:var(--accent)}.set-check:checked:after{content:'✓';position:absolute;inset:-1px 0;display:grid;place-items:center;font-size:17px;color:#172512;font-weight:900}.set-row.checked .set-target{color:#879b83}.workout-foot{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}.note-textarea{width:100%;resize:vertical;min-height:105px;border:1px solid #394437;background:#0f1710;border-radius:12px;padding:14px;color:white;outline:0}.finish-button{min-width:190px}.soft-divider{height:1px;background:var(--line);margin:20px 0}.calendar-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:18px}.calendar-colhead{text-align:center;color:var(--dim);font-weight:850;font-size:10px;letter-spacing:.15em;padding:4px 0}.calendar-cell{padding:12px;border:1px solid var(--line);background:#171d18;border-radius:12px;text-align:left;color:var(--ink);min-height:106px;display:flex;flex-direction:column;justify-content:space-between;gap:10px}.calendar-cell:hover{border-color:#6b8860}.calendar-cell.today{border-color:var(--accent)}.calendar-cell.completed{background:#1d2d1e;border-color:#46623d}.calendar-cell .cal-num{font-size:22px;font-weight:900;line-height:1}.calendar-cell .cal-week{color:var(--dim);font-size:9px;font-weight:800}.calendar-cell .cal-title{font-size:10px;color:#c6d3bf;line-height:1.3;font-weight:700}.calendar-cell .cal-progress{font-size:9px;color:var(--accent);font-weight:900}.calendar-week-label{display:none}.library-tools{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}.filter-input,.checkin-input{background:#131a14;border:1px solid #364235;color:var(--ink);border-radius:10px;outline:none;padding:12px}.filter-input{flex:1;min-width:180px}.filter-tabs{display:flex;gap:6px;flex-wrap:wrap}.filter-tab{background:#171f18;border:1px solid var(--line);padding:9px 12px;color:var(--muted);border-radius:9px;font-weight:750;font-size:11px}.filter-tab.active{border-color:var(--accent);background:#253724;color:var(--accent)}.library-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.library-card{padding:18px;border:1px solid var(--line);background:var(--panel);border-radius:13px;display:flex;flex-direction:column;gap:10px}.library-card .eyebrow{color:var(--accent)}.library-card h3{margin:0}.library-card p{font-size:12px;color:var(--muted);margin:0;line-height:1.6;flex:1}.library-card .button{align-self:start}.guide-week-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px}.guide-week{border:1px solid #344034;background:#1c251d;border-radius:9px;padding:8px}.guide-week small{font-size:9px;display:block;color:var(--muted)}.guide-week strong{font-size:11px;display:block}.progress-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:15px}.checkin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field-label{display:grid;gap:6px;color:var(--muted);font-size:11px;font-weight:750}.checkin-input{width:100%}.week-bar-list{display:grid;gap:13px}.week-bar-label{display:flex;justify-content:space-between;font-size:11px;color:#ccd7c7;margin-bottom:5px}.microchart{width:100%;height:170px;display:block}.microchart text{fill:var(--muted);font-size:10px;font-family:var(--font)}.baseline-list{display:grid;gap:10px}.baseline-row{display:flex;align-items:center;gap:14px;justify-content:space-between}.baseline-row label{font-size:12px;color:var(--muted)}.baseline-row input{max-width:90px}.danger-zone{padding:14px 0;display:flex;align-items:center;gap:15px;flex-wrap:wrap}.site-footer{border-top:1px solid var(--line);padding:25px 0 40px;font-size:10px;color:var(--dim);letter-spacing:.08em;display:flex;gap:9px;flex-wrap:wrap}.mobile-nav{display:none}.timer-float{position:fixed;bottom:22px;right:24px;background:#d2ff9b;border:1px solid #9abe74;box-shadow:0 20px 60px #0009;border-radius:14px;padding:11px 13px;color:#172610;z-index:50;min-width:220px}.timer-float[hidden]{display:none}.timer-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.timer-digit{font-size:24px;font-weight:950;letter-spacing:-.06em}.timer-float button{border:1px solid #537647;background:#b3eb7d;border-radius:7px;padding:5px 10px;color:#1d2e16;font-weight:850}.exercise-dialog{max-width:620px;width:calc(100% - 24px);max-height:88vh;overflow:auto;background:#162017;color:var(--ink);border:1px solid #455840;border-radius:19px;padding:0;box-shadow:0 25px 100px #000d}.exercise-dialog::backdrop{background:#030804c9;backdrop-filter:blur(5px)}.dialog-padding{padding:26px}.dialog-top{display:flex;align-items:flex-start;gap:15px;justify-content:space-between}.dialog-close{background:#283528;border:1px solid #3f513b;border-radius:9px;color:var(--ink);width:37px;height:37px;font-size:24px;line-height:1}.guide-list{padding-left:19px;color:#d5dfd0;font-size:13px;line-height:1.9}.guide-list li{padding-left:5px;margin-bottom:6px}.info-block{margin-top:13px;background:#1e2a20;border:1px solid #394c38;border-radius:10px;padding:13px;font-size:12px;color:#ccd8c7}.info-block strong{display:block;color:var(--accent);margin-bottom:5px}.info-block.warn strong{color:var(--amber)}#toast{position:fixed;left:50%;bottom:25px;transform:translateX(-50%) translateY(20px);background:var(--accent);color:#15200e;border-radius:10px;padding:11px 17px;font-size:12px;font-weight:850;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:100;box-shadow:0 15px 50px #0008}#toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:1180px){.sidebar{flex-basis:208px;width:208px}.main-area{padding:0 24px}.day-tabs{gap:5px}.day-tab{padding:10px 6px}.calendar-cell{padding:9px}}
+@media(max-width:980px){.grid-2,.progress-layout{grid-template-columns:1fr}.day-tabs{grid-template-columns:repeat(7,minmax(0,1fr))}.metrics-grid{grid-template-columns:repeat(2,1fr)}.calendar-grid{grid-template-columns:repeat(7,minmax(0,1fr))}.calendar-cell{min-height:95px}.week-steps{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:750px){body{font-size:13px}.sidebar{display:none}.main-area{padding:0 15px 76px}.topbar{height:65px}.topbar-context{font-size:9px;letter-spacing:.06em}.live-date{display:none}.top-button{font-size:10px;padding:7px 8px}.top-actions{gap:5px}.view{padding:22px 0 38px}.hero{padding:27px 22px;border-radius:18px}.hero h1{font-size:clamp(39px,8.7vw,64px)}.hero .subtitle{font-size:12px}.hero:before{top:-30px;right:-40px;font-size:250px}.metrics-grid{gap:8px;margin:14px 0}.metric{padding:13px}.metric .label{font-size:10px}.metric .value{font-size:28px}.grid-3{grid-template-columns:1fr}.panel{padding:16px;border-radius:14px}.week-steps{gap:6px}.week-step{padding:10px 8px}.week-step strong{font-size:18px}.day-tabs{gap:6px;overflow-x:auto;grid-auto-flow:column;grid-auto-columns:minmax(75px,1fr);grid-template-columns:none;padding-bottom:5px;scroll-snap-type:x mandatory}.day-tab{min-width:75px;scroll-snap-align:start}.day-tab .date-num{font-size:20px}.day-tab .tab-label{font-size:9px}.session-hero{padding:18px}.session-hero h2{font-size:27px}.exercise-top{padding:14px 12px 10px;gap:9px}.exercise-index{height:30px;width:30px;flex-basis:30px}.exercise-summary h3{font-size:14px}.exercise-dose{font-size:11px;max-width:115px;white-space:normal}.exercise-note{margin:0 11px 11px;padding:7px 10px}.exercise-controls{padding:0 11px 10px;gap:8px}.set-table{padding:0 11px 10px}.set-header,.set-row{grid-template-columns:27px minmax(50px,1fr) 75px 75px 31px;gap:5px}.set-target,.set-id{font-size:10px}.set-header{font-size:9px}.log-input{padding:9px 4px;font-size:11px}.set-check{width:23px;height:23px}.calendar-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.calendar-colhead{display:none}.calendar-cell{min-height:108px}.calendar-week-label{display:block;color:var(--dim);font-size:9px;font-weight:800}.library-list{grid-template-columns:1fr}.mobile-nav{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#101711ed;backdrop-filter:blur(18px);border-top:1px solid #3b503a;padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:40;box-shadow:0 -20px 50px #0003}.mobile-nav .nav-button{display:flex;flex-direction:column;gap:3px;justify-content:center;align-items:center;border-radius:9px;font-size:9px;padding:7px 3px}.mobile-nav .nav-icon{font-size:19px}.timer-float{bottom:calc(83px + env(safe-area-inset-bottom));right:10px;left:10px;min-width:0}.site-footer{padding-bottom:20px}.hero-actions .button{flex:1;min-width:140px}.workout-navigation{align-items:stretch}.workout-navigation .button{flex:1}.workout-navigation .week-select{flex:1}.chip{font-size:9px;padding:6px 9px}.guide-week-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:370px){.topbar-context{max-width:145px}.topbar-context span:last-child{white-space:normal}.exercise-dose{font-size:10px;max-width:95px}.set-header,.set-row{grid-template-columns:22px minmax(44px,1fr) 63px 63px 25px;gap:4px}.set-check{width:22px;height:22px}.log-input{font-size:10px}.hero h1{font-size:38px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
+
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <div class="brand-mark"><span>H</span><span class="brand-slash">/</span><span>42</span></div>
+        <div><strong>HYBRID / 42</strong><small>BODY × SKILL</small></div>
+      </div>
+      <div class="sidebar-small">TRAINING SYSTEM</div>
+      <nav class="side-nav" id="desktopNav"></nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-glow"></div>
+        <div class="eyebrow">THE BLUEPRINT</div>
+        <p>Train like an athlete.<br><b>Progress like a scientist.</b></p>
+        <small>Inspired by calisthenics skill work & evidence-based hypertrophy. Not affiliated with either coach.</small>
+      </div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-context"><span class="status-dot"></span><span>THE SIX-WEEK TRANSFORMATION SYSTEM</span></div>
+        <div class="top-actions">
+          <span class="live-date" id="liveDate"></span>
+          <button type="button" class="button button-ghost top-button" data-action="export" title="Export saved progress">Export data <span aria-hidden="true">↗</span></button>
+          <button type="button" class="button button-ghost top-button" data-action="import" title="Import a saved JSON backup">Import</button>
+        </div>
+      </header>
+      <section id="view-dashboard" class="view" aria-label="Overview"></section>
+      <section id="view-workout" class="view" hidden aria-label="Workout"></section>
+      <section id="view-calendar" class="view" hidden aria-label="42 day schedule"></section>
+      <section id="view-library" class="view" hidden aria-label="Exercise library"></section>
+      <section id="view-progress" class="view" hidden aria-label="Progress tracking"></section>
+      <footer class="site-footer">HYBRID / 42 <span>•</span> <span>10 NOV — 21 DEC 2026</span> <span>•</span> Built for consistent progress, not reckless intensity.</footer>
+    </main>
+  </div>
+  <nav class="mobile-nav" aria-label="Mobile navigation" id="mobileNav"></nav>
+  <div class="timer-float" id="timerFloat" hidden aria-live="polite"></div>
+  <dialog class="exercise-dialog" id="exerciseDialog" aria-label="Exercise technique guide">
+    <div id="dialogBody"></div>
+  </dialog>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script>
+/* HERIA × NIPPARD — original six-week hybrid plan, inspired by the coaches' publicly discussed training principles; not affiliated. */
+const PLAN = {
+  name: 'HYBRID / 42',
+  subtitle: 'Strength you can lift. Skills you can own.',
+  start: '2026-11-10',
+  end: '2026-12-21',
+  profile: { age: 22, height: 181.1, weight: 84.3, estimatedBodyFat: 19.7, pushups: '11–20', pullups: '1–3' },
+  weekdays: ['TUE','WED','THU','FRI','SAT','SUN','MON'],
+  phases: [
+    { name:'FOUNDATION', dates:'10–16 NOV', title:'Establish clean baselines', subtitle:'Learn positions, assess your true capacity, log working loads.', focus:'2–3 reps in reserve (RIR) on most work. One clean max-form set for pull-ups and push-ups; no grinding.', action:'Record your exact pull-up/push-up max, comfortable pull-up assistance (kg), and first gym working weights.', note:'Use easier variations freely. Your logged numbers are more useful than guessing a target weight.' },
+    { name:'VOLUME', dates:'17–23 NOV', title:'Accumulate quality reps', subtitle:'Nudge repetitions up without sacrificing range or control.', focus:'Same loads as Week 1 where possible; add ~1 rep per working set, maintaining 2 RIR.', action:'Log reps on all gym lifts and lower pull-up assistance only if repetitions remain crisp.', note:'The displayed reps are targets, not a command to push through form breakdown.' },
+    { name:'PROGRESS', dates:'24–30 NOV', title:'Earn overload', subtitle:'Reach the higher end of prescribed rep ranges.', focus:'Aim for the displayed rep ranges with ~1–2 RIR. Add load only after every set is controlled.', action:'If you reach all upper rep targets, plan a small load increase for Week 5.', note:'For bodyweight skills, a cleaner range of motion is progress even if reps do not rise.' },
+    { name:'DELOAD', dates:'01–07 DEC', title:'Recover and consolidate', subtitle:'Reduced volume; keep movement patterns and skill positions familiar.', focus:'About half the hard sets and at least 3–4 RIR. Increase assistance as needed; no max tests.', action:'Prioritize sleep, wrist/elbow recovery and mobility. Do not try to beat personal records.', note:'The deload is part of the program, not a missed week.' },
+    { name:'INTENSIFY', dates:'08–14 DEC', title:'Return stronger', subtitle:'Restore training volume and modestly increase difficulty if ready.', focus:'After a successful Week 3, add ~2.5–5% to upper-body gym lifts or ~2.5–5% to lower-body lifts as equipment permits. Otherwise keep the previous load.', action:'Reduce pull-up assistance a small amount only when all Week 3 sets were clean.', note:'The weight-change percentages are conditional, never required.' },
+    { name:'TEST + BUILD', dates:'15–21 DEC', title:'Measure the outcome', subtitle:'Retest a few meaningful skills while retaining manageable training volume.', focus:'On Tuesday, test one strict pull-up max set and one strict push-up max set after warm-up. Stop at loss of form. Most other work stays at 2 RIR.', action:'Compare Week 1 and Week 6 max reps; log waist, body weight and gym strength without chasing scale weight.', note:'A slower rate of improvement is normal, especially with new calisthenics and a calorie deficit.' }
+  ],
+  days: [
+    { key:'tue', short:'Calisthenics A', name:'Pull + push foundations', theme:'CALI / STRENGTH', kind:'strength', duration:'60–75 min', intensity:'Moderate–hard', accent:'lime', tags:['PULL','PUSH','CORE'],
+      objective:'Own the strict pull-up and perfect the push-up. Bodyweight strength first, accessory work second.',
+      warmup:['5 min easy rower or brisk walk','10 shoulder circles each direction','2 × 8 scapular push-ups','1 easy assisted pull-up set × 5','2 progressively easier push-up sets'],
+      items:[{id:'scap_pull', sets:2, min:6,max:8},{id:'strict_pull',sets:2,min:1,max:1, special:'pullTest'},{id:'assisted_pull',sets:3,min:5,max:8},{id:'inverted_row',sets:3,min:8,max:12},{id:'pushup',sets:3,min:6,max:10,special:'pushTest'},{id:'pike_pushup',sets:2,min:5,max:8},{id:'db_lateral',sets:2,min:12,max:15},{id:'hanging_knee',sets:2,min:8,max:12}],
+      cooldown:['Lat stretch 30 sec/side','Chest doorway stretch 30 sec/side','Slow breathing for 2 min'],
+      target:'Complete controlled strict-rep practice, then accumulate assisted volume. No kipping.'},
+    { key:'wed', short:'Gym Lower A', name:'Squat + hinge', theme:'GYM / LOWER', kind:'strength', duration:'60–70 min', intensity:'Moderate–hard', accent:'blue', tags:['QUADS','HAMSTRINGS','CORE'],
+      objective:'Build leg mass and strength with predictable, trackable overload.',
+      warmup:['5 min stationary bike','10 bodyweight squats + 10 hip hinges','2–3 progressively loaded warm-up sets before squat','1 light warm-up set before RDL'],
+      items:[{id:'squat',sets:3,min:6,max:8},{id:'rdl',sets:3,min:8,max:10},{id:'rev_lunge',sets:2,min:8,max:10},{id:'leg_curl',sets:2,min:10,max:12},{id:'standing_calf',sets:3,min:10,max:15},{id:'plank',sets:2,min:30,max:40}],
+      cooldown:['Easy walk 3 min','Hip flexor stretch 30 sec/side','Hamstring stretch 30 sec/side'],
+      target:'Record working loads, not warm-up loads. Leave ~2 clean reps before failure.'},
+    { key:'thu', short:'Active Recovery', name:'Restore the joints', theme:'RECOVER / MOBILITY', kind:'recovery', duration:'25–40 min', intensity:'Easy', accent:'amber', tags:['WALK','MOBILITY','RECOVERY'],
+      objective:'Support recovery, joint comfort and skill readiness. No demanding lifts today.',
+      warmup:['Start with 2–3 minutes of easy walking'],
+      items:[{id:'easy_walk',sets:1,min:20,max:30},{id:'wrist_rocks',sets:2,min:8,max:10},{id:'wall_slides',sets:2,min:8,max:12},{id:'cat_cow',sets:2,min:8,max:10},{id:'thoracic_rot',sets:2,min:8,max:10},{id:'ankle_mob',sets:2,min:10,max:12},{id:'box_breathing',sets:1,min:3,max:5}],
+      cooldown:['Hydrate and eat normally','Finish feeling better than when you started'],
+      target:'RPE 2–3/10 only. If fatigued, just walk or fully rest.'},
+    { key:'fri', short:'Hybrid Upper B', name:'Handstand prep + hypertrophy', theme:'HYBRID / UPPER', kind:'strength', duration:'70–85 min', intensity:'Moderate–hard', accent:'purple', tags:['SKILLS','CHEST','BACK','ARMS'],
+      objective:'Practice overhead balance while fresh, then use gym equipment for chest, back and shoulder growth.',
+      warmup:['5 min easy cardio','30 sec wrist circles both directions','2 × 8 scapular push-ups','1–2 easy pike holds','2 progressively loaded incline bench warm-up sets'],
+      items:[{id:'pike_hold',sets:3,min:15,max:25},{id:'incline_db',sets:3,min:8,max:12},{id:'assisted_pull',sets:3,min:5,max:8},{id:'cable_row',sets:3,min:8,max:12},{id:'db_shoulder',sets:2,min:8,max:10},{id:'cable_fly',sets:2,min:10,max:15},{id:'cable_lateral',sets:2,min:12,max:15},{id:'bicep_curl',sets:2,min:10,max:12},{id:'tricep_press',sets:2,min:10,max:12},{id:'support_hold',sets:2,min:10,max:20}],
+      cooldown:['Easy chest stretch 30 sec/side','Gentle forearm stretches','2 min easy walking'],
+      target:'Prioritize full controlled range and steady load progression. No maximal handstand attempts.'},
+    { key:'sat', short:'Skill Studio', name:'Technique, not exhaustion', theme:'CALI / TECHNIQUE', kind:'skill', duration:'20–35 min', intensity:'Easy–moderate', accent:'lime', tags:['CONTROL','HANDSTAND','L-SIT'],
+      objective:'Low-fatigue repetition of positions that require coordination and patience.',
+      warmup:['4 min easy walking','Wrist circles 30 sec each direction','10 scapular push-ups','Gentle shoulder elevation drills'],
+      items:[{id:'pike_hold',sets:2,min:15,max:20},{id:'support_hold',sets:3,min:10,max:20},{id:'seated_compression',sets:3,min:6,max:10},{id:'hollow_hold',sets:2,min:15,max:25},{id:'scap_push',sets:2,min:8,max:12},{id:'easy_cycle',sets:1,min:10,max:15}],
+      cooldown:['Gentle wrists and hip flexor stretches','Finish with energy left'],
+      target:'Stop before form deteriorates. If recovering poorly, substitute a walk or rest.'},
+    { key:'sun', short:'Gym Lower B', name:'Legs + L-sit foundations', theme:'GYM / LOWER', kind:'strength', duration:'60–75 min', intensity:'Moderate–hard', accent:'blue', tags:['QUADS','GLUTES','CORE'],
+      objective:'A second lower-body growth stimulus plus focused compression and core training.',
+      warmup:['5 min bike or treadmill','1 × 10 bodyweight split squats per side','2 warm-up sets before leg press','1 lighter hip thrust warm-up set'],
+      items:[{id:'leg_press',sets:3,min:10,max:12},{id:'hip_thrust',sets:3,min:8,max:12},{id:'bulgarian',sets:2,min:8,max:10},{id:'leg_curl',sets:3,min:10,max:15},{id:'seated_calf',sets:2,min:12,max:20},{id:'tuck_support',sets:3,min:10,max:20},{id:'dead_bug',sets:2,min:8,max:10}],
+      cooldown:['3 min easy walk','Gentle quad stretch 30 sec/side','Slow diaphragmatic breathing'],
+      target:'Leave adequate recovery for Tuesday pull/push. Skill holds are controlled, not maximal.'},
+    { key:'mon', short:'Full Recovery', name:'Adaptation happens here', theme:'REST / RECOVERY', kind:'rest', duration:'0–25 min', intensity:'Rest', accent:'amber', tags:['SLEEP','REST','REFLECT'],
+      objective:'No heavy weights, hard pull-ups or skill testing. Give your connective tissues time to adapt.',
+      warmup:[],
+      items:[{id:'optional_walk',sets:1,min:15,max:25, optional:true},{id:'relax_breathing',sets:1,min:3,max:5, optional:true},{id:'weekly_review',sets:1,min:1,max:1, optional:true}],
+      cooldown:['Plan next week and prepare meals','Aim for 7–9 hours of sleep'],
+      target:'This is a rest day, not a failed workout. Optional recovery tasks do not count toward completion.'}
+  ]
+};
+const EXERCISES = {
+  scap_pull:{name:'Scapular pull-ups',category:'CALISTHENICS',muscle:'Scapular control / lats',equipment:'Pull-up bar',unit:'reps',mode:'body',rest:60,load:'none',how:['Hang from a bar with arms straight and a comfortable grip.','Pull your shoulder blades down without bending your elbows significantly.','Pause briefly, then return slowly to a passive or neutral hang.'],cue:'Shoulders down, ribs controlled; very small movement is fine.',avoid:'Do not swing or force a painful dead hang.',swap:'Cable scapular pulldown.'},
+  strict_pull:{name:'Strict pull-ups',category:'CALISTHENICS',muscle:'Lats / biceps / upper back',equipment:'Pull-up bar',unit:'reps',mode:'body',rest:150,load:'none',how:['Start from a comfortable dead hang with stable shoulders.','Pull elbows toward the ribs, keeping legs quiet.','Bring chin over the bar without jutting neck, then lower under control.'],cue:'Every repetition must look the same; stop before kipping.',avoid:'No swinging or ugly failure reps. Use assistance if only one strict rep is possible.',swap:'Assisted pull-ups or lat pulldowns.'},
+  assisted_pull:{name:'Assisted pull-ups',category:'CALISTHENICS',muscle:'Lats / biceps / upper back',equipment:'Assisted pull-up machine or band',unit:'reps',mode:'assist',rest:120,load:'assist',how:['Set the machine assistance so your first reps are smooth.','Start extended, engage shoulders and pull your chin above bar height.','Lower for about 2 seconds; keep the same movement path each rep.'],cue:'As you improve, reduce assistance in small steps.',avoid:'A lighter assistance number means a harder movement. Do not rush this.',swap:'Lat pulldown, neutral grip.'},
+  inverted_row:{name:'Inverted / Australian rows',category:'CALISTHENICS',muscle:'Mid back / lats / biceps',equipment:'Smith machine or secure low bar',unit:'reps',mode:'body',rest:90,load:'none',how:['Set a secure bar around waist height.','Hold a plank-like torso beneath the bar with feet grounded.','Pull chest toward the bar and lower with control.'],cue:'Walk feet farther forward to make it harder.',avoid:'Do not use an unstable bar or sag your hips.',swap:'Seated cable row.'},
+  pushup:{name:'Strict push-ups',category:'CALISTHENICS',muscle:'Chest / triceps / anterior shoulders',equipment:'Floor',unit:'reps',mode:'body',rest:120,load:'none',how:['Place hands just outside shoulder width and brace glutes and abdomen.','Lower chest toward the floor while elbows track about 30–45° from torso.','Press the floor away without letting hips sag.'],cue:'Full-body plank throughout; record only clean reps.',avoid:'Stop the max-form test as soon as alignment or depth breaks.',swap:'Incline push-ups on a stable bench.'},
+  pike_pushup:{name:'Pike push-ups',category:'CALISTHENICS',muscle:'Shoulders / triceps',equipment:'Floor or mat',unit:'reps',mode:'body',rest:120,load:'none',how:['Form an inverted V with hands planted shoulder-width.','Bend elbows to bring the crown of your head forward/down between your hands.','Push back to the inverted V while keeping hips high.'],cue:'Keep shoulders active and move under control.',avoid:'Avoid collapsing onto head or bending wrists into pain.',swap:'Light dumbbell overhead press.'},
+  db_lateral:{name:'Dumbbell lateral raises',category:'GYM',muscle:'Side deltoids',equipment:'Dumbbells',unit:'reps',mode:'accessory',rest:75,load:'kg',how:['Stand tall with elbows slightly bent.','Raise dumbbells out to the side to about shoulder height.','Lower slowly without swinging the torso.'],cue:'Use lighter dumbbells than your ego suggests.',avoid:'Do not heave weights using lower back.',swap:'Cable lateral raise.'},
+  hanging_knee:{name:'Hanging knee raises',category:'CALISTHENICS',muscle:'Abs / hip flexors',equipment:'Pull-up bar',unit:'reps',mode:'body',rest:75,load:'none',how:['Hang with shoulders active.','Curl knees toward chest while tilting pelvis gently backward.','Lower slowly without swinging.'],cue:'Prioritize a quiet torso.',avoid:'Stop if grip or shoulders lose control.',swap:'Reverse crunches.'},
+  squat:{name:'Barbell squat / leg press',category:'GYM',muscle:'Quads / glutes',equipment:'Squat rack or leg press',unit:'reps',mode:'compound',rest:180,load:'kg',how:['Use 2–3 easy warm-up sets to reach a working load.','Brace abdomen, bend knees and hips, and lower to a comfortable depth.','Drive up with controlled knees and stable feet.'],cue:'Choose ONE variation and keep tracking it for six weeks.',avoid:'Do not chase depth or load that causes pain or lost control.',swap:'Goblet squat or leg press.'},
+  rdl:{name:'Romanian deadlift',category:'GYM',muscle:'Hamstrings / glutes / spinal erectors',equipment:'Barbell or dumbbells',unit:'reps',mode:'compound',rest:150,load:'kg',how:['Stand tall with slightly bent knees and weights near legs.','Move hips backward while keeping a neutral spine.','Stop when hamstrings are stretched without rounding; stand by driving hips through.'],cue:'Think “hips back” instead of “bend down”.',avoid:'Do not round your back to reach the floor.',swap:'Dumbbell RDL.'},
+  rev_lunge:{name:'Reverse lunges',category:'GYM',muscle:'Quads / glutes / balance',equipment:'Bodyweight or dumbbells',unit:'reps',mode:'accessory',rest:90,load:'kg',how:['Stand tall and step one leg back.','Lower under control until both knees bend comfortably.','Push through the front foot and return; alternate or complete each leg.'],cue:'Reps are PER LEG.',avoid:'Keep front knee tracking in line with toes.',swap:'Supported split squats.'},
+  leg_curl:{name:'Seated / lying leg curl',category:'GYM',muscle:'Hamstrings',equipment:'Leg curl machine',unit:'reps',mode:'accessory',rest:90,load:'kg',how:['Adjust the machine pivot and pad to suit your joints.','Curl heel(s) toward the body without moving hips.','Lower slowly, maintaining tension.'],cue:'Make the negative as controlled as the positive.',avoid:'Avoid bouncing the stack.',swap:'Swiss-ball hamstring curl.'},
+  standing_calf:{name:'Standing calf raises',category:'GYM',muscle:'Calves',equipment:'Calf machine or dumbbells',unit:'reps',mode:'accessory',rest:75,load:'kg',how:['Stand on stable support with feet straight ahead.','Rise on balls of feet as high as comfortable.','Lower steadily into a comfortable stretch.'],cue:'Pause for a beat at the top.',avoid:'No bouncing or ankle rolling.',swap:'Single-leg bodyweight calf raises.'},
+  plank:{name:'Forearm plank',category:'CALISTHENICS',muscle:'Deep core',equipment:'Mat',unit:'sec',mode:'hold',rest:60,load:'none',how:['Place elbows below shoulders and extend legs.','Brace ribs down and squeeze glutes gently.','Hold a straight line while breathing steadily.'],cue:'Quality beats duration.',avoid:'Do not let hips sag or hold breath.',swap:'Elevated forearm plank.'},
+  easy_walk:{name:'Easy recovery walk',category:'RECOVERY',muscle:'Aerobic recovery',equipment:'Comfortable shoes',unit:'min',mode:'walk',rest:0,load:'none',how:['Walk on level ground at an easy conversational pace.','Keep breathing comfortably; you should finish refreshed.','Reduce the duration if sore or poorly recovered.'],cue:'RPE about 2–3/10.',avoid:'Do not turn recovery walking into interval training.',swap:'Easy stationary bike.'},
+  wrist_rocks:{name:'Quadruped wrist rocks',category:'MOBILITY',muscle:'Wrist tolerance',equipment:'Mat',unit:'reps',mode:'mobility',rest:30,load:'none',how:['Place hands on the floor with fingers forward and elbows soft.','Shift weight gently forward and backward.','Keep the range small and pain-free.'],cue:'Warm tissues; do not force stretch.',avoid:'Sharp wrist pain means back off.',swap:'Standing palm-to-wall leans.'},
+  wall_slides:{name:'Wall slides',category:'MOBILITY',muscle:'Shoulder mobility / scapula',equipment:'Wall',unit:'reps',mode:'mobility',rest:30,load:'none',how:['Stand with back near a wall and ribs gently tucked.','Slide arms upward without forcing elbows back.','Lower slowly and repeat.'],cue:'Move only in a comfortable range.',avoid:'Do not arch your lower back to reach higher.',swap:'Seated shoulder flexion.'},
+  cat_cow:{name:'Cat–cow spine mobility',category:'MOBILITY',muscle:'Spinal movement',equipment:'Mat',unit:'reps',mode:'mobility',rest:30,load:'none',how:['Set up on hands and knees.','Gently round spine while exhaling.','Slowly arch within comfort while inhaling.'],cue:'Smooth breathing and motion.',avoid:'No forceful end-range positions.',swap:'Seated spinal flexion/extension.'},
+  thoracic_rot:{name:'Side-lying thoracic rotations',category:'MOBILITY',muscle:'Upper back mobility',equipment:'Mat',unit:'reps',mode:'mobility',rest:30,load:'none',how:['Lie on your side with hips and knees bent.','Open your top arm toward the opposite side, turning upper chest.','Return slowly without letting your lower back twist excessively.'],cue:'Reps are PER SIDE.',avoid:'Move in a pain-free range.',swap:'Seated upper-back rotations.'},
+  ankle_mob:{name:'Knee-to-wall ankle rocks',category:'MOBILITY',muscle:'Ankle dorsiflexion',equipment:'Wall',unit:'reps',mode:'mobility',rest:30,load:'none',how:['Face a wall with one foot planted a short distance back.','Bring knee toward wall keeping heel down.','Move smoothly back and forth; switch legs.'],cue:'Reps are PER SIDE.',avoid:'No heel lift or pinching pain.',swap:'Standing calf stretch.'},
+  box_breathing:{name:'Relaxed breathing',category:'RECOVERY',muscle:'Recovery / relaxation',equipment:'None',unit:'min',mode:'walk',rest:0,load:'none',how:['Sit comfortably and breathe slowly through the nose if comfortable.','Let the exhale be natural and unforced.','Use an easy rhythm, stopping if dizzy.'],cue:'No strict breath-holding required.',avoid:'Do not force long breath holds.',swap:'Quiet seated rest.'},
+  pike_hold:{name:'Pike support hold',category:'SKILL',muscle:'Overhead shoulder stability',equipment:'Floor / mat',unit:'sec',mode:'hold',rest:75,load:'none',how:['Place hands shoulder width and walk feet closer until hips are raised.','Push the ground away and maintain active shoulders.','Keep gaze between hands and hold while breathing.'],cue:'Build to wall support only after pain-free control.',avoid:'Do not kick into an unsupported handstand.',swap:'Elevated downward dog hold.'},
+  incline_db:{name:'Incline dumbbell bench press',category:'GYM',muscle:'Upper chest / triceps',equipment:'Incline bench and dumbbells',unit:'reps',mode:'compound',rest:150,load:'kg',how:['Set bench around 15–30° and plant feet.','Lower dumbbells with elbows in a comfortable path.','Press up without crashing weights together.'],cue:'Maintain controlled depth.',avoid:'Do not over-arch or drop elbows abruptly.',swap:'Incline chest press machine.'},
+  cable_row:{name:'Seated cable row',category:'GYM',muscle:'Mid back / lats',equipment:'Cable row machine',unit:'reps',mode:'compound',rest:120,load:'kg',how:['Sit tall with neutral back and reach slightly forward.','Pull handle toward lower ribs while elbows travel back.','Return slowly without rocking your torso.'],cue:'Keep upper back doing the work.',avoid:'No excessive torso momentum.',swap:'Chest-supported dumbbell row.'},
+  db_shoulder:{name:'Seated dumbbell shoulder press',category:'GYM',muscle:'Shoulders / triceps',equipment:'Dumbbells and bench',unit:'reps',mode:'compound',rest:120,load:'kg',how:['Sit upright and begin dumbbells near shoulders.','Press upward along a comfortable arc.','Lower under control; stop before painful range.'],cue:'Skip if shoulders are already fatigued after pike holds.',avoid:'Avoid excessive spinal arch.',swap:'Machine shoulder press.'},
+  cable_fly:{name:'Cable chest fly',category:'GYM',muscle:'Pectorals',equipment:'Cable station',unit:'reps',mode:'accessory',rest:75,load:'kg',how:['Set handles slightly below shoulder level.','With soft elbows, bring hands inward in a hugging arc.','Return under control without an excessive stretch.'],cue:'Let chest move the handles.',avoid:'Avoid over-stretching front of shoulders.',swap:'Pec deck.'},
+  cable_lateral:{name:'Cable lateral raises',category:'GYM',muscle:'Side deltoids',equipment:'Cable station',unit:'reps',mode:'accessory',rest:75,load:'kg',how:['Stand beside low cable with working arm farthest from stack.','Raise arm out to side with soft elbow.','Lower slowly without torso leaning.'],cue:'Controlled range, light load.',avoid:'Avoid jerking or twisting.',swap:'Dumbbell lateral raises.'},
+  bicep_curl:{name:'Dumbbell / cable biceps curls',category:'GYM',muscle:'Biceps',equipment:'Dumbbells or cable',unit:'reps',mode:'accessory',rest:60,load:'kg',how:['Keep upper arms quiet beside torso.','Bend elbows to curl the weight, without swinging.','Lower for about 2 seconds.'],cue:'Elbows stay near ribs.',avoid:'Avoid torso momentum.',swap:'Hammer curls.'},
+  tricep_press:{name:'Rope triceps pushdowns',category:'GYM',muscle:'Triceps',equipment:'Cable with rope',unit:'reps',mode:'accessory',rest:60,load:'kg',how:['Keep elbows tucked beside torso.','Straighten arms by pressing rope downward.','Return smoothly without shifting shoulders forward.'],cue:'Upper arms barely move.',avoid:'No leaning body weight onto stack.',swap:'Single dumbbell triceps extension.'},
+  support_hold:{name:'Foot-assisted parallel-bar support',category:'SKILL',muscle:'Scapular depression / core / triceps',equipment:'Dip bars or parallettes',unit:'sec',mode:'hold',rest:75,load:'none',how:['Place hands firmly on stable parallel bars.','Press shoulders down and lightly support body with feet.','Keep elbows straight but not aggressively locked; lift a little weight into arms.'],cue:'Build to brief unassisted supports when pain-free.',avoid:'No deep dips required; avoid painful shoulder positions.',swap:'Bench-supported straight-arm hold.'},
+  seated_compression:{name:'Seated compression leg lifts',category:'SKILL',muscle:'Hip flexors / abs for L-sit',equipment:'Floor or mat',unit:'reps',mode:'body',rest:60,load:'none',how:['Sit with legs extended or slightly bent, hands on floor near thighs.','Brace your core and try to lift one or both heels briefly.','Lower gently; keep torso upright as possible.'],cue:'Small lifts count. Keep knees bent if necessary.',avoid:'Do not strain hips or force straight legs.',swap:'Seated knee raises.'},
+  hollow_hold:{name:'Hollow-body hold',category:'CALISTHENICS',muscle:'Anterior core',equipment:'Mat',unit:'sec',mode:'hold',rest:60,load:'none',how:['Lie on back and gently flatten lower back toward mat.','Lift head/shoulders and knees slightly if comfortable.','Hold while maintaining lower back contact and steady breathing.'],cue:'Bend knees to make it easier.',avoid:'Stop if lower back arches or neck strains.',swap:'Dead bug hold.'},
+  scap_push:{name:'Scapular push-ups',category:'CALISTHENICS',muscle:'Serratus / scapular control',equipment:'Floor',unit:'reps',mode:'body',rest:45,load:'none',how:['Hold a plank with straight arms.','Let shoulder blades come together slightly without bending elbows.','Push the floor away to spread shoulder blades.'],cue:'Keep trunk still.',avoid:'Do not shrug shoulders toward ears excessively.',swap:'Standing wall scapular push-ups.'},
+  easy_cycle:{name:'Easy cycling cooldown',category:'RECOVERY',muscle:'Circulation / aerobic recovery',equipment:'Stationary bike',unit:'min',mode:'walk',rest:0,load:'none',how:['Cycle at low resistance while breathing easily.','Keep a conversational effort level.','End feeling refreshed, not exhausted.'],cue:'Optional: omit if the skill session already feels long.',avoid:'No intervals or sprints.',swap:'Gentle walk.'},
+  leg_press:{name:'Leg press',category:'GYM',muscle:'Quads / glutes',equipment:'Leg press machine',unit:'reps',mode:'compound',rest:150,load:'kg',how:['Set seat so hips remain stable and knees bend comfortably.','Lower sled with full-foot pressure on platform.','Drive up without locking knees aggressively.'],cue:'Use the same machine and setup to compare loads.',avoid:'Never let pelvis curl sharply off the pad.',swap:'Goblet squat.'},
+  hip_thrust:{name:'Hip thrust',category:'GYM',muscle:'Glutes',equipment:'Barbell / smith / machine',unit:'reps',mode:'compound',rest:120,load:'kg',how:['Set upper back securely on a bench or machine pad.','Drive feet into ground and extend hips to neutral.','Pause briefly at top and lower under control.'],cue:'Ribs down; move at hips, not lower back.',avoid:'Avoid hyperextending the spine.',swap:'Glute bridge.'},
+  bulgarian:{name:'Bulgarian split squats',category:'GYM',muscle:'Quads / glutes / balance',equipment:'Bench and optional dumbbells',unit:'reps',mode:'accessory',rest:90,load:'kg',how:['Place rear foot on low stable bench, front foot well forward.','Lower body slowly using the front leg.','Press through front foot to rise; switch legs.'],cue:'Reps are PER LEG; use support to balance.',avoid:'Avoid wobbling under too-heavy dumbbells.',swap:'Regular split squat.'},
+  seated_calf:{name:'Seated calf raises',category:'GYM',muscle:'Soleus / calves',equipment:'Seated calf machine',unit:'reps',mode:'accessory',rest:75,load:'kg',how:['Sit with thighs under pad and balls of feet on platform.','Raise heels as high as comfortable.','Lower slowly through a comfortable stretch.'],cue:'Move through ankle; stay seated.',avoid:'Avoid bouncing at bottom.',swap:'Bent-knee bodyweight calf raises.'},
+  tuck_support:{name:'Foot-assisted tuck L-sit support',category:'SKILL',muscle:'Abs / hip flexors / shoulder depression',equipment:'Parallettes or dip bars',unit:'sec',mode:'hold',rest:75,load:'none',how:['Hold secure bars with arms straight and shoulders pushed down.','Keep feet lightly on floor, bring one knee toward chest.','Progress to lifting both feet briefly while maintaining posture.'],cue:'Assistance is fine. Quality matters more than fully clearing the feet.',avoid:'Do not hold through sharp wrist or shoulder pain.',swap:'Seated compression raises.'},
+  dead_bug:{name:'Dead bug',category:'CALISTHENICS',muscle:'Deep abdominal core',equipment:'Mat',unit:'reps',mode:'body',rest:45,load:'none',how:['Lie on your back with arms up and hips/knees bent to 90°.','Extend opposite arm and leg slowly while bracing.','Return and alternate without lower-back arch.'],cue:'Reps are PER SIDE.',avoid:'Reduce range if back arches.',swap:'Heel slides.'},
+  optional_walk:{name:'Optional fresh-air walk',category:'RECOVERY',muscle:'Restorative activity',equipment:'Walking shoes',unit:'min',mode:'walk',rest:0,load:'none',how:['Skip entirely if you want full rest.','If you walk, keep the pace easy enough to talk continuously.','Finish without fatigue.'],cue:'Optional — not counted toward workout completion.',avoid:'No hard cardio today.',swap:'Full rest.'},
+  relax_breathing:{name:'Optional slow breathing',category:'RECOVERY',muscle:'Relaxation',equipment:'None',unit:'min',mode:'walk',rest:0,load:'none',how:['Sit or lie comfortably.','Breathe slowly without forcing an exact pattern.','Relax shoulders and jaw.'],cue:'Optional — do only if helpful.',avoid:'Avoid forceful breath-holding.',swap:'Full rest.'},
+  weekly_review:{name:'Weekly training review',category:'RECOVERY',muscle:'Planning and consistency',equipment:'Your log',unit:'reps',mode:'review',rest:0,load:'none',how:['Review your completed sessions and notes.','Check gym loads and form quality, not just body weight.','Plan any needed substitutions for next week.'],cue:'One review session; optional and nonphysical.',avoid:'Do not treat missed workouts as failure.',swap:'None needed.'}
+};
+
+function displayDate(weekIndex,dayIndex){
+  const d = new Date(2026,10,10+weekIndex*7+dayIndex,12,0,0);
+  return d;
+}
+function dateKey(weekIndex,dayIndex) {
+  const d=displayDate(weekIndex,dayIndex);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function roundTo5(x){return Math.round(x/5)*5;}
+function specFor(item,weekIndex) {
+  const e=EXERCISES[item.id], w=weekIndex+1;
+  let sets=item.sets, min=item.min, max=item.max, note='', isTest=false, specialSets=null;
+  const base=[item.min,item.max];
+  if(item.special==='pullTest') {
+    if(w===1 || w===6) {
+      sets=1; min=1; max='MAX'; isTest=true;
+      specialSets=['MAX clean reps'];
+      note=w===1?'Baseline: perform one strict max-form set after warm-up. If only 1 rep is possible, that is your baseline.':'Retest: one strict max-form set under similar conditions to Week 1. Stop before kipping or loss of control.';
+    } else if(w===2){sets=2;min=1;max=1;note='Two clean singles. Use assistance if you cannot preserve good form.';}
+    else if(w===3){sets=3;min=1;max=1;note='Three clean singles. Do not chase a second rep unless clearly comfortable.';}
+    else if(w===4){sets=1;min=1;max=1;note='Deload: one EASY assisted rep, or skip if tired.';}
+    else if(w===5){sets=3;min=1;max=2;note='Three sets of 1 clean strict rep; attempt a second only if 2 RIR remain.';}
+  } else if(item.special==='pushTest') {
+    if(w===1||w===6){sets=3;min=6;max=8;isTest=true;specialSets=['MAX clean reps','6–8 easy reps','6–8 easy reps']; note=w===1?'Baseline: do one max-form set, then use easier push-ups for 2 back-off sets.':'Retest under similar conditions to Week 1, then perform two easier back-off sets.';}
+    else if(w===2){sets=3;min=7;max=11;note='Keep 2 reps in reserve; use incline if needed.';}
+    else if(w===3){sets=3;min=8;max=12;note='Keep technique exact and stop with 1–2 clean reps remaining.';}
+    else if(w===4){sets=2;min=6;max=8;note='Deload: easy incline push-ups are appropriate.';}
+    else if(w===5){sets=3;min=6;max=10;note='Return to hard standard push-ups. Do not add weight unless every set is easy.';}
+  } else if(e.mode==='hold') {
+    const additions=[0,5,10,0,10,15];
+    min=roundTo5(Math.max(5,base[0]+additions[weekIndex]));max=roundTo5(base[1]+additions[weekIndex]);
+    if(w===4){sets=Math.max(1,Math.ceil(item.sets/2));note='Deload: shorter, easy holds only.';}
+    else if(w===5){note='Increase duration only if position remains stable.';}
+    else if(w===6){note='Stretch target; cut duration if form deteriorates.';}
+  } else if(e.mode==='walk') {
+    const inc=[0,5,5,0,5,0][weekIndex];min+=inc;max+=inc;
+    if(w===4)note='Deload: keep recovery work gentle.';
+  } else if(e.mode==='review') {
+    min=max=1;sets=1;
+  } else if(e.mode==='mobility') {
+    const inc=[0,1,2,0,1,2][weekIndex];min+=inc;max+=inc;
+    note='Comfortable range only. This is mobility, not a strength test.';
+  } else {
+    const inc=[0,1,2,0,0,1][weekIndex];min+=inc;max+=inc;
+    if(w===4){sets=Math.max(1,Math.ceil(item.sets/2));note='Deload: ~3–4 reps in reserve; decrease weight or increase assistance if needed.';}
+    else if(w===5){note=e.mode==='assist'?'If Week 3 was clean, reduce machine assistance slightly; otherwise repeat.':e.load==='kg'?'Use a small load increase ONLY if all Week 3 top-range reps were clean. Otherwise repeat your previous load.':'Resume full volume; increase leverage difficulty only if your Week 3 reps were excellent.';}
+    else if(w===6){note='Use around 2 reps in reserve; compare quality and load with earlier weeks.';}
+    else if(w===2){note='Aim for +1 clean rep compared with the previous week while maintaining form.';}
+    else if(w===3){note='Aim for quality at a higher rep range; do not force a weight increase yet.';}
+  }
+  if(item.optional)note='OPTIONAL. Full rest is a valid choice; this item never counts toward required session completion.';
+  const range=(min===max?String(min):`${min}–${max}`);
+  const descriptor=e.unit==='sec'?'sec':e.unit==='min'?'min':'reps';
+  const text=e.mode==='review'?'1 × weekly review':specialSets?(item.special==='pushTest' ? '1× clean max + 2× 6–8 reps' : '1× strict max-form test'): `${sets} × ${range} ${descriptor}${['rev_lunge','bulgarian','thoracic_rot','ankle_mob','dead_bug'].includes(item.id)?'/side':''}`;
+  const targets=e.mode==='review'?['Review']:specialSets||Array(sets).fill(range);
+  return { ...item, exercise:e, sets, min, max, text, note, targets, isTest, optional:!!item.optional};
+}
+function sessionFor(weekIndex,dayIndex){
+  const day=PLAN.days[dayIndex];
+  let entries=day.items.slice();
+  // Place push-up max-form testing near the start, before fatiguing rowing volume.
+  if(dayIndex===0 && (weekIndex===0 || weekIndex===5)){
+    const p=entries.findIndex(x=>x.id==='pushup');const [test]=entries.splice(p,1);
+    entries.splice(entries.findIndex(x=>x.id==='strict_pull')+1,0,test);
+  }
+  return { ...day, week:weekIndex+1, dayIndex, date:dateKey(weekIndex,dayIndex), dateObj:displayDate(weekIndex,dayIndex), items:entries.map(entry=>specFor(entry,weekIndex)) };
+}
+function formattedDate(d) {return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});}
+function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>sessionFor(w,d)));}
+
+</script>
+  <script>
+/* HYBRID / 42 — offline, no dependencies, saves locally in this browser. */
+(() => {
+  'use strict';
+  const STORAGE = 'hybrid42-progress-v1';
+  const VIEWS = [
+    {id:'dashboard',label:'Overview',icon:'◈'},
+    {id:'workout',label:'Workout',icon:'⚡'},
+    {id:'calendar',label:'42 Days',icon:'▦'},
+    {id:'library',label:'Exercises',icon:'▤'},
+    {id:'progress',label:'Progress',icon:'↗'}
+  ];
+  const fresh = () => ({version:1, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{}, baseline:{pullW1:'',pushW1:'',pullW6:'',pushW6:''}});
+  function load(){
+    try { const x=JSON.parse(localStorage.getItem(STORAGE));return x&&typeof x==='object'?{...fresh(),...x}:fresh(); }
+    catch(e){return fresh();}
+  }
+  let db=load(), activeView='dashboard', selectedWeek=0, selectedDay=0, categoryFilter='ALL', searchTerm='', timerEnd=null, timerInterval=null, toastTimeout=null;
+  const currentDate = (()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;})();
+  const indexedToday=allSessions().find(s=>s.date===currentDate);
+  if(indexedToday){selectedWeek=indexedToday.week-1;selectedDay=indexedToday.dayIndex;}
+  const save=()=>{try{localStorage.setItem(STORAGE,JSON.stringify(db));}catch(e){toast('Browser storage unavailable. Export a backup to save progress.');}};
+  function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+  function fmtDateShort(d){return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});}
+  function element(id){return document.getElementById(id);}
+  function toast(msg){const el=element('toast');el.textContent=msg;el.classList.add('visible');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('visible'),2900);}
+  const keyFor=(s,item,index)=>`${s.date}|${item.id}|${index}`;
+  const isChecked=(s,item,i)=>!!db.logs[keyFor(s,item,i)]?.done;
+  const requiredSets=s=>s.kind==='rest'?0:s.items.filter(i=>!i.optional).reduce((sum,i)=>sum+i.sets,0);
+  const doneSets=s=>s.items.filter(i=>!i.optional).reduce((sum,item)=>sum+item.targets.filter((_,idx)=>isChecked(s,item,idx)).length,0);
+  const sessionPct=s=>requiredSets(s)===0?(db.doneDates[s.date]?100:0):Math.round(doneSets(s)/requiredSets(s)*100);
+  const dayIsDone=s=>!!db.doneDates[s.date];
+  function dayLabel(s){return s.kind==='rest'?'REST':s.kind==='recovery'?'RECOVERY':s.kind==='skill'?'SKILL':'TRAIN';}
+  function fmtWeekDate(w){return `${fmtDateShort(displayDate(w,0))} — ${fmtDateShort(displayDate(w,6))}`;}
+  function navHtml(mobile=false){return VIEWS.map(v=>`<button type="button" class="nav-button${activeView===v.id?' active':''}" data-action="nav" data-view="${v.id}" aria-label="${v.label}" aria-current="${activeView===v.id?'page':'false'}"><span class="nav-icon" aria-hidden="true">${v.icon}</span><span>${mobile&&v.id==='dashboard'?'Home':v.label}</span></button>`).join('');}
+  function updateNav(){element('desktopNav').innerHTML=navHtml();element('mobileNav').innerHTML=navHtml(true);}
+  function showView(view,scroll=true){
+    activeView=view;
+    document.querySelectorAll('.view').forEach(el=>el.hidden=el.id!==`view-${view}`);
+    updateNav();
+    renderView();
+    if(scroll) window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function renderView(){
+    if(activeView==='dashboard')renderDashboard();
+    if(activeView==='workout')renderWorkout();
+    if(activeView==='calendar')renderCalendar();
+    if(activeView==='library')renderLibrary();
+    if(activeView==='progress')renderProgress();
+  }
+  function weekPicker(){return `<select class="week-select" aria-label="Choose training week" data-action="select-week">${PLAN.phases.map((w,i)=>`<option value="${i}"${i===selectedWeek?' selected':''}>WEEK ${i+1} · ${w.name}</option>`).join('')}</select>`;}
+  function weekTiles(){const short=["FOUND.","VOLUME","PROGRESS","DELOAD","INTENSIFY","TEST"];return `<div class="week-steps">${PLAN.phases.map((w,i)=>`<button type="button" class="week-step${i===selectedWeek?' active':''}" data-action="week" data-week="${i}"><small class="muted">WEEK</small><strong>${String(i+1).padStart(2,'0')}</strong><span>${short[i]}</span></button>`).join('')}</div>`;}
+  function renderDashboard(){
+    const s=sessionFor(selectedWeek,selectedDay), all=allSessions(), finished=all.filter(dayIsDone).length, thisWeek=PLAN.days.map((_,d)=>sessionFor(selectedWeek,d)), thisCompleted=thisWeek.filter(dayIsDone).length;
+    const total=all.reduce((n,x)=>n+doneSets(x),0), required=all.reduce((n,x)=>n+requiredSets(x),0);
+    const cur=PLAN.phases[selectedWeek];
+    element('view-dashboard').innerHTML=`
+    <div class="hero">
+      <div class="section-topline"><span class="rule"></span>THE HERIA × NIPPARD INSPIRED HYBRID</div>
+      <h1>BUILD THE BODY.<br><span class="accent">EARN THE SKILL.</span></h1>
+      <p class="subtitle">Your complete 42-day training system — calisthenics fundamentals, evidence-informed hypertrophy, structured recovery, and every set logged.</p>
+      <div class="hero-actions"><button type="button" class="button button-primary" data-action="nav" data-view="workout">START TODAY'S PLAN <span>→</span></button><button type="button" class="button button-outline" data-action="nav" data-view="calendar">VIEW ALL 42 DAYS</button></div>
+      <div class="hero-profile"><span class="chip lime">84.3 KG</span><span class="chip">181.1 CM</span><span class="chip">11–20 PUSH-UPS</span><span class="chip">1–3 PULL-UPS</span><span class="chip">6 WEEKS</span></div>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric"><div class="label">SESSIONS MARKED</div><div class="value">${finished}<span class="muted">/42</span></div><small>Includes programmed recovery</small></div>
+      <div class="metric"><div class="label">WORKING SETS LOGGED</div><div class="value">${total}</div><small>Of ${required} prescribed sets</small></div>
+      <div class="metric"><div class="label">CURRENT WEEK</div><div class="value">${String(selectedWeek+1).padStart(2,'0')}<span class="muted">/06</span></div><small>${cur.name.toLowerCase()} phase</small></div>
+      <div class="metric"><div class="label">WEEK'S DAYS COMPLETED</div><div class="value">${thisCompleted}<span class="muted">/7</span></div><small>Rest days count when marked</small></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel"><div class="panel-title-row"><div><div class="section-label">YOUR CURRENT TRAINING BLOCK</div><h2 style="margin:7px 0">Week ${selectedWeek+1} <span class="accent">/ ${cur.name}</span></h2></div><span class="chip lime">${esc(cur.dates)}</span></div>
+        <p class="subtitle">${esc(cur.subtitle)}</p><div class="surface-note"><strong>THIS WEEK'S RULE</strong><br>${esc(cur.focus)}</div><div class="spacer"></div>${weekTiles()}<div class="spacer"></div><button class="button button-secondary" data-action="nav" data-view="workout">Open Week ${selectedWeek+1} workout →</button>
+      </div>
+      <div class="panel"><div class="panel-title-row"><div><div class="section-label">YOUR 7-DAY SCHEDULE</div><h3 style="margin-top:7px">${fmtWeekDate(selectedWeek)}</h3></div><span class="chip dim">${thisCompleted}/7</span></div>
+        <div class="day-mini-list">${thisWeek.map((x,i)=>`<button class="day-mini${x.date===currentDate?' today':''}" data-action="goto-session" data-week="${selectedWeek}" data-day="${i}"><span class="day-name">${PLAN.weekdays[i]}</span><span class="day-main">${esc(x.short)}</span><span class="day-side">${x.kind==='rest'?'REST':x.kind==='recovery'?'EASY':`${sessionPct(x)}%`}</span><span class="done-circle${dayIsDone(x)?' yes':''}">${dayIsDone(x)?'✓':'·'}</span></button>`).join('')}</div>
+      </div>
+    </div>
+    <div class="spacer"></div><div class="grid-3">
+       <div class="panel"><div class="section-label">01 / CALISTHENICS</div><h3 style="margin-top:10px">Relative strength</h3><p class="subtitle">Strict pull-ups, rows, push-ups and slow progressions. Never sacrifice control to hit a number.</p><span class="chip lime">HERIA-INSPIRED</span></div>
+       <div class="panel"><div class="section-label">02 / HYPERTROPHY</div><h3 style="margin-top:10px">Progressive overload</h3><p class="subtitle">Track weights, reps and sets on gym lifts; raise load when top-range reps are clean.</p><span class="chip blue">NIPPARD-INSPIRED</span></div>
+       <div class="panel"><div class="section-label">03 / RECOVERY</div><h3 style="margin-top:10px">Adaptation is training</h3><p class="subtitle">Four substantial training days, one low-fatigue skill day, one active recovery day, and full rest.</p><span class="chip amber">SUSTAINABLE</span></div>
+    </div>
+    <div class="spacer"></div><div class="surface-note amber">Seven days are planned, but <b>not seven hard workouts</b>. Thursday and Monday deliberately protect recovery. Your exact gym weights depend on your logged ability; select loads with 1–3 repetitions left in reserve and progress conditionally.</div>
+    `;
+  }
+  function dayTab(s,i){
+    const date=s.dateObj;
+    const status=dayIsDone(s)?'complete':sessionPct(s)>0?'partial':'';
+    return `<button type="button" class="day-tab${selectedDay===i?' active':''}" data-action="day" data-day="${i}" aria-label="${PLAN.weekdays[i]} ${date.getDate()}, ${s.short}">
+       <span class="row between" style="width:100%"><span class="dow">${PLAN.weekdays[i]}</span><span class="tab-dot ${status}"></span></span>
+       <span class="date-num">${String(date.getDate()).padStart(2,'0')}</span><span class="tab-label">${esc(s.short)}</span>
+     </button>`;
+  }
+  function workoutChecklist(s,items,kind){
+    return `<div class="checkline-list">${items.map((step,i)=>{const k=`${s.date}|${kind}|${i}`;const checked=!!db.warmups[k];return `<label class="checkline ${checked?'checked':''}"><input type="checkbox" data-action="warmup" data-key="${esc(k)}"${checked?' checked':''}><span>${esc(step)}</span></label>`;}).join('')}</div>`;
+  }
+  function exerciseCard(s,item,i){
+    const e=item.exercise;const counted=item.targets.filter((_,i)=>isChecked(s,item,i)).length;
+    const rest=e.rest>0?`<button type="button" class="inline-button" data-action="timer" data-seconds="${e.rest}">⏱ Start ${e.rest}s rest</button>`:'';
+    const help=e.load==='kg'?'LOAD KG':e.load==='assist'?'ASSIST KG':'—';
+    const unit=e.unit==='sec'?'SEC':e.unit==='min'?'MIN':'REPS';
+    const testBadge=item.isTest?'<span class="chip amber">BASELINE / TEST</span>':'';
+    return `<article class="exercise-card${counted===item.sets?' is-complete':''}" id="exercise-${esc(s.date)}-${esc(item.id)}">
+     <div class="exercise-top"><div class="exercise-index">${String(i+1).padStart(2,'0')}</div>
+      <div class="exercise-summary"><div class="row wrap" style="gap:7px"><span class="section-label">${esc(e.category)}</span>${testBadge}</div><h3>${esc(e.name)}</h3><p class="subtitle">${esc(e.muscle)} · ${esc(e.equipment)}</p></div>
+      <div class="exercise-dose">${esc(item.text)}<small>${counted} / ${item.sets} sets</small></div>
+     </div>
+     <div class="exercise-note"><strong>CUE:</strong> ${esc(e.cue)}${item.note?`<br><strong>WEEK ${s.week}:</strong> ${esc(item.note)}`:''}</div>
+     <div class="exercise-controls"><button class="inline-button" type="button" data-action="guide" data-id="${esc(item.id)}">VIEW FORM + ALL SIX WEEKS ↗</button><span class="rest-mark">${e.rest?`${e.rest}s rest between sets`:'Easy pace / no set rest'}</span>${rest}${item.optional?'<span class="chip dim">OPTIONAL</span>':''}</div>
+     <div class="set-table"><div class="set-header"><span>SET</span><span>TARGET</span><span>${help}</span><span>LOG ${unit}</span><span>DONE</span></div>
+     ${item.targets.map((target,idx)=>{const k=keyFor(s,item,idx),rec=db.logs[k]||{};return `<div class="set-row${rec.done?' checked':''}"><span class="set-id">${String(idx+1).padStart(2,'0')}</span><span class="set-target">${esc(target)} ${target.includes('MAX')?'':e.unit==='sec'?'sec':e.unit==='min'?'min':''}</span>
+       <input type="number" min="0" max="1000" step="0.5" class="log-input" aria-label="Set ${idx+1} load in kilograms" placeholder="${e.load==='assist'?'Assist kg':'Kg'}" data-action="log-field" data-key="${esc(k)}" data-field="load" value="${esc(rec.load??'')}" ${e.load==='none'?'disabled':''}>
+       <input type="number" min="0" max="1000" step="1" class="log-input" aria-label="Set ${idx+1} ${unit.toLowerCase()} achieved" placeholder="${unit.toLowerCase()}" data-action="log-field" data-key="${esc(k)}" data-field="reps" value="${esc(rec.reps??'')}">
+       <input type="checkbox" class="set-check" aria-label="Mark set ${idx+1} completed" data-action="set-complete" data-key="${esc(k)}"${rec.done?' checked':''}></div>`;}).join('')}
+    </div></article>`;
+  }
+  function renderWorkout(){
+    const s=sessionFor(selectedWeek,selectedDay), w=PLAN.phases[selectedWeek], pct=sessionPct(s), total=requiredSets(s), count=doneSets(s), finished=dayIsDone(s);
+    const activeSetCount=s.items.reduce((n,it)=>n+it.sets,0);
+    element('view-workout').innerHTML=`
+      <div class="section-head"><div class="section-topline"><span class="rule"></span>YOUR PERSONAL TRAINING LOG</div><h1>THE <span class="accent">WORKOUT.</span></h1><p class="subtitle">Every day. Every set. Every progression. Select any of the six weeks and all seven days.</p></div>
+      <div class="workout-navigation">${weekPicker()}<button class="button button-ghost" data-action="prev-week" ${selectedWeek===0?'disabled':''}>← Previous</button><button class="button button-ghost" data-action="next-week" ${selectedWeek===5?'disabled':''}>Next week →</button></div>
+      <div class="day-tabs">${PLAN.days.map((_,i)=>dayTab(sessionFor(selectedWeek,i),i)).join('')}</div>
+      <div class="session-hero"><div class="session-top"><div class="overline">WEEK ${String(selectedWeek+1).padStart(2,'0')} / ${esc(w.name)} · ${esc(s.theme)}</div><span class="chip ${s.accent==='lime'?'lime':s.accent==='blue'?'blue':s.accent==='purple'?'purple':'amber'}">${esc(dayLabel(s))}</span></div>
+        <h2>${esc(s.name)}</h2><p class="subtitle">${esc(s.objective)}</p>
+        <div class="session-stats"><span class="stat-pill"><strong>◷</strong> ${s.duration}</span><span class="stat-pill"><strong>${activeSetCount}</strong> prescribed sets</span><span class="stat-pill"><strong>${fmtDateShort(s.dateObj)}</strong> ${s.dateObj.getFullYear()}</span><span class="stat-pill"><strong>${s.intensity}</strong> effort</span></div>
+        <div style="margin-top:21px"><div class="row between" style="margin-bottom:8px"><span class="mini strong">SET COMPLETION</span><span class="mini strong accent">${s.kind==='rest'?'REST DAY':`${count}/${total} · ${pct}%`}</span></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div></div>
+      </div>
+      <div class="surface-note"><strong>WEEK ${selectedWeek+1} PROGRESSION:</strong> ${esc(w.focus)}<br><strong>YOUR DAILY TARGET:</strong> ${esc(s.target)}</div>
+      ${s.warmup.length?`<div class="group-title"><h3>01 <span class="accent">/</span> Warm-up</h3><small>5–10 minutes · before work sets</small></div>${workoutChecklist(s,s.warmup,'warmup')}`:''}
+      <div class="group-title"><h3>${s.warmup.length?'02':'01'} <span class="accent">/</span> ${s.kind==='rest'?'Optional recovery tasks':s.kind==='recovery'?'Recovery movement': 'Training blocks'}</h3><small>${s.items.length} exercises · exact week-specific targets</small></div>
+      ${s.kind==='rest'?'<div class="surface-note amber" style="margin-bottom:12px"><strong>FULL REST IS THE DEFAULT.</strong> Everything below is optional and may be skipped. There is no strength workout today.</div>':''}
+      <div class="exercise-list">${s.items.map((item,i)=>exerciseCard(s,item,i)).join('')}</div>
+      <div class="group-title"><h3>03 <span class="accent">/</span> Cool-down & recovery</h3><small>Recommended</small></div>
+      ${workoutChecklist(s,s.cooldown,'cooldown')}
+      <div class="group-title"><h3>04 <span class="accent">/</span> Session notes</h3><small>Saved automatically on this device</small></div>
+      <textarea class="note-textarea" data-action="notes" data-date="${esc(s.date)}" placeholder="What loads did you use? How did your pull-ups feel? Any stiffness, pain, or substitutions?">${esc(db.notes[s.date]||'')}</textarea>
+      <div class="workout-foot"><div><span class="chip ${finished?'complete':'dim'}">${finished?'✓ DAY COMPLETED':'DAY NOT YET MARKED'}</span><p class="caption" style="margin:8px 0 0">${s.kind==='rest'?'Mark when you have taken your rest day.':'You control when a day is marked complete. Unchecked sets remain visible.'}</p></div><button class="button ${finished?'button-secondary':'button-primary'} finish-button" data-action="finish-day">${finished?'↶ Undo day completion':'✓ Mark day complete'}</button></div>
+      <div class="spacer"></div><div class="surface-note amber"><strong>SAFE LOADING RULE:</strong> Your exact dumbbell/barbell kilograms cannot be safely inferred from body weight. Choose a working weight that leaves about ${selectedWeek===3?'3–4':'1–3'} reps in reserve (RIR). Log the actual kilograms above; increase only after you own the prescribed range.</div>
+    `;
+  }
+  function renderCalendar(){
+    const all=allSessions(), complete=all.filter(dayIsDone).length;
+    element('view-calendar').innerHTML=`
+    <div class="section-head"><div class="section-topline"><span class="rule"></span>42 DAYS / ZERO GUESSWORK</div><h1>YOUR <span class="accent">ROADMAP.</span></h1><p class="subtitle">Six complete weeks from Tuesday 10 November through Monday 21 December 2026. Tap any day to view all exercises, sets, cues, progressions and logs.</p></div>
+    <div class="panel"><div class="calendar-head"><div><div class="section-label">MASTER SCHEDULE</div><h2 style="margin-top:6px">All 42 days</h2><p class="muted mini" style="margin:9px 0 0">Four primary lifting days + one technique day + one recovery day + one rest day weekly.</p></div><div class="row"><span class="chip complete">${complete} completed</span><span class="chip dim">${42-complete} remaining</span></div></div>
+      <div class="calendar-grid">${PLAN.weekdays.map(day=>`<div class="calendar-colhead">${day}</div>`).join('')}${all.map(s=>`<button type="button" class="calendar-cell${dayIsDone(s)?' completed':''}${s.date===currentDate?' today':''}" data-action="goto-session" data-week="${s.week-1}" data-day="${s.dayIndex}"><span class="row between"><span class="cal-week">W${s.week}</span><span class="cal-progress">${dayIsDone(s)?'✓ DONE':s.kind==='rest'?'REST':s.kind==='recovery'?'EASY':`${sessionPct(s)}%`}</span></span><span class="cal-num">${String(s.dateObj.getDate()).padStart(2,'0')}</span><span class="cal-title">${esc(s.short)}</span><span class="calendar-week-label">${PLAN.weekdays[s.dayIndex]} · ${fmtDateShort(s.dateObj)}</span></button>`).join('')}</div>
+    </div><div class="spacer"></div><div class="panel"><div class="panel-title-row"><h3>Progression rules by week</h3><span class="chip lime">6 PHASES</span></div><div class="grid-3">${PLAN.phases.map((w,i)=>`<div style="padding:13px;border-radius:11px;border:1px solid var(--line);background:#182019"><div class="section-label">WEEK ${String(i+1).padStart(2,'0')} · ${esc(w.name)}</div><h3 style="margin:8px 0">${esc(w.title)}</h3><p class="caption" style="margin:0">${esc(w.focus)}</p></div>`).join('')}</div></div>`;
+  }
+  function libraryCards(){
+    const els=Object.entries(EXERCISES).filter(([id,e])=>{
+      const combined=`${e.name} ${e.muscle} ${e.equipment} ${e.category}`.toLowerCase();
+      if(searchTerm&&!combined.includes(searchTerm))return false;
+      if(categoryFilter==='ALL')return true;
+      if(categoryFilter==='CALISTHENICS')return ['CALISTHENICS','SKILL'].includes(e.category);
+      if(categoryFilter==='GYM')return e.category==='GYM';
+      return ['RECOVERY','MOBILITY'].includes(e.category);
+    });
+    return els.map(([id,e])=>`<article class="library-card"><div class="eyebrow">${esc(e.category)} · ${esc(e.equipment)}</div><h3>${esc(e.name)}</h3><p>${esc(e.muscle)}<br>${esc(e.cue)}</p><button class="button button-sm button-ghost" data-action="guide" data-id="${esc(id)}">Open exercise guide ↗</button></article>`).join('')||`<div class="surface-note">No exercises match this search. Try a different keyword.</div>`;
+  }
+  function renderLibrary(){
+    element('view-library').innerHTML=`<div class="section-head"><div class="section-topline"><span class="rule"></span>THE EXERCISE DATABASE</div><h1>MASTER THE <span class="accent">MOVEMENT.</span></h1><p class="subtitle">Every exercise explained: what to do, coaching cues, mistakes to avoid, substitutions, and how its prescription changes from Week 1 through Week 6.</p></div>
+    <div class="library-tools"><input id="librarySearch" type="search" class="filter-input" placeholder="Search pull-up, chest, leg press, mobility..." value="${esc(searchTerm)}" aria-label="Search exercises"><div class="filter-tabs">${[['ALL','All'],['CALISTHENICS','Calisthenics'],['GYM','Gym'],['RECOVERY','Recovery']].map(([id,label])=>`<button type="button" class="filter-tab${categoryFilter===id?' active':''}" data-action="filter" data-filter="${id}">${label}</button>`).join('')}</div></div>
+    <div class="library-list" id="libraryList">${libraryCards()}</div><div class="spacer"></div><div class="surface-note amber">Form tips are educational. If a movement causes sharp pain or worsening joint symptoms, stop and use a pain-free substitute; seek qualified assessment for persistent symptoms.</div>`;
+  }
+  function tinyChart(values,label){
+    const pts=values.map((x,i)=>({x:24+i*71,y:x===''||x==null?null:Number(x)})).filter(p=>p.y!==null&&Number.isFinite(p.y));
+    if(!pts.length)return `<div class="surface-note">Enter at least one weekly ${label.toLowerCase()} check-in to see your trend.</div>`;
+    const nums=pts.map(p=>p.y),low=Math.min(...nums)-.5,high=Math.max(...nums)+.5,range=high-low||1;
+    const pos=p=>`${p.x},${155-((p.y-low)/range)*112}`;
+    const lines=pts.length>1?`<polyline points="${pts.map(pos).join(' ')}" fill="none" stroke="#bafa6c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`:'';
+    return `<svg class="microchart" viewBox="0 0 420 180" role="img" aria-label="${label} by training week"><line x1="24" y1="154" x2="405" y2="154" stroke="#3d4a3e"/>${[1,2,3,4,5,6].map(w=>`<text x="${24+(w-1)*71}" y="174" text-anchor="middle">W${w}</text>`).join('')}${lines}${pts.map(p=>`<circle cx="${p.x}" cy="${155-((p.y-low)/range)*112}" r="5" fill="#bafa6c"><title>${p.y}</title></circle>`).join('')}</svg>`;
+  }
+  function renderProgress(){
+    const sessions=allSessions(), finished=sessions.filter(dayIsDone).length;
+    const weights=PLAN.phases.map((_,i)=>db.checkins[i]?.weight??'');
+    const baseline=db.baseline||{};
+    element('view-progress').innerHTML=`
+    <div class="section-head"><div class="section-topline"><span class="rule"></span>THE SCIENCE OF SHOWING UP</div><h1>TRACK YOUR <span class="accent">PROGRESS.</span></h1><p class="subtitle">Save sets, loads, reps, optional body measurements and your Week 1 / Week 6 skill tests. Your data stays in this browser unless you export it.</p></div>
+    <div class="metrics-grid"><div class="metric"><div class="label">DAYS MARKED COMPLETE</div><div class="value">${finished}<span class="muted">/42</span></div><small>Includes recovery days</small></div><div class="metric"><div class="label">MAIN TRAINING DAYS</div><div class="value">${sessions.filter(s=>s.kind==='strength'&&dayIsDone(s)).length}<span class="muted">/24</span></div><small>Four primary sessions / week</small></div><div class="metric"><div class="label">WORKING SETS DONE</div><div class="value">${sessions.reduce((v,s)=>v+doneSets(s),0)}</div><small>Across all sessions</small></div><div class="metric"><div class="label">WEEKS IN PLAN</div><div class="value">06</div><small>Deload during Week 4</small></div></div>
+    <div class="progress-layout"><div class="panel"><div class="panel-title-row"><div><div class="section-label">WEEKLY ADHERENCE</div><h3 style="margin-top:6px">Completion by week</h3></div><span class="chip lime">42 DAYS</span></div><div class="week-bar-list">${PLAN.phases.map((w,i)=>{const week=PLAN.days.map((_,d)=>sessionFor(i,d));const done=week.filter(dayIsDone).length;return `<div><div class="week-bar-label"><span>W${i+1} / ${esc(w.name)}</span><span>${done}/7 days</span></div><div class="progress-track"><div class="progress-fill" style="width:${done/7*100}%"></div></div></div>`;}).join('')}</div><div class="soft-divider"></div><div class="section-label">WEIGHT TREND (KG)</div>${tinyChart(weights,'Body weight')}</div>
+     <div class="panel"><div class="section-label">WEEKLY MEASUREMENTS</div><h3 style="margin:8px 0 7px">Check in once per week</h3><p class="caption">Record morning weight and waist under similar conditions; these are optional and do not drive unsafe calorie targets.</p><div class="spacer"></div><div class="checkin-grid">${PLAN.phases.map((w,i)=>`<div style="background:#182019;border:1px solid var(--line);border-radius:10px;padding:10px"><div class="section-label" style="margin-bottom:9px">W${i+1} · ${esc(w.name)}</div><label class="field-label">WEIGHT (KG)<input class="checkin-input" data-action="checkin" data-week="${i}" data-field="weight" inputmode="decimal" type="number" min="30" max="300" step="0.1" placeholder="84.3" value="${esc(db.checkins[i]?.weight??'')}"></label><div style="height:9px"></div><label class="field-label">WAIST (CM)<input class="checkin-input" data-action="checkin" data-week="${i}" data-field="waist" inputmode="decimal" type="number" min="30" max="200" step="0.1" placeholder="Optional" value="${esc(db.checkins[i]?.waist??'')}"></label></div>`).join('')}</div></div>
+    </div>
+    <div class="spacer"></div><div class="panel"><div class="panel-title-row"><div><div class="section-label">CALISTHENICS PROGRESS</div><h3 style="margin-top:7px">Two comparable tests</h3></div><span class="chip amber">FORM FIRST</span></div><p class="caption">Record maximum clean reps after the same warm-up. Aim to improve, but there are no guaranteed results.</p><div class="grid-2"><div><h3>Week 1 baseline</h3><div class="baseline-list">${[['pullW1','Strict pull-ups'],['pushW1','Strict push-ups']].map(([key,label])=>`<div class="baseline-row"><label for="${key}">${label}</label><input id="${key}" type="number" min="0" max="150" step="1" class="checkin-input" data-action="baseline" data-field="${key}" value="${esc(baseline[key]??'')}" placeholder="Reps"></div>`).join('')}</div></div><div><h3>Week 6 assessment</h3><div class="baseline-list">${[['pullW6','Strict pull-ups'],['pushW6','Strict push-ups']].map(([key,label])=>`<div class="baseline-row"><label for="${key}">${label}</label><input id="${key}" type="number" min="0" max="150" step="1" class="checkin-input" data-action="baseline" data-field="${key}" value="${esc(baseline[key]??'')}" placeholder="Reps"></div>`).join('')}</div></div></div>
+      <div class="soft-divider"></div><div class="grid-2"><div class="surface-note">Pull-up difference: <strong>${baseline.pullW1!==''&&baseline.pullW6!==''?`${Number(baseline.pullW6)-Number(baseline.pullW1)>0?'+':''}${Number(baseline.pullW6)-Number(baseline.pullW1)} reps`:'Awaiting both tests'}</strong></div><div class="surface-note">Push-up difference: <strong>${baseline.pushW1!==''&&baseline.pushW6!==''?`${Number(baseline.pushW6)-Number(baseline.pushW1)>0?'+':''}${Number(baseline.pushW6)-Number(baseline.pushW1)} reps`:'Awaiting both tests'}</strong></div></div>
+    </div>
+    <div class="spacer"></div><div class="panel"><div class="section-label">OWN YOUR DATA</div><h3 style="margin:8px 0">Backup & portability</h3><p class="subtitle">Progress is saved in local browser storage. It does <strong>not</strong> automatically synchronize between your iPhone and MacBook. Export a JSON backup on one device, then import it on the other. Opening the page in a different browser can create a separate log.</p><div class="row wrap"><button class="button button-primary" data-action="export">↗ Export progress JSON</button><button class="button button-secondary" data-action="import">↙ Import backup</button></div><div class="danger-zone"><button class="button button-danger button-sm" data-action="reset">Reset ALL saved training data</button><span class="caption">Reset cannot be undone without an exported backup.</span></div></div>`;
+  }
+  function showGuide(id){
+    const e=EXERCISES[id];if(!e)return;
+    const firstDay=PLAN.days.findIndex(day=>day.items.some(item=>item.id===id));
+    const previews=firstDay<0?[]:PLAN.phases.map((w,wi)=>{const item=sessionFor(wi,firstDay).items.find(i=>i.id===id);return {week:wi+1,name:w.name,txt:item?.text||'-'};});
+    element('dialogBody').innerHTML=`<div class="dialog-padding"><div class="dialog-top"><div><div class="overline">${esc(e.category)} · EXERCISE MANUAL</div><h2 style="margin:10px 0">${esc(e.name)}</h2><p class="muted mini">${esc(e.muscle)} · ${esc(e.equipment)}</p></div><button class="dialog-close" data-action="close-guide" aria-label="Close exercise guide">×</button></div>
+      <div class="section-label" style="margin-top:17px">STEP-BY-STEP TECHNIQUE</div><ol class="guide-list">${e.how.map(line=>`<li>${esc(line)}</li>`).join('')}</ol>
+      <div class="info-block"><strong>COACHING CUE</strong>${esc(e.cue)}</div>
+      <div class="info-block warn"><strong>WATCH OUT FOR</strong>${esc(e.avoid)}</div>
+      <div class="info-block"><strong>SAFER SUBSTITUTE</strong>${esc(e.swap)}</div>
+      <div class="section-label" style="margin-top:24px">SIX-WEEK TARGETS ON ${PLAN.weekdays[firstDay]||'PROGRAM'}</div><div class="guide-week-grid">${previews.map(p=>`<div class="guide-week"><small>W${p.week} · ${esc(p.name)}</small><strong>${esc(p.txt)}</strong></div>`).join('')}</div><p class="caption" style="margin:12px 0 0">If the exercise also appears on another day, that day's set count can differ. Open the specific day for the exact prescription.</p></div>`;
+    const dlg=element('exerciseDialog');if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');
+  }
+  function keepScroll(fn){const y=window.scrollY;fn();window.scrollTo({top:y,behavior:'instant'});}
+  function exportData(){
+    const payload={app:'HYBRID / 42',exportedAt:new Date().toISOString(),programStart:PLAN.start,progress:db};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='hybrid42-training-progress.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),8000);toast('Progress backup exported.');
+  }
+  function handleFile(file){
+    if(!file)return;
+    if(file.size>3_000_000){toast('Backup too large (max 3 MB).');return;}
+    const reader=new FileReader();reader.onload=()=>{
+      try{
+        const data=JSON.parse(reader.result);
+        if(!data||data.app!=='HYBRID / 42'||!data.progress||typeof data.progress.logs!=='object'||!data.progress.logs||Array.isArray(data.progress.logs))throw Error('Not a valid HYBRID / 42 backup');
+        if(!confirm('Import this backup? It will replace all progress saved in this browser.'))return;
+        const raw=data.progress;db={...fresh(),...raw,logs:{...raw.logs},warmups:{...(raw.warmups||{})},doneDates:{...(raw.doneDates||{})},notes:{...(raw.notes||{})},checkins:{...(raw.checkins||{})},baseline:{...fresh().baseline,...(raw.baseline||{})}};save();renderView();toast('Progress backup imported.');
+      }catch(e){toast('This file is not a valid HYBRID / 42 backup.');}
+    };reader.readAsText(file);
+  }
+  function renderTimer(){
+    const el=element('timerFloat');if(!timerEnd){el.hidden=true;return;}
+    const remain=Math.max(0,Math.ceil((timerEnd-Date.now())/1000));
+    if(remain===0){timerEnd=null;clearInterval(timerInterval);timerInterval=null;el.hidden=true;toast('Rest over — prepare for the next set.');return;}
+    const clock=`${String(Math.floor(remain/60)).padStart(2,'0')}:${String(remain%60).padStart(2,'0')}`;
+    el.hidden=false;el.innerHTML=`<div class="timer-top"><div><div style="font-size:10px;font-weight:850;letter-spacing:.12em">REST TIMER</div><div class="timer-digit">${clock}</div></div><button data-action="stop-timer">Stop ×</button></div>`;
+  }
+  function startTimer(sec){timerEnd=Date.now()+sec*1000;clearInterval(timerInterval);renderTimer();timerInterval=setInterval(renderTimer,250);}
+  function navigateSession(w,d){selectedWeek=Math.min(5,Math.max(0,w));selectedDay=Math.min(6,Math.max(0,d));showView('workout');}
+  function handleClick(event){
+    const b=event.target.closest('[data-action]');if(!b)return;
+    const act=b.dataset.action;
+    if(act==='nav')return showView(b.dataset.view);
+    if(act==='goto-session')return navigateSession(+b.dataset.week,+b.dataset.day);
+    if(act==='day'){selectedDay=+b.dataset.day;return keepScroll(renderWorkout);}
+    if(act==='week'){selectedWeek=+b.dataset.week;renderView();return;}
+    if(act==='prev-week'||act==='next-week'){selectedWeek=Math.max(0,Math.min(5,selectedWeek+(act==='next-week'?1:-1)));return renderWorkout();}
+    if(act==='filter'){categoryFilter=b.dataset.filter;return renderLibrary();}
+    if(act==='guide')return showGuide(b.dataset.id);
+    if(act==='close-guide')return element('exerciseDialog').close();
+    if(act==='timer')return startTimer(+b.dataset.seconds);
+    if(act==='stop-timer'){timerEnd=null;clearInterval(timerInterval);timerInterval=null;return renderTimer();}
+    if(act==='export')return exportData();
+    if(act==='import')return element('importFile').click();
+    if(act==='reset'){
+      if(!confirm('Erase ALL exercise logs, weekly measurements and notes saved in this browser? This cannot be undone without an exported backup.'))return;
+      if(!confirm('Confirm again: reset all six weeks of saved data?'))return;
+      db=fresh();save();renderView();toast('Saved progress reset.');return;
+    }
+    if(act==='finish-day'){
+      const s=sessionFor(selectedWeek,selectedDay);
+      if(!db.doneDates[s.date]&&s.kind==='strength'&&sessionPct(s)<75&&!confirm('Fewer than 75% of prescribed sets are checked. Mark this day completed anyway?'))return;
+      db.doneDates[s.date]=!db.doneDates[s.date];save();keepScroll(renderWorkout);toast(db.doneDates[s.date]?'Day saved as complete.':'Day completion undone.');return;
+    }
+  }
+  function handleChange(event){
+    const target=event.target;
+    const act=target.dataset.action;
+    if(act==='select-week'){selectedWeek=+target.value;return renderWorkout();}
+    if(act==='set-complete'){
+      const key=target.dataset.key;db.logs[key]={...(db.logs[key]||{}),done:target.checked};save();keepScroll(renderWorkout);return;
+    }
+    if(act==='warmup'){db.warmups[target.dataset.key]=target.checked;save();target.closest('.checkline')?.classList.toggle('checked',target.checked);return;}
+    if(act==='log-field'){
+      const key=target.dataset.key,v=target.value.trim();db.logs[key]={...(db.logs[key]||{}),[target.dataset.field]:v};save();return;
+    }
+    if(act==='checkin'){
+      const w=+target.dataset.week;db.checkins[w]={...(db.checkins[w]||{}),[target.dataset.field]:target.value};save();return;
+    }
+    if(act==='baseline'){db.baseline[target.dataset.field]=target.value;save();return;}
+  }
+  function handleInput(event){
+    const el=event.target;
+    if(el.id==='librarySearch'){
+      searchTerm=el.value.toLowerCase().trim();element('libraryList').innerHTML=libraryCards();return;
+    }
+    if(el.dataset.action==='notes'){db.notes[el.dataset.date]=el.value;save();return;}
+    if(['checkin','baseline','log-field'].includes(el.dataset.action))handleChange(event);
+  }
+  document.addEventListener('click',handleClick);
+  document.addEventListener('change',handleChange);
+  document.addEventListener('input',handleInput);
+  element('importFile').addEventListener('change',event=>{handleFile(event.target.files?.[0]);event.target.value='';});
+  element('exerciseDialog').addEventListener('click',event=>{if(event.target===element('exerciseDialog'))element('exerciseDialog').close();});
+  element('liveDate').textContent=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}).toUpperCase();
+  updateNav();showView('dashboard',false);
+})();
+
+</script>
+</body>
+</html>
