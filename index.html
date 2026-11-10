@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0e0c">
-  <meta name="description" content="42-day offline-ready calisthenics + gym training companion, inspired by Chris Heria and Jeff Nippard principles.">
+  <meta name="description" content="42-day calisthenics + gym tracker with Week 1 body metrics, six-week check-ins and workout logs, inspired by Chris Heria and Jeff Nippard principles.">
   <title>HYBRID / 42 — Six-Week Training System</title>
   <style>
 :root{--bg:#0b0e0c;--panel:#141915;--panel-hi:#1a201b;--panel2:#1d241e;--line:#29322a;--ink:#f4f6f0;--muted:#a1aca0;--dim:#6c786d;--accent:#bafa6c;--accent2:#d7ffa2;--cyan:#8dbfe9;--purple:#bb9aff;--amber:#f4c374;--shadow:0 20px 70px rgba(0,0,0,.16);--radius:18px;--font:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
@@ -16,6 +16,26 @@
 @media(max-width:370px){.topbar-context{max-width:145px}.topbar-context span:last-child{white-space:normal}.exercise-dose{font-size:10px;max-width:95px}.set-header,.set-row{grid-template-columns:22px minmax(44px,1fr) 63px 63px 25px;gap:4px}.set-check{width:22px;height:22px}.log-input{font-size:10px}.hero h1{font-size:38px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
+
+/* HYBRID / 42 v2: editable circumference baseline and six weekly check-ins */
+.body-baseline-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.baseline-tile{background:#19231a;border:1px solid #364936;border-radius:12px;padding:13px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.baseline-tile span{color:#a7bb9e;font-size:10px;letter-spacing:.13em;font-weight:850}
+.baseline-tile strong{font-size:clamp(17px,1.7vw,24px);line-height:1.25;letter-spacing:-.025em;overflow-wrap:anywhere}
+.baseline-tile small{font-size:10px;color:#7f9980}
+.checkin-week-list{display:grid;gap:10px}
+.checkin-week{background:#182019;border:1px solid #344636;border-radius:11px;overflow:hidden}
+.checkin-week[open]{border-color:#678556}
+.checkin-week summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 13px;font-size:12px;font-weight:850;list-style:none}
+.checkin-week summary::-webkit-details-marker{display:none}
+.checkin-week summary::before{content:'+';color:var(--accent);font-size:17px;line-height:1}
+.checkin-week[open] summary::before{content:'−'}
+.checkin-week summary>span:first-child{flex:1}
+.checkin-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 12px 12px}
+.checkin-fields .field-label{min-width:0;font-size:10px}
+.checkin-fields .checkin-input{min-width:0;padding:10px 9px}
+@media(max-width:1080px){.body-baseline-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:540px){.body-baseline-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.checkin-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.checkin-grid{grid-template-columns:1fr}.baseline-tile{padding:11px}.baseline-tile strong{font-size:17px}}
 </style>
 </head>
 <body>
@@ -249,10 +269,47 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     {id:'library',label:'Exercises',icon:'▤'},
     {id:'progress',label:'Progress',icon:'↗'}
   ];
-  const fresh = () => ({version:1, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{}, baseline:{pullW1:'',pushW1:'',pullW6:'',pushW6:''}});
+  // These values are the user's recorded measurements on 10 November 2026, in cm except weight.
+  // They are applied ONCE on upgrade, never over a measurement the user has already entered.
+  const WEEK1_MEASUREMENTS = Object.freeze({
+    weight:'84.3', chest:'95', waist:'85', bicepL:'38', bicepR:'38',
+    thighL:'52.5', thighR:'53', calfL:'38', calfR:'37.5'
+  });
+  const BODY_FIELDS = [
+    {key:'weight', label:'Weight', unit:'kg', min:30, max:300},
+    {key:'chest', label:'Chest', unit:'cm', min:30, max:200},
+    {key:'waist', label:'Waist', unit:'cm', min:30, max:200},
+    {key:'bicepL', label:'Left biceps', unit:'cm', min:10, max:100},
+    {key:'bicepR', label:'Right biceps', unit:'cm', min:10, max:100},
+    {key:'thighL', label:'Left thigh', unit:'cm', min:15, max:150},
+    {key:'thighR', label:'Right thigh', unit:'cm', min:15, max:150},
+    {key:'calfL', label:'Left calf', unit:'cm', min:10, max:100},
+    {key:'calfR', label:'Right calf', unit:'cm', min:10, max:100}
+  ];
+  const fresh = () => ({version:2, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{}, baseline:{pullW1:'',pushW1:'',pullW6:'',pushW6:''}});
+  function normalize(raw){
+    const input=raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{};
+    const state={...fresh(),...input,
+      logs:{...(input.logs||{})}, warmups:{...(input.warmups||{})},
+      doneDates:{...(input.doneDates||{})}, notes:{...(input.notes||{})},
+      checkins:{...(input.checkins||{})}, baseline:{...fresh().baseline,...(input.baseline||{})}
+    };
+    // One-time v2 upgrade preserves every previously recorded set, note and measurement.
+    if(Number(input.version||0)<2){
+      state.checkins[0]={...WEEK1_MEASUREMENTS,...(state.checkins[0]||{})};
+      state.doneDates['2026-11-10']=true;
+      state.version=2;
+    }
+    return state;
+  }
   function load(){
-    try { const x=JSON.parse(localStorage.getItem(STORAGE));return x&&typeof x==='object'?{...fresh(),...x}:fresh(); }
-    catch(e){return fresh();}
+    try {
+      const raw=localStorage.getItem(STORAGE);
+      const parsed=raw?JSON.parse(raw):null;
+      const state=normalize(parsed);
+      if(!parsed||Number(parsed.version||0)<2)localStorage.setItem(STORAGE,JSON.stringify(state));
+      return state;
+    } catch(e){return normalize(null);}
   }
   let db=load(), activeView='dashboard', selectedWeek=0, selectedDay=0, categoryFilter='ALL', searchTerm='', timerEnd=null, timerInterval=null, toastTimeout=null;
   const currentDate = (()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;})();
@@ -289,6 +346,16 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
   }
   function weekPicker(){return `<select class="week-select" aria-label="Choose training week" data-action="select-week">${PLAN.phases.map((w,i)=>`<option value="${i}"${i===selectedWeek?' selected':''}>WEEK ${i+1} · ${w.name}</option>`).join('')}</select>`;}
   function weekTiles(){const short=["FOUND.","VOLUME","PROGRESS","DELOAD","INTENSIFY","TEST"];return `<div class="week-steps">${PLAN.phases.map((w,i)=>`<button type="button" class="week-step${i===selectedWeek?' active':''}" data-action="week" data-week="${i}"><small class="muted">WEEK</small><strong>${String(i+1).padStart(2,'0')}</strong><span>${short[i]}</span></button>`).join('')}</div>`;}
+  function bodyMeasurementsSummary(){
+    const v=db.checkins[0]||{};
+    const tiles=[
+      ['WEIGHT',v.weight,'kg'],['CHEST',v.chest,'cm'],['WAIST',v.waist,'cm'],
+      ['BICEPS',`L ${v.bicepL??'—'} / R ${v.bicepR??'—'}`,'cm'],
+      ['THIGHS',`L ${v.thighL??'—'} / R ${v.thighR??'—'}`,'cm'],
+      ['CALVES',`L ${v.calfL??'—'} / R ${v.calfR??'—'}`,'cm']
+    ];
+    return `<div class="body-baseline-grid">${tiles.map(([label,value,unit])=>`<div class="baseline-tile"><span>${esc(label)}</span><strong>${esc(value??'—')}</strong><small>${esc(unit)}</small></div>`).join('')}</div>`;
+  }
   function renderDashboard(){
     const s=sessionFor(selectedWeek,selectedDay), all=allSessions(), finished=all.filter(dayIsDone).length, thisWeek=PLAN.days.map((_,d)=>sessionFor(selectedWeek,d)), thisCompleted=thisWeek.filter(dayIsDone).length;
     const total=all.reduce((n,x)=>n+doneSets(x),0), required=all.reduce((n,x)=>n+requiredSets(x),0);
@@ -301,18 +368,24 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
       <div class="hero-actions"><button type="button" class="button button-primary" data-action="nav" data-view="workout">START TODAY'S PLAN <span>→</span></button><button type="button" class="button button-outline" data-action="nav" data-view="calendar">VIEW ALL 42 DAYS</button></div>
       <div class="hero-profile"><span class="chip lime">84.3 KG</span><span class="chip">181.1 CM</span><span class="chip">11–20 PUSH-UPS</span><span class="chip">1–3 PULL-UPS</span><span class="chip">6 WEEKS</span></div>
     </div>
+    ${dayIsDone(sessionFor(0,0))?'<div class="surface-note" style="margin-bottom:16px"><strong>✓ TUESDAY 10 NOVEMBER — COMPLETE</strong><br>Day 1 has been marked completed as requested. Individual sets and weights were not invented; add them to the workout log whenever you have the numbers.</div>':''}
     <div class="metrics-grid">
       <div class="metric"><div class="label">SESSIONS MARKED</div><div class="value">${finished}<span class="muted">/42</span></div><small>Includes programmed recovery</small></div>
       <div class="metric"><div class="label">WORKING SETS LOGGED</div><div class="value">${total}</div><small>Of ${required} prescribed sets</small></div>
       <div class="metric"><div class="label">CURRENT WEEK</div><div class="value">${String(selectedWeek+1).padStart(2,'0')}<span class="muted">/06</span></div><small>${cur.name.toLowerCase()} phase</small></div>
       <div class="metric"><div class="label">WEEK'S DAYS COMPLETED</div><div class="value">${thisCompleted}<span class="muted">/7</span></div><small>Rest days count when marked</small></div>
     </div>
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-title-row"><div><div class="section-label">BODY MEASUREMENTS / WEEK 01</div><h3 style="margin-top:7px">Your recorded starting measurements</h3></div><button class="button button-sm button-secondary" data-action="nav" data-view="progress">Track measurements →</button></div>
+      ${bodyMeasurementsSummary()}
+      <p class="caption" style="margin:12px 0 0">Measured 10 Nov 2026 · Centimetres except body weight · Left/right shown separately.</p>
+    </div>
     <div class="grid-2">
       <div class="panel"><div class="panel-title-row"><div><div class="section-label">YOUR CURRENT TRAINING BLOCK</div><h2 style="margin:7px 0">Week ${selectedWeek+1} <span class="accent">/ ${cur.name}</span></h2></div><span class="chip lime">${esc(cur.dates)}</span></div>
         <p class="subtitle">${esc(cur.subtitle)}</p><div class="surface-note"><strong>THIS WEEK'S RULE</strong><br>${esc(cur.focus)}</div><div class="spacer"></div>${weekTiles()}<div class="spacer"></div><button class="button button-secondary" data-action="nav" data-view="workout">Open Week ${selectedWeek+1} workout →</button>
       </div>
       <div class="panel"><div class="panel-title-row"><div><div class="section-label">YOUR 7-DAY SCHEDULE</div><h3 style="margin-top:7px">${fmtWeekDate(selectedWeek)}</h3></div><span class="chip dim">${thisCompleted}/7</span></div>
-        <div class="day-mini-list">${thisWeek.map((x,i)=>`<button class="day-mini${x.date===currentDate?' today':''}" data-action="goto-session" data-week="${selectedWeek}" data-day="${i}"><span class="day-name">${PLAN.weekdays[i]}</span><span class="day-main">${esc(x.short)}</span><span class="day-side">${x.kind==='rest'?'REST':x.kind==='recovery'?'EASY':`${sessionPct(x)}%`}</span><span class="done-circle${dayIsDone(x)?' yes':''}">${dayIsDone(x)?'✓':'·'}</span></button>`).join('')}</div>
+        <div class="day-mini-list">${thisWeek.map((x,i)=>`<button class="day-mini${x.date===currentDate?' today':''}" data-action="goto-session" data-week="${selectedWeek}" data-day="${i}"><span class="day-name">${PLAN.weekdays[i]}</span><span class="day-main">${esc(x.short)}</span><span class="day-side">${dayIsDone(x)?'DONE':x.kind==='rest'?'REST':x.kind==='recovery'?'EASY':`${sessionPct(x)}%`}</span><span class="done-circle${dayIsDone(x)?' yes':''}">${dayIsDone(x)?'✓':'·'}</span></button>`).join('')}</div>
       </div>
     </div>
     <div class="spacer"></div><div class="grid-3">
@@ -414,12 +487,19 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
   function renderProgress(){
     const sessions=allSessions(), finished=sessions.filter(dayIsDone).length;
     const weights=PLAN.phases.map((_,i)=>db.checkins[i]?.weight??'');
+    const waists=PLAN.phases.map((_,i)=>db.checkins[i]?.waist??'');
+    const chests=PLAN.phases.map((_,i)=>db.checkins[i]?.chest??'');
     const baseline=db.baseline||{};
     element('view-progress').innerHTML=`
     <div class="section-head"><div class="section-topline"><span class="rule"></span>THE SCIENCE OF SHOWING UP</div><h1>TRACK YOUR <span class="accent">PROGRESS.</span></h1><p class="subtitle">Save sets, loads, reps, optional body measurements and your Week 1 / Week 6 skill tests. Your data stays in this browser unless you export it.</p></div>
     <div class="metrics-grid"><div class="metric"><div class="label">DAYS MARKED COMPLETE</div><div class="value">${finished}<span class="muted">/42</span></div><small>Includes recovery days</small></div><div class="metric"><div class="label">MAIN TRAINING DAYS</div><div class="value">${sessions.filter(s=>s.kind==='strength'&&dayIsDone(s)).length}<span class="muted">/24</span></div><small>Four primary sessions / week</small></div><div class="metric"><div class="label">WORKING SETS DONE</div><div class="value">${sessions.reduce((v,s)=>v+doneSets(s),0)}</div><small>Across all sessions</small></div><div class="metric"><div class="label">WEEKS IN PLAN</div><div class="value">06</div><small>Deload during Week 4</small></div></div>
-    <div class="progress-layout"><div class="panel"><div class="panel-title-row"><div><div class="section-label">WEEKLY ADHERENCE</div><h3 style="margin-top:6px">Completion by week</h3></div><span class="chip lime">42 DAYS</span></div><div class="week-bar-list">${PLAN.phases.map((w,i)=>{const week=PLAN.days.map((_,d)=>sessionFor(i,d));const done=week.filter(dayIsDone).length;return `<div><div class="week-bar-label"><span>W${i+1} / ${esc(w.name)}</span><span>${done}/7 days</span></div><div class="progress-track"><div class="progress-fill" style="width:${done/7*100}%"></div></div></div>`;}).join('')}</div><div class="soft-divider"></div><div class="section-label">WEIGHT TREND (KG)</div>${tinyChart(weights,'Body weight')}</div>
-     <div class="panel"><div class="section-label">WEEKLY MEASUREMENTS</div><h3 style="margin:8px 0 7px">Check in once per week</h3><p class="caption">Record morning weight and waist under similar conditions; these are optional and do not drive unsafe calorie targets.</p><div class="spacer"></div><div class="checkin-grid">${PLAN.phases.map((w,i)=>`<div style="background:#182019;border:1px solid var(--line);border-radius:10px;padding:10px"><div class="section-label" style="margin-bottom:9px">W${i+1} · ${esc(w.name)}</div><label class="field-label">WEIGHT (KG)<input class="checkin-input" data-action="checkin" data-week="${i}" data-field="weight" inputmode="decimal" type="number" min="30" max="300" step="0.1" placeholder="84.3" value="${esc(db.checkins[i]?.weight??'')}"></label><div style="height:9px"></div><label class="field-label">WAIST (CM)<input class="checkin-input" data-action="checkin" data-week="${i}" data-field="waist" inputmode="decimal" type="number" min="30" max="200" step="0.1" placeholder="Optional" value="${esc(db.checkins[i]?.waist??'')}"></label></div>`).join('')}</div></div>
+    <div class="panel" style="margin-bottom:16px"><div class="panel-title-row"><div><div class="section-label">10 NOV 2026 / WEEK 1</div><h3 style="margin-top:7px">Baseline physique measurements</h3></div><span class="chip complete">RECORDED</span></div>${bodyMeasurementsSummary()}<p class="caption" style="margin-top:12px">All circumferences in cm. Measurements are editable below; this summary follows your Week 1 values.</p></div>
+    <div class="progress-layout"><div class="panel"><div class="panel-title-row"><div><div class="section-label">WEEKLY ADHERENCE</div><h3 style="margin-top:6px">Completion by week</h3></div><span class="chip lime">42 DAYS</span></div><div class="week-bar-list">${PLAN.phases.map((w,i)=>{const week=PLAN.days.map((_,d)=>sessionFor(i,d));const done=week.filter(dayIsDone).length;return `<div><div class="week-bar-label"><span>W${i+1} / ${esc(w.name)}</span><span>${done}/7 days</span></div><div class="progress-track"><div class="progress-fill" style="width:${done/7*100}%"></div></div></div>`;}).join('')}</div><div class="soft-divider"></div><div class="section-label">WEIGHT TREND (KG)</div>${tinyChart(weights,'Body weight')}<div class="soft-divider"></div><div class="section-label">WAIST TREND (CM)</div>${tinyChart(waists,'Waist')}<div class="soft-divider"></div><div class="section-label">CHEST TREND (CM)</div>${tinyChart(chests,'Chest')}</div>
+     <div class="panel"><div class="section-label">WEEKLY MEASUREMENTS</div><h3 style="margin:8px 0 7px">Check in once per week</h3><p class="caption">Record weight, chest, waist, left/right biceps, thighs and calves under similar conditions. Open each week to enter your values. Your Week 1 measurements have been entered.</p><div class="spacer"></div><div class="checkin-week-list">${PLAN.phases.map((w,i)=>{
+         const saved=db.checkins[i]||{};
+         const recorded=BODY_FIELDS.filter(f=>saved[f.key]!==undefined && saved[f.key]!=='' ).length;
+         return `<details class="checkin-week" ${i===0?'open':''}><summary><span>W${i+1} · ${esc(w.name)}</span><span class="chip ${recorded===BODY_FIELDS.length?'complete':'dim'}">${recorded}/${BODY_FIELDS.length} recorded</span></summary><div class="checkin-fields">${BODY_FIELDS.map(f=>`<label class="field-label">${esc(f.label.toUpperCase())} (${esc(f.unit)})<input class="checkin-input" data-action="checkin" data-week="${i}" data-field="${esc(f.key)}" inputmode="decimal" type="number" min="${f.min}" max="${f.max}" step="0.1" placeholder="Optional" value="${esc(saved[f.key]??'')}"></label>`).join('')}</div></details>`;
+       }).join('')}</div></div>
     </div>
     <div class="spacer"></div><div class="panel"><div class="panel-title-row"><div><div class="section-label">CALISTHENICS PROGRESS</div><h3 style="margin-top:7px">Two comparable tests</h3></div><span class="chip amber">FORM FIRST</span></div><p class="caption">Record maximum clean reps after the same warm-up. Aim to improve, but there are no guaranteed results.</p><div class="grid-2"><div><h3>Week 1 baseline</h3><div class="baseline-list">${[['pullW1','Strict pull-ups'],['pushW1','Strict push-ups']].map(([key,label])=>`<div class="baseline-row"><label for="${key}">${label}</label><input id="${key}" type="number" min="0" max="150" step="1" class="checkin-input" data-action="baseline" data-field="${key}" value="${esc(baseline[key]??'')}" placeholder="Reps"></div>`).join('')}</div></div><div><h3>Week 6 assessment</h3><div class="baseline-list">${[['pullW6','Strict pull-ups'],['pushW6','Strict push-ups']].map(([key,label])=>`<div class="baseline-row"><label for="${key}">${label}</label><input id="${key}" type="number" min="0" max="150" step="1" class="checkin-input" data-action="baseline" data-field="${key}" value="${esc(baseline[key]??'')}" placeholder="Reps"></div>`).join('')}</div></div></div>
       <div class="soft-divider"></div><div class="grid-2"><div class="surface-note">Pull-up difference: <strong>${baseline.pullW1!==''&&baseline.pullW6!==''?`${Number(baseline.pullW6)-Number(baseline.pullW1)>0?'+':''}${Number(baseline.pullW6)-Number(baseline.pullW1)} reps`:'Awaiting both tests'}</strong></div><div class="surface-note">Push-up difference: <strong>${baseline.pushW1!==''&&baseline.pushW6!==''?`${Number(baseline.pushW6)-Number(baseline.pushW1)>0?'+':''}${Number(baseline.pushW6)-Number(baseline.pushW1)} reps`:'Awaiting both tests'}</strong></div></div>
@@ -452,7 +532,7 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
         const data=JSON.parse(reader.result);
         if(!data||data.app!=='HYBRID / 42'||!data.progress||typeof data.progress.logs!=='object'||!data.progress.logs||Array.isArray(data.progress.logs))throw Error('Not a valid HYBRID / 42 backup');
         if(!confirm('Import this backup? It will replace all progress saved in this browser.'))return;
-        const raw=data.progress;db={...fresh(),...raw,logs:{...raw.logs},warmups:{...(raw.warmups||{})},doneDates:{...(raw.doneDates||{})},notes:{...(raw.notes||{})},checkins:{...(raw.checkins||{})},baseline:{...fresh().baseline,...(raw.baseline||{})}};save();renderView();toast('Progress backup imported.');
+        const raw=data.progress;db=normalize(raw);save();renderView();toast('Progress backup imported.');
       }catch(e){toast('This file is not a valid HYBRID / 42 backup.');}
     };reader.readAsText(file);
   }
