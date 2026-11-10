@@ -49,6 +49,11 @@
 .nutrition-metrics .value small{display:inline;font-size:12px;letter-spacing:0}
 .meal-card,.photo-card,.grocery-list>div,.logged-food{background:#19231a;border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
 .meal-card p{color:var(--muted);margin:8px 0;line-height:1.7}
+.meal-recipe{margin-top:12px;border-top:1px solid var(--line);padding-top:4px}
+#view-nutrition .meal-recipe summary{color:var(--accent);padding:9px 0;min-height:38px}
+#view-nutrition .meal-recipe p{margin-top:4px}
+.meal-recipe summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
 .meal-check{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
 .meal-check input,.checkline input{accent-color:var(--accent)}
 .meal-check input{width:19px;height:19px;margin:3px 0 0;flex-shrink:0}
@@ -341,6 +346,7 @@ const FOOD = {
   soya: ['Soya chunks (dry)', 345, 52, 33, 0.5, 210],
   tofu: ['Firm tofu (drained)', 112, 14, 7, 3, 350],
   paneer: ['Low-fat paneer', 160, 21, 4, 7, 500],
+  chicken: ['Boneless skinless chicken breast (raw)', 120, 22.5, 0, 2.6, 400],
   curd: ['Plain low-fat curd', 61, 3.5, 4.7, 3.3, 100],
   milk: ['Toned milk', 58, 3.1, 4.8, 3, 63, 'mL'],
   banana: ['Banana (peeled)', 89, 1.1, 23, 0.3, 60],
@@ -356,51 +362,74 @@ const FOOD = {
   pumpkin: ['Pumpkin seeds', 559, 30, 11, 49, 600],
   oil: ['Mustard or groundnut oil (weighed)', 884, 0, 0, 100, 180]
 };
-const MEAL_PLAN = [
+const VEGETARIAN_MENU = [
   [
-    ['Curd and banana oats', {oats:65, curd:200, banana:100, flax:10, peanut:15}],
-    ['Masoor dal, rice and soya bhurji', {masoor:65, rice:45, soya:50, carrot:100, onion:50, tomato:80, oil:10}],
-    ['Guava and roasted chana', {guava:130, roasted:45}],
-    ['Toned milk', {milk:250}],
-    ['Palak tofu with roti', {tofu:220, atta:60, spinach:100, tomato:60, oil:10, pumpkin:15}]
+    ['Curd and banana oats', {oats:65, curd:200, banana:100, flax:10, peanut:15}, 'Simmer the oats in water until soft. Let them cool slightly, then stir in the curd and top with sliced banana, ground flaxseed and peanuts.'],
+    ['Masoor dal, rice and soya bhurji', {masoor:65, rice:45, soya:50, carrot:100, onion:50, tomato:80, oil:10}, 'Boil the rinsed masoor dal until soft and cook the rice separately. Cook, drain and chop the soya chunks as directed on the pack. Sauté the onion, carrot and tomato in the measured oil, stir in the soya, and serve with the dal and rice.'],
+    ['Guava and roasted chana', {guava:130, roasted:45}, 'Wash and slice the guava. Serve with the roasted chana.'],
+    ['Toned milk', {milk:250}, 'Measure the toned milk and serve chilled or warm.'],
+    ['Palak tofu with roti', {tofu:220, atta:60, spinach:100, tomato:60, oil:10, pumpkin:15}, 'Knead the atta with water, roll into rotis and cook both sides on a hot tawa. Sauté the tomato in the measured oil, stir in chopped spinach until wilted, then add cubed tofu and heat through. Top with pumpkin seeds and serve with the rotis.']
   ],[
-    ['Besan chilla with tofu filling', {besan:80, tofu:160, onion:40, spinach:50, oil:8, curd:120}],
-    ['Rajma chawal and soya', {rajma:75, rice:55, soya:40, tomato:100, onion:40, oil:10}],
-    ['Banana and peanuts', {banana:100, peanut:15}],
-    ['Curd, flax and orange', {curd:200, flax:10, orange:150}],
-    ['Paneer and vegetable roti wraps', {paneer:150, atta:55, veg:180, oil:10}]
+    ['Besan chilla with tofu filling', {besan:80, tofu:160, onion:40, spinach:50, oil:8, curd:120}, 'Whisk besan with water into a pourable batter. Sauté onion, spinach and crumbled tofu in part of the measured oil. Use the remaining oil to cook thin chillas on both sides, fill with the tofu mixture and serve with curd.'],
+    ['Rajma chawal and soya', {rajma:75, rice:55, soya:40, tomato:100, onion:40, oil:10}, 'Cook the rice separately. Sauté onion and tomato in the measured oil, then simmer with fully cooked rajma and prepared, drained soya chunks. Serve over rice.'],
+    ['Banana and peanuts', {banana:100, peanut:15}, 'Peel the banana and serve with the measured peanuts.'],
+    ['Curd, flax and orange', {curd:200, flax:10, orange:150}, 'Stir the ground flaxseed into curd. Peel the orange and serve the segments alongside.'],
+    ['Paneer and vegetable roti wraps', {paneer:150, atta:55, veg:180, oil:10}, 'Knead the atta with water, roll into rotis and cook both sides on a hot tawa. Stir-fry the vegetables in the measured oil until tender, add cubed paneer and heat through, then roll the filling in the rotis.']
   ],[
-    ['Soya and peanut poha', {poha:60, soya:45, peanut:20, carrot:70, onion:40, oil:8}],
-    ['Chole, roti and curd', {chana:70, atta:60, curd:200, tomato:100, onion:45, oil:10}],
-    ['Banana and roasted chana', {banana:90, roasted:40}],
-    ['Toned milk with ground flax', {milk:250, flax:10}],
-    ['Tofu, moong dal and spinach', {tofu:250, moong:60, spinach:140, carrot:80, oil:10}]
+    ['Soya and peanut poha', {poha:60, soya:45, peanut:20, carrot:70, onion:40, oil:8}, 'Rinse the poha briefly and let it drain until soft. Sauté the peanuts, onion and carrot in the measured oil. Add prepared, drained soya chunks and fold in the poha until hot.'],
+    ['Chole, roti and curd', {chana:70, atta:60, curd:200, tomato:100, onion:45, oil:10}, 'Soak the dry chana overnight, drain and boil in fresh water until tender. Sauté onion and tomato in the measured oil, add the cooked chana and simmer. Knead the atta with water and cook the rotis on a tawa. Serve with the curd.'],
+    ['Banana and roasted chana', {banana:90, roasted:40}, 'Peel the banana and serve it with roasted chana.'],
+    ['Toned milk with ground flax', {milk:250, flax:10}, 'Stir the ground flaxseed into the measured milk and serve.'],
+    ['Tofu, moong dal and spinach', {tofu:250, moong:60, spinach:140, carrot:80, oil:10}, 'Simmer the rinsed moong dal in water until soft. Sauté the chopped carrot, spinach and cubed tofu in the measured oil until the carrot is tender. Stir into the dal and heat through.']
   ],[
-    ['Moong chilla with curd', {moong:80, curd:220, spinach:75, tomato:70, oil:8}],
-    ['Soya vegetable pulao', {rice:55, soya:65, veg:180, onion:40, oil:10, curd:130}],
-    ['Orange and peanuts', {orange:150, peanut:15}],
-    ['Banana flax oats', {oats:30, milk:250, banana:100, flax:10}],
-    ['Paneer bhurji and roti', {paneer:155, atta:50, tomato:100, onion:50, carrot:100, oil:8}]
+    ['Moong chilla with curd', {moong:80, curd:220, spinach:75, tomato:70, oil:8}, 'Soak the moong dal for 3–4 hours, drain and blend with fresh water into a pourable batter. Stir in finely chopped spinach and tomato. Cook thin chillas in the measured oil until set and browned on both sides, then serve with curd.'],
+    ['Soya vegetable pulao', {rice:55, soya:65, veg:180, onion:40, oil:10, curd:130}, 'Cook and drain the soya chunks as directed on the pack. Sauté the onion and vegetables in the measured oil. Add rinsed rice, the prepared soya and cooking water, then cover and simmer until the rice is tender. Serve with curd.'],
+    ['Orange and peanuts', {orange:150, peanut:15}, 'Peel the orange and serve the segments with the measured peanuts.'],
+    ['Banana flax oats', {oats:30, milk:250, banana:100, flax:10}, 'Simmer the oats in the measured milk until soft. Stir in the ground flaxseed and top with sliced banana.'],
+    ['Paneer bhurji and roti', {paneer:155, atta:50, tomato:100, onion:50, carrot:100, oil:8}, 'Sauté chopped onion, carrot and tomato in the measured oil until soft. Crumble in the paneer and heat through. Knead the atta with water, roll and cook the rotis on a hot tawa, then serve with the bhurji.']
   ],[
-    ['Banana and peanut oats', {oats:55, milk:250, banana:110, peanut:20, flax:10}],
-    ['Moong dal, soya sabzi and roti', {moong:65, soya:45, atta:60, veg:170, oil:10, curd:150}],
-    ['Guava and roasted chana', {guava:130, roasted:35}],
-    ['Curd and pumpkin seeds', {curd:170, pumpkin:10}],
-    ['Tofu tikka bowl with rice', {tofu:230, rice:45, tomato:80, onion:50, spinach:100, oil:10}]
+    ['Banana and peanut oats', {oats:55, milk:250, banana:110, peanut:20, flax:10}, 'Simmer the oats in the measured milk until soft. Top with sliced banana, peanuts and ground flaxseed.'],
+    ['Moong dal, soya sabzi and roti', {moong:65, soya:45, atta:60, veg:170, oil:10, curd:150}, 'Simmer the rinsed moong dal until soft. Cook and drain the soya chunks as directed on the pack, then stir-fry them with the vegetables in the measured oil until tender. Knead the atta with water, roll and cook the rotis on a hot tawa. Serve with curd.'],
+    ['Guava and roasted chana', {guava:130, roasted:35}, 'Wash and slice the guava. Serve with the measured roasted chana.'],
+    ['Curd and pumpkin seeds', {curd:170, pumpkin:10}, 'Spoon the curd into a bowl and scatter the pumpkin seeds on top.'],
+    ['Tofu tikka bowl with rice', {tofu:230, rice:45, tomato:80, onion:50, spinach:100, oil:10}, 'Cook the rice. Toss cubed tofu with part of the measured oil and dry spices such as cumin and paprika, then pan-sear. Use the remaining oil to soften the onion, tomato and spinach. Serve the tofu and vegetables over rice.']
   ],[
-    ['Paneer-stuffed besan chilla', {besan:65, paneer:135, onion:40, spinach:60, oil:8}],
-    ['Masoor rice bowl with soya', {masoor:65, soya:45, rice:50, tomato:100, carrot:100, oil:10}],
-    ['Banana and roasted chana', {banana:90, roasted:35}],
-    ['Toned milk and flax', {milk:250, flax:10}],
-    ['Chana, curd and vegetable roti', {chana:55, curd:200, atta:55, veg:170, oil:9}]
+    ['Paneer-stuffed besan chilla', {besan:65, paneer:135, onion:40, spinach:60, oil:8}, 'Whisk besan with water into a pourable batter. Sauté chopped onion, spinach and crumbled paneer in part of the measured oil. Use the rest of the oil to cook thin chillas on both sides and fold them around the filling.'],
+    ['Masoor rice bowl with soya', {masoor:65, soya:45, rice:50, tomato:100, carrot:100, oil:10}, 'Cook the rice and simmer the rinsed masoor dal separately until soft. Sauté the chopped tomato and carrot in the measured oil, add prepared, drained soya chunks and heat through. Serve over rice with the dal.'],
+    ['Banana and roasted chana', {banana:90, roasted:35}, 'Peel the banana and serve it alongside the roasted chana.'],
+    ['Toned milk and flax', {milk:250, flax:10}, 'Stir the ground flaxseed into the measured milk and serve.'],
+    ['Chana, curd and vegetable roti', {chana:55, curd:200, atta:55, veg:170, oil:9}, 'Soak the dry chana overnight, drain and boil in fresh water until tender. Sauté the vegetables in the measured oil and stir in the cooked chana. Knead the atta with water, roll and cook the rotis on a tawa. Serve with curd.']
   ],[
-    ['Tofu scramble with roti', {tofu:160, atta:60, tomato:90, onion:45, oil:8}],
-    ['Rajma, soya and rice', {rajma:65, soya:45, rice:50, veg:150, tomato:80, oil:10}],
-    ['Guava and peanuts', {guava:150, peanut:25}],
-    ['Banana, curd and flax oats', {banana:100, curd:180, oats:35, flax:10}],
-    ['Palak masoor and paneer', {masoor:60, paneer:135, spinach:130, carrot:100, oil:8}]
+    ['Tofu scramble with roti', {tofu:160, atta:60, tomato:90, onion:45, oil:8}, 'Sauté onion and tomato in the measured oil until soft. Crumble in the tofu and cook until heated through. Knead the atta with water, then roll and cook the rotis on a hot tawa.'],
+    ['Rajma, soya and rice', {rajma:65, soya:45, rice:50, veg:150, tomato:80, oil:10}, 'Cook the rice separately. Sauté tomato and vegetables in the measured oil until tender. Add fully cooked rajma and prepared, drained soya chunks, heat through and serve over rice.'],
+    ['Guava and peanuts', {guava:150, peanut:25}, 'Wash and slice the guava. Serve with the measured peanuts.'],
+    ['Banana, curd and flax oats', {banana:100, curd:180, oats:35, flax:10}, 'Simmer the oats in water until soft. Cool slightly, stir in the curd and top with sliced banana and ground flaxseed.'],
+    ['Palak masoor and paneer', {masoor:60, paneer:135, spinach:130, carrot:100, oil:8}, 'Simmer the rinsed masoor dal in water until soft. Sauté chopped carrot and spinach in the measured oil. Add the vegetables and cubed paneer to the dal, then simmer briefly until hot throughout.']
   ]
 ];
+// Only the tofu and paneer meals change. Old meal records still use the original menu.
+const CHICKEN_MEALS = {
+  'Palak tofu with roti': ['Palak chicken with roti', {chicken:140, atta:75, spinach:100, tomato:60, oil:13, pumpkin:15},
+    'Knead the atta with water, roll the rotis and cook on a hot tawa. Sauté tomato in the measured oil, add diced chicken and cook to 74°C in the thickest piece. Fold in chopped spinach until wilted, top with pumpkin seeds and serve with the rotis.'],
+  'Besan chilla with tofu filling': ['Besan chilla with chicken filling', {besan:95, chicken:100, onion:40, spinach:50, oil:8, curd:120},
+    'Whisk besan with water into a pourable batter. Use part of the measured oil to sauté onion and finely diced chicken until it reaches 74°C. Add chopped spinach, then use the rest of the oil to cook the chillas on both sides. Fill and serve with curd.'],
+  'Paneer and vegetable roti wraps': ['Chicken and vegetable roti wraps', {chicken:140, atta:70, veg:180, oil:12},
+    'Knead the atta with water, roll the rotis and cook on a hot tawa. Stir-fry sliced chicken in the measured oil until it reaches 74°C. Add chopped vegetables, cook until tender and roll the filling in the rotis.'],
+  'Tofu, moong dal and spinach': ['Chicken, moong dal and spinach rice bowl', {chicken:160, moong:60, rice:20, spinach:140, carrot:80, oil:12},
+    'Cook the rinsed rice and simmer the moong dal separately until soft. Sauté diced chicken and chopped carrot in the measured oil until the chicken reaches 74°C and the carrot is tender. Stir in spinach until wilted and serve with the dal and rice.'],
+  'Paneer bhurji and roti': ['Chicken keema and roti', {chicken:145, atta:65, tomato:100, onion:50, carrot:100, oil:11},
+    'Finely chop the chicken breast. Soften onion, carrot and tomato in the measured oil, then cook the chicken through to 74°C, stirring to break it up. Knead the atta with water and cook the rolled rotis on a hot tawa.'],
+  'Tofu tikka bowl with rice': ['Chicken tikka rice bowl', {chicken:145, rice:65, tomato:80, onion:50, spinach:100, oil:11},
+    'Cook the rice. Toss diced chicken with part of the measured oil and dry spices such as cumin and paprika, then pan-sear to 74°C in the thickest piece. Use the remaining oil to soften onion, tomato and spinach, then serve over rice.'],
+  'Paneer-stuffed besan chilla': ['Chicken-stuffed besan chilla', {besan:80, chicken:125, onion:40, spinach:60, oil:9},
+    'Whisk besan with water into a thin batter. Use part of the measured oil to sauté onion and finely diced chicken until it reaches 74°C, then add chopped spinach. Use the rest of the oil to cook the chillas on both sides, then fold around the filling.'],
+  'Tofu scramble with roti': ['Chicken and tomato roti', {chicken:100, atta:75, tomato:90, onion:45, oil:9},
+    'Sauté chopped onion and tomato in the measured oil. Add diced chicken and cook it to 74°C in the thickest piece. Knead the atta with water, roll and cook the rotis on a hot tawa, then serve with the chicken.'],
+  'Palak masoor and paneer': ['Palak masoor chicken with roti', {masoor:60, chicken:125, atta:20, spinach:130, carrot:100, oil:8},
+    'Simmer the rinsed masoor dal until soft. Sauté diced chicken and carrot in the measured oil until the chicken reaches 74°C and the carrot is tender. Wilt in the spinach and stir into the dal. Knead the atta with water and cook a small roti on a hot tawa.']
+};
+const MEAL_PLAN = VEGETARIAN_MENU.map(day=>day.map(meal=>CHICKEN_MEALS[meal[0]]||meal));
+
 const MEAL_SLOTS = ['Breakfast','Lunch','Pre-workout / snack','Post-workout / snack','Dinner'];
 const NUTRIENTS = [['kcal','Calories','kcal',6000],['protein','Protein','g',500],['carbs','Carbs','g',1000],['fat','Fat','g',500]];
 const DEFAULT_TARGET = {kcal:2350, protein:140, carbs:295, fat:68};
@@ -451,7 +480,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     {key:'calfR', label:'Right calf', unit:'cm', min:10, max:100}
   ];
   const fresh = () => ({
-    version:3, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{},
+    version:4, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{},
     baseline:{pullW1:'',pushW1:'',pullW6:'',pushW6:''},
     nutrition:{}, nutritionTarget:{}, recovery:{}, skin:{}, skinStart:PLAN.start, photos:{}, archiveDates:[]
   });
@@ -481,6 +510,12 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     for(const key of ['nutrition','nutritionTarget','recovery','skin','photos']){
       if(!state[key]||typeof state[key]!=='object'||Array.isArray(state[key]))state[key]={};
     }
+    if(Number(input.version||0)<4){
+      state.nutrition=Object.fromEntries(Object.entries(state.nutrition).map(([date,day])=>[
+        date,{...day,menu:'vegetarian'}
+      ]));
+      state.version=4;
+    }
     return state;
   }
   function load(){
@@ -488,7 +523,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       const raw=localStorage.getItem(STORAGE);
       const parsed=raw?JSON.parse(raw):null;
       const state=normalize(parsed);
-      if(!parsed||Number(parsed.version||0)<3){
+      if(!parsed||Number(parsed.version||0)<4){
         try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch{/* Keep the prior saved state if storage is full. */}
       }
       return state;
@@ -810,7 +845,8 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     if(el.dataset.action==='notes'){db.notes[el.dataset.date]=el.value;save();return;}
     if(['checkin','baseline','log-field'].includes(el.dataset.action))handleChange(event);
   }
-  const mealDay = date => MEAL_PLAN[((daysBetween(date,PLAN.start)%7)+7)%7];
+  const menuIndex = date => ((daysBetween(date,PLAN.start)%7)+7)%7;
+  const mealDay = date => (db.nutrition[date]?.menu==='vegetarian'?VEGETARIAN_MENU:MEAL_PLAN)[menuIndex(date)];
   const zeros = () => Object.fromEntries(NUTRIENTS.map(([key])=>[key,0]));
   function addMacros(total, values, factor=1){
     for(const [key] of NUTRIENTS)total[key]+=(Number(values[key])||0)*factor;
@@ -838,33 +874,36 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
   function groceries(){
     const totals={};
     for(const day of MEAL_PLAN)for(const [,ingredients] of day)for(const [food,grams] of Object.entries(ingredients))totals[food]=(totals[food]||0)+grams;
-    const rows=Object.entries(FOOD).map(([key,[name,,,,,rate,unit]])=>{
+    const rows=Object.entries(FOOD).filter(([key])=>totals[key]).map(([key,[name,,,,,rate,unit]])=>{
       const grams=totals[key];
       return {name,amount:`${grams} ${unit||'g'}`,rate,cost:grams*rate/1000};
     });
     const cost=rows.reduce((sum,row)=>sum+row.cost,0);
-    return `<details class="panel"><summary>Seven-day grocery list · about ₹${Math.round(cost/10)*10} used</summary><p class="caption">One person, all default portions. Quantities are edible amounts. Buy a little extra for peels and trimming. Estimates use November 2026 Indian retail rates and exclude spices, delivery and pack-size rounding.</p><div class="grocery-list">${rows.map(row=>`<div><span>${esc(row.name)}<small>${row.amount} · ₹${row.rate}/${row.amount.endsWith('mL')?'L':'kg'}</small></span><strong>~₹${Math.round(row.cost)}</strong></div>`).join('')}</div><p class="caption">Price references · <a href="https://fcainfoweb.nic.in/Default.aspx">Consumer Affairs price monitor</a> · <a href="https://www.bigbasket.com/pd/40003518/nutrela-soya-chunks-200-g-carton/">Example soya price</a></p></details>`;
+    return `<details class="panel"><summary>Seven-day grocery list · about ₹${Math.round(cost/10)*10} used</summary><p class="caption">Current chicken menu for one person, using default portions. Quantities are edible amounts. Weigh the boneless chicken raw. Buy a little extra for peels and trimming. Estimates use November 2026 Indian retail rates and exclude spices, delivery and pack-size rounding.</p><div class="grocery-list">${rows.map(row=>`<div><span>${esc(row.name)}<small>${row.amount} · ₹${row.rate}/${row.amount.endsWith('mL')?'L':'kg'}</small></span><strong>~₹${Math.round(row.cost)}</strong></div>`).join('')}</div><p class="caption">Price references · <a href="https://fcainfoweb.nic.in/Default.aspx">Consumer Affairs price monitor</a> · <a href="https://www.bigbasket.com/pd/40003518/nutrela-soya-chunks-200-g-carton/">Example soya price</a> · <a href="https://meatcompany.in/product/chicken-breast-boneless-500gm/">Example chicken price</a></p></details>`;
   }
   function renderNutrition(){
     const date=wellnessDates.nutrition;
     const meals=mealDay(date), daily=db.nutrition[date]||{}, target={...DEFAULT_TARGET,...db.nutritionTarget};
     const plan=zeros(), eaten=zeros();
-    const cards=meals.map(([name,ingredients],i)=>{
+    const view=element('view-nutrition');
+    const openRecipes=new Set([...view.querySelectorAll(`details.meal-recipe[data-date="${date}"][open]`)].map(details=>Number(details.dataset.slot)));
+    const cards=meals.map(([name,ingredients,recipe],i)=>{
       const record=daily.meals?.[i]||{}, portion=record.portion||100;
       const planned=mealMacros(ingredients,portion);
       addMacros(plan,planned);
       if(record.done)addMacros(eaten,planned);
-      return `<article class="meal-card"><label class="meal-check"><input type="checkbox" data-action="meal-check" data-slot="${i}"${record.done?' checked':''}><span><small class="section-label">${MEAL_SLOTS[i]}</small><strong>${esc(name)}</strong></span></label><p>${Object.entries(ingredients).map(([id,g])=>`${esc(FOOD[id][0])} ${Number((g*portion/100).toFixed(1))} ${FOOD[id][6]||'g'}`).join(' · ')}</p><div class="meal-bottom"><strong class="accent">${macroLine(planned)}</strong><label class="field-label">Serving<select class="field-input" data-action="meal-portion" data-slot="${i}">${[50,75,100,125,150,200].map(n=>`<option value="${n}"${n===portion?' selected':''}>${n}%</option>`).join('')}</select></label></div></article>`;
+      return `<article class="meal-card"><label class="meal-check"><input type="checkbox" data-action="meal-check" data-slot="${i}"${record.done?' checked':''}><span><small class="section-label">${MEAL_SLOTS[i]}</small><strong>${esc(name)}</strong></span></label><p>${Object.entries(ingredients).map(([id,g])=>`${esc(FOOD[id][0])} ${Number((g*portion/100).toFixed(1))} ${FOOD[id][6]||'g'}`).join(' · ')}</p><div class="meal-bottom"><strong class="accent">${macroLine(planned)}</strong><label class="field-label">Serving<select class="field-input" data-action="meal-portion" data-slot="${i}">${[50,75,100,125,150,200].map(n=>`<option value="${n}"${n===portion?' selected':''}>${n}%</option>`).join('')}</select></label></div><details class="meal-recipe" data-date="${date}" data-slot="${i}"${openRecipes.has(i)?' open':''}><summary aria-label="How to make ${esc(name)}">How to make</summary><p>${esc(recipe)}</p>${ingredients.rajma?`<p class="caption">For dry rajma, soak for at least 5 hours, drain, then boil in fresh water for at least 30 minutes and continue cooking until tender. <a href="https://www.fda.gov/food/chemical-contaminants-pesticides/natural-toxins-food">FDA kidney bean guidance</a></p>`:''}</details></article>`;
     }).join('');
     const extras=Array.isArray(daily.extras)?daily.extras:[];
     extras.forEach(entry=>addMacros(eaten,entry));
-    element('view-nutrition').innerHTML=`
-      ${pageHead('FUEL / SEVEN-DAY ROTATION','EAT FOR','THE WORK.','Indian lacto-vegetarian meals with no eggs, meat or whey by default. The menu repeats each Wednesday.')}
+    view.innerHTML=`
+      ${pageHead('FUEL / SEVEN-DAY ROTATION','EAT FOR','THE WORK.','Indian meals built around dal, vegetables and boneless chicken. This seven-day menu repeats each Wednesday. Open “How to make” on any meal card for a short recipe.')}
       <div class="panel">
         <div class="panel-title-row"><div><div class="section-label">DAILY NUTRITION</div><h2>${fmtDay(date)}</h2></div>${dateControl('nutrition',date)}</div>
-        <div class="meal-days" aria-label="This week's menu">${MEAL_PLAN.map((_,i)=>{const key=offsetDay(date,i-((daysBetween(date,PLAN.start)%7+7)%7));return `<button class="button ${key===date?'button-primary':'button-ghost'}" data-action="meal-day" data-date="${key}" aria-pressed="${key===date}">${dayFormat.formatToParts(parseDay(key)).find(p=>p.type==='weekday').value}</button>`;}).join('')}</div>
+        ${daily.menu==='vegetarian'?'<p class="caption">This date uses the original vegetarian menu so your logged meals and macros stay the same.</p>':''}
+        <div class="meal-days" aria-label="This week's menu">${MEAL_PLAN.map((_,i)=>{const key=offsetDay(date,i-menuIndex(date));return `<button class="button ${key===date?'button-primary':'button-ghost'}" data-action="meal-day" data-date="${key}" aria-pressed="${key===date}">${dayFormat.formatToParts(parseDay(key)).find(p=>p.type==='weekday').value}</button>`;}).join('')}</div>
         <div class="metrics-grid nutrition-metrics">${NUTRIENTS.map(([key,label,unit])=>`<div class="metric"><div class="label">${label} LOGGED</div><div class="value">${Math.round(eaten[key])}<small> ${unit}</small></div><small>Target ${esc(target[key])} · Menu ${Math.round(plan[key])}</small></div>`).join('')}</div>
-        <p class="caption">Check a meal to count its macros. Adjust its serving or leave it unchecked and log what you ate below. Dry weights apply to grains and pulses. Oil is included. Calories and macros vary by label, recipe and rounding.</p>
+        <p class="caption">Check a meal to count its macros. Adjust its serving or leave it unchecked and log what you ate below. Weigh grains, pulses and soya dry, and chicken raw. Oil is included. Calories and macros vary by label, recipe and rounding.</p>
         <div class="meal-grid">${cards}</div>
       </div>
       <details class="panel" ${extras.length?'open':''}><summary>Log a substitution or extra food</summary>
@@ -879,9 +918,9 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       ${groceries()}
       <details class="panel"><summary>Meal timing, food swaps and skin</summary>
         <p>Have the pre-workout snack about 1–2 hours before lifting if useful. Move meals around your schedule. A regular protein-containing meal within a few hours after training works. Use the snack slots normally on rest days and drink water around activity.</p>
-        <p>The menu assumes dairy, soy, wheat and nuts are tolerated. If avoiding dairy, try unsweetened fortified soy milk or yogurt and use your label to log the difference. Firm tofu or dry soya chunks can replace paneer. For example, 100 g of the listed paneer provides 21 g protein, roughly the same as 150 g of this tofu or 40 g dry soya chunks. Prices vary and soy chunks are the cheaper option here.</p>
+        <p>The menu assumes dairy, soy, wheat and nuts are tolerated. If avoiding dairy, try unsweetened fortified soy milk or yogurt and use your label to log the difference. For a lower-cost swap, 45 g dry soya chunks provides roughly the same protein as 100 g raw boneless chicken breast. Leave the planned meal unchecked and log your adjusted meal using the ingredients you ate.</p>
         <p>Flax adds plant omega-3, guava and orange add vitamin C, carrots and spinach add carotenoids, and peanuts and seeds add vitamin E and zinc. Pair starches with dal, protein and vegetables. If you suspect a food affects your skin, track one change at a time in Recovery. Evidence varies by dairy product and individual. No supplement is needed for this menu.</p>
-        <p class="caption"><a href="https://pubmed.ncbi.nlm.nih.gov/28698222/">Protein and resistance training</a> · <a href="https://www.aad.org/public/diseases/acne/causes/diet">AAD on diet and acne</a></p>
+        <p class="caption"><a href="https://pubmed.ncbi.nlm.nih.gov/28698222/">Protein and resistance training</a> · <a href="https://www.aad.org/public/diseases/acne/causes/diet">AAD on diet and acne</a> · <a href="https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures">Safe cooking temperatures</a></p>
       </details>`;
   }
   const recoveryFields=[['sleep','Sleep','hours',24,0.1],['water','Water','L',15,0.1],['steps','Steps','count',100000,1],['readiness','Readiness (1 low, 5 high)','score',5,1,1]];
