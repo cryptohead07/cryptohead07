@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b0e0c">
-  <meta name="description" content="42-day calisthenics + gym tracker with Week 1 body metrics, six-week check-ins and workout logs, inspired by Chris Heria and Jeff Nippard principles.">
+  <meta name="description" content="Six weeks of gym and calisthenics with Indian meal plans, recovery, skincare and private progress tracking.">
   <title>HYBRID / 42 — Six-Week Training System</title>
   <style>
 :root{--bg:#0b0e0c;--panel:#141915;--panel-hi:#1a201b;--panel2:#1d241e;--line:#29322a;--ink:#f4f6f0;--muted:#a1aca0;--dim:#6c786d;--accent:#bafa6c;--accent2:#d7ffa2;--cyan:#8dbfe9;--purple:#bb9aff;--amber:#f4c374;--shadow:0 20px 70px rgba(0,0,0,.16);--radius:18px;--font:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
@@ -36,6 +36,50 @@
 .checkin-fields .checkin-input{min-width:0;padding:10px 9px}
 @media(max-width:1080px){.body-baseline-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:540px){.body-baseline-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.checkin-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.checkin-grid{grid-template-columns:1fr}.baseline-tile{padding:11px}.baseline-tile strong{font-size:17px}}
+/* Nutrition, recovery and photo logs */
+.field-input{background:#131a14;border:1px solid #364235;color:var(--ink);border-radius:10px;padding:10px;width:100%;min-width:0;color-scheme:dark}
+.field-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wellness-date{display:flex;align-items:flex-end;gap:7px;flex-shrink:0}
+.wellness-date .button{min-width:42px}
+.wellness-date input{width:155px;color-scheme:dark}
+.wellness-fields,.meal-grid,.photo-grid,.grocery-list{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.wellness-fields{margin:14px 0;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))}
+.meal-days{display:flex;flex-wrap:wrap;gap:6px}
+.meal-days .button{flex:1;padding:8px 4px}
+.nutrition-metrics .value small{display:inline;font-size:12px;letter-spacing:0}
+.meal-card,.photo-card,.grocery-list>div,.logged-food{background:#19231a;border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.meal-card p{color:var(--muted);margin:8px 0;line-height:1.7}
+.meal-check{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.meal-check input,.checkline input{accent-color:var(--accent)}
+.meal-check input{width:19px;height:19px;margin:3px 0 0;flex-shrink:0}
+.meal-check small,.meal-check strong,.grocery-list small{display:block}
+.meal-check strong{font-size:15px}
+.meal-bottom,.grocery-list>div,.logged-food{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.meal-bottom strong,.grocery-list strong,.logged-food small{font-size:12px}
+.meal-bottom .field-input{width:auto;padding:5px}
+.grocery-list small,.logged-food small{color:var(--muted)}
+.logged-food{margin:8px 0;overflow-wrap:anywhere}
+.photo-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.photo-card h4{margin:0 0 8px}
+.photo-card img{display:block;width:100%;aspect-ratio:3/4;object-fit:contain;background:#101711;border-radius:8px;margin-bottom:10px}
+.photo-card input{max-width:100%;min-width:0;font-size:11px}
+.photo-card .button,.photo-history,.skin-schedule{margin-top:12px}
+.photo-history{max-width:300px}
+#view-nutrition summary,#view-recovery summary{cursor:pointer;font-weight:750}
+#view-nutrition details>p:first-of-type,#view-recovery form p{margin-top:12px}
+#view-nutrition a,#view-recovery a{color:var(--accent)}
+.archived-sessions{display:flex;flex-wrap:wrap;gap:8px}
+.sidebar{overflow-y:auto}
+@media(max-width:750px){
+  .mobile-nav{grid-template-columns:repeat(6,minmax(0,1fr));gap:2px}
+  .mobile-nav .nav-button{font-size:9px;padding-inline:1px;min-height:44px}
+  .meal-grid,.photo-grid{grid-template-columns:1fr}
+  .photo-card img{max-height:380px}
+  .grocery-list{grid-template-columns:1fr}
+  #view-nutrition .panel-title-row,#view-recovery .panel-title-row,#view-progress .panel-title-row:has(.wellness-date){flex-wrap:wrap}
+}
+@media(max-width:370px){.wellness-date input{width:140px}}
+
 </style>
 </head>
 <body>
@@ -56,7 +100,7 @@
     </aside>
     <main class="main-area">
       <header class="topbar">
-        <div class="topbar-context"><span class="status-dot"></span><span>THE SIX-WEEK TRANSFORMATION SYSTEM</span></div>
+        <div class="topbar-context"><span class="status-dot"></span><span>THE SIX-WEEK HYBRID SYSTEM</span></div>
         <div class="top-actions">
           <span class="live-date" id="liveDate"></span>
           <button type="button" class="button button-ghost top-button" data-action="export" title="Export saved progress">Export data <span aria-hidden="true">↗</span></button>
@@ -67,8 +111,10 @@
       <section id="view-workout" class="view" hidden aria-label="Workout"></section>
       <section id="view-calendar" class="view" hidden aria-label="42 day schedule"></section>
       <section id="view-library" class="view" hidden aria-label="Exercise library"></section>
+      <section id="view-nutrition" class="view" hidden aria-label="Nutrition tracking"></section>
+      <section id="view-recovery" class="view" hidden aria-label="Recovery and skincare"></section>
       <section id="view-progress" class="view" hidden aria-label="Progress tracking"></section>
-      <footer class="site-footer">HYBRID / 42 <span>•</span> <span>10 NOV — 21 DEC 2026</span> <span>•</span> Built for consistent progress, not reckless intensity.</footer>
+      <footer class="site-footer">HYBRID / 42 <span>•</span> <span>11 NOV — 22 DEC 2026</span> <span>•</span> Train, fuel and recover.</footer>
     </main>
   </div>
   <nav class="mobile-nav" aria-label="Mobile navigation" id="mobileNav"></nav>
@@ -83,19 +129,19 @@
 const PLAN = {
   name: 'HYBRID / 42',
   subtitle: 'Strength you can lift. Skills you can own.',
-  start: '2026-11-10',
-  end: '2026-12-21',
+  start: '2026-11-11',
+  end: '2026-12-22',
   profile: { age: 22, height: 181.1, weight: 84.3, estimatedBodyFat: 19.7, pushups: '11–20', pullups: '1–3' },
-  weekdays: ['TUE','WED','THU','FRI','SAT','SUN','MON'],
+  weekdays: ['WED','THU','FRI','SAT','SUN','MON','TUE'],
   phases: [
-    { name:'FOUNDATION', dates:'10–16 NOV', title:'Establish clean baselines', subtitle:'Learn positions, assess your true capacity, log working loads.', focus:'2–3 reps in reserve (RIR) on most work. One clean max-form set for pull-ups and push-ups; no grinding.', action:'Record your exact pull-up/push-up max, comfortable pull-up assistance (kg), and first gym working weights.', note:'Use easier variations freely. Your logged numbers are more useful than guessing a target weight.' },
-    { name:'VOLUME', dates:'17–23 NOV', title:'Accumulate quality reps', subtitle:'Nudge repetitions up without sacrificing range or control.', focus:'Same loads as Week 1 where possible; add ~1 rep per working set, maintaining 2 RIR.', action:'Log reps on all gym lifts and lower pull-up assistance only if repetitions remain crisp.', note:'The displayed reps are targets, not a command to push through form breakdown.' },
-    { name:'PROGRESS', dates:'24–30 NOV', title:'Earn overload', subtitle:'Reach the higher end of prescribed rep ranges.', focus:'Aim for the displayed rep ranges with ~1–2 RIR. Add load only after every set is controlled.', action:'If you reach all upper rep targets, plan a small load increase for Week 5.', note:'For bodyweight skills, a cleaner range of motion is progress even if reps do not rise.' },
-    { name:'DELOAD', dates:'01–07 DEC', title:'Recover and consolidate', subtitle:'Reduced volume; keep movement patterns and skill positions familiar.', focus:'About half the hard sets and at least 3–4 RIR. Increase assistance as needed; no max tests.', action:'Prioritize sleep, wrist/elbow recovery and mobility. Do not try to beat personal records.', note:'The deload is part of the program, not a missed week.' },
-    { name:'INTENSIFY', dates:'08–14 DEC', title:'Return stronger', subtitle:'Restore training volume and modestly increase difficulty if ready.', focus:'After a successful Week 3, add ~2.5–5% to upper-body gym lifts or ~2.5–5% to lower-body lifts as equipment permits. Otherwise keep the previous load.', action:'Reduce pull-up assistance a small amount only when all Week 3 sets were clean.', note:'The weight-change percentages are conditional, never required.' },
-    { name:'TEST + BUILD', dates:'15–21 DEC', title:'Measure the outcome', subtitle:'Retest a few meaningful skills while retaining manageable training volume.', focus:'On Tuesday, test one strict pull-up max set and one strict push-up max set after warm-up. Stop at loss of form. Most other work stays at 2 RIR.', action:'Compare Week 1 and Week 6 max reps; log waist, body weight and gym strength without chasing scale weight.', note:'A slower rate of improvement is normal, especially with new calisthenics and a calorie deficit.' }
+    { name:'FOUNDATION', dates:'11–17 NOV', title:'Establish clean baselines', subtitle:'Learn positions, assess your true capacity, log working loads.', focus:'Leave 2–3 reps in reserve (RIR). Start with Wednesday lower body after your completed Tuesday. Keep strict pull-up practice submaximal and use assistance for volume.', action:'Use your Nov 10 log as the starting reference. Record comfortable pull-up assistance (kg) and your gym working weights.', note:'Use easier variations freely. Your logged numbers are more useful than guessing a target weight.' },
+    { name:'VOLUME', dates:'18–24 NOV', title:'Accumulate quality reps', subtitle:'Nudge repetitions up without sacrificing range or control.', focus:'Same loads as Week 1 where possible; add ~1 rep per working set, maintaining 2 RIR.', action:'Log reps on all gym lifts and lower pull-up assistance only if repetitions remain crisp.', note:'The displayed reps are targets, not a command to push through form breakdown.' },
+    { name:'PROGRESS', dates:'25 NOV–01 DEC', title:'Earn overload', subtitle:'Reach the higher end of prescribed rep ranges.', focus:'Aim for the displayed rep ranges with ~1–2 RIR. Add load only after every set is controlled.', action:'If you reach all upper rep targets, plan a small load increase for Week 5.', note:'For bodyweight skills, a cleaner range of motion is progress even if reps do not rise.' },
+    { name:'DELOAD', dates:'02–08 DEC', title:'Recover and consolidate', subtitle:'Reduced volume; keep movement patterns and skill positions familiar.', focus:'About half the hard sets and at least 3–4 RIR. Increase assistance as needed; no max tests.', action:'Prioritize sleep, wrist/elbow recovery and mobility. Do not try to beat personal records.', note:'The deload is part of the program, not a missed week.' },
+    { name:'INTENSIFY', dates:'09–15 DEC', title:'Return stronger', subtitle:'Restore training volume and modestly increase difficulty if ready.', focus:'After a successful Week 3, add ~2.5–5% to upper-body gym lifts or ~2.5–5% to lower-body lifts as equipment permits. Otherwise keep the previous load.', action:'Reduce pull-up assistance a small amount only when all Week 3 sets were clean.', note:'The weight-change percentages are conditional, never required.' },
+    { name:'TEST + BUILD', dates:'16–22 DEC', title:'Measure the outcome', subtitle:'Retest a few meaningful skills while retaining manageable training volume.', focus:'On Tuesday, test one strict pull-up max set and one strict push-up max set after warm-up. Stop at loss of form. Most other work stays at 2 RIR.', action:'Compare Week 1 and Week 6 max reps; log waist, body weight and gym strength without chasing scale weight.', note:'If you missed the starting test, keep your Week 6 result as a new reference.' }
   ],
-  days: [
+  originalDays: [
     { key:'tue', short:'Calisthenics A', name:'Pull + push foundations', theme:'CALI / STRENGTH', kind:'strength', duration:'60–75 min', intensity:'Moderate–hard', accent:'lime', tags:['PULL','PUSH','CORE'],
       objective:'Own the strict pull-up and perfect the push-up. Bodyweight strength first, accessory work second.',
       warmup:['5 min easy rower or brisk walk','10 shoulder circles each direction','2 × 8 scapular push-ups','1 easy assisted pull-up set × 5','2 progressively easier push-up sets'],
@@ -133,13 +179,32 @@ const PLAN = {
       cooldown:['3 min easy walk','Gentle quad stretch 30 sec/side','Slow diaphragmatic breathing'],
       target:'Leave adequate recovery for Tuesday pull/push. Skill holds are controlled, not maximal.'},
     { key:'mon', short:'Full Recovery', name:'Adaptation happens here', theme:'REST / RECOVERY', kind:'rest', duration:'0–25 min', intensity:'Rest', accent:'amber', tags:['SLEEP','REST','REFLECT'],
-      objective:'No heavy weights, hard pull-ups or skill testing. Give your connective tissues time to adapt.',
+      objective:'Take a full rest day or an easy walk. Save energy for Tuesday pull-ups.',
       warmup:[],
       items:[{id:'optional_walk',sets:1,min:15,max:25, optional:true},{id:'relax_breathing',sets:1,min:3,max:5, optional:true},{id:'weekly_review',sets:1,min:1,max:1, optional:true}],
       cooldown:['Plan next week and prepare meals','Aim for 7–9 hours of sleep'],
       target:'This is a rest day, not a failed workout. Optional recovery tasks do not count toward completion.'}
   ]
 };
+// Keep original prescriptions for dated logs and build the new Wednesday–Tuesday rotation.
+const [oldUpperA, oldLowerA, oldRecovery, oldUpperB, oldSkill, oldLowerB, oldRest] = PLAN.originalDays;
+const keepItems = (day, ids) => ids.map(id=>day.items.find(item=>item.id===id));
+PLAN.days = [
+  {...oldLowerA, duration:'50–65 min', items:keepItems(oldLowerA,['squat','rdl','rev_lunge','leg_curl','standing_calf','plank']),
+    objective:'Start the block with lower body. Build squat and hinge strength with repeatable technique.'},
+  {...oldRecovery, duration:'25–35 min', items:keepItems(oldRecovery,['easy_walk','wrist_rocks','wall_slides','thoracic_rot','ankle_mob'])},
+  {...oldUpperB, name:'Incline press + upper-body skill', duration:'55–70 min',
+    items:keepItems(oldUpperB,['pike_hold','incline_db','assisted_pull','cable_row','cable_lateral','bicep_curl','tricep_press']),
+    target:'Keep pike holds easy. Use the incline press and lateral raises to build upper chest and shoulders. Log pull-up assistance separately from load.'},
+  {...oldSkill, short:'Optional Skills', duration:'0–25 min', items:keepItems(oldSkill,['pike_hold','support_hold','seated_compression','hollow_hold']).map(item=>({...item,optional:true})),
+    objective:'Practice comfortable handstand and L-sit foundations or take the day off. Keep elbows, shoulders and wrists fresh.'},
+  {...oldLowerB, duration:'50–65 min', items:keepItems(oldLowerB,['leg_press','hip_thrust','bulgarian','leg_curl','seated_calf','dead_bug'])},
+  {...oldRest},
+  {...oldUpperA, name:'Pull-up + push-up strength', duration:'50–65 min',
+    items:keepItems(oldUpperA,['scap_pull','strict_pull','assisted_pull','pushup','inverted_row','db_lateral','hanging_knee']),
+    target:'Practice clean strict singles only if you have a rep in reserve. If one strict rep is your max, use assistance for working sets. Use an incline for push-ups if needed.'}
+];
+
 const EXERCISES = {
   scap_pull:{name:'Scapular pull-ups',category:'CALISTHENICS',muscle:'Scapular control / lats',equipment:'Pull-up bar',unit:'reps',mode:'body',rest:60,load:'none',how:['Hang from a bar with arms straight and a comfortable grip.','Pull your shoulder blades down without bending your elbows significantly.','Pause briefly, then return slowly to a passive or neutral hang.'],cue:'Shoulders down, ribs controlled; very small movement is fine.',avoid:'Do not swing or force a painful dead hang.',swap:'Cable scapular pulldown.'},
   strict_pull:{name:'Strict pull-ups',category:'CALISTHENICS',muscle:'Lats / biceps / upper back',equipment:'Pull-up bar',unit:'reps',mode:'body',rest:150,load:'none',how:['Start from a comfortable dead hang with stable shoulders.','Pull elbows toward the ribs, keeping legs quiet.','Bring chin over the bar without jutting neck, then lower under control.'],cue:'Every repetition must look the same; stop before kipping.',avoid:'No swinging or ugly failure reps. Use assistance if only one strict rep is possible.',swap:'Assisted pull-ups or lat pulldowns.'},
@@ -186,20 +251,24 @@ const EXERCISES = {
   weekly_review:{name:'Weekly training review',category:'RECOVERY',muscle:'Planning and consistency',equipment:'Your log',unit:'reps',mode:'review',rest:0,load:'none',how:['Review your completed sessions and notes.','Check gym loads and form quality, not just body weight.','Plan any needed substitutions for next week.'],cue:'One review session; optional and nonphysical.',avoid:'Do not treat missed workouts as failure.',swap:'None needed.'}
 };
 
-function displayDate(weekIndex,dayIndex){
-  const d = new Date(2026,10,10+weekIndex*7+dayIndex,12,0,0);
+function displayDate(weekIndex,dayIndex,archived=false){
+  const d = new Date(2026,10,(archived?10:11)+weekIndex*7+dayIndex,12,0,0);
   return d;
 }
-function dateKey(weekIndex,dayIndex) {
-  const d=displayDate(weekIndex,dayIndex);
+function dateKey(weekIndex,dayIndex,archived=false) {
+  const d=displayDate(weekIndex,dayIndex,archived);
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 function roundTo5(x){return Math.round(x/5)*5;}
-function specFor(item,weekIndex) {
+function specFor(item,weekIndex,archived=false) {
   const e=EXERCISES[item.id], w=weekIndex+1;
   let sets=item.sets, min=item.min, max=item.max, note='', isTest=false, specialSets=null;
   const base=[item.min,item.max];
-  if(item.special==='pullTest') {
+  if(w===1&&!archived&&item.special==='pullTest'){
+    note='Up to two clean singles if each leaves a rep in reserve. Use assisted singles if needed.';
+  } else if(w===1&&!archived&&item.special==='pushTest'){
+    note='Use standard or incline push-ups. Stop each set with 2–3 clean reps in reserve.';
+  } else if(item.special==='pullTest') {
     if(w===1 || w===6) {
       sets=1; min=1; max='MAX'; isTest=true;
       specialSets=['MAX clean reps'];
@@ -236,25 +305,118 @@ function specFor(item,weekIndex) {
     else if(w===2){note='Aim for +1 clean rep compared with the previous week while maintaining form.';}
     else if(w===3){note='Aim for quality at a higher rep range; do not force a weight increase yet.';}
   }
-  if(item.optional)note='OPTIONAL. Full rest is a valid choice; this item never counts toward required session completion.';
+  if(item.optional)note='Optional. Keep holds easy and stop before form fades. A walk or full rest is fine.';
   const range=(min===max?String(min):`${min}–${max}`);
   const descriptor=e.unit==='sec'?'sec':e.unit==='min'?'min':'reps';
   const text=e.mode==='review'?'1 × weekly review':specialSets?(item.special==='pushTest' ? '1× clean max + 2× 6–8 reps' : '1× strict max-form test'): `${sets} × ${range} ${descriptor}${['rev_lunge','bulgarian','thoracic_rot','ankle_mob','dead_bug'].includes(item.id)?'/side':''}`;
   const targets=e.mode==='review'?['Review']:specialSets||Array(sets).fill(range);
   return { ...item, exercise:e, sets, min, max, text, note, targets, isTest, optional:!!item.optional};
 }
-function sessionFor(weekIndex,dayIndex){
-  const day=PLAN.days[dayIndex];
+function sessionFor(weekIndex,dayIndex,archived=false){
+  const day=(archived?PLAN.originalDays:PLAN.days)[dayIndex];
   let entries=day.items.slice();
   // Place push-up max-form testing near the start, before fatiguing rowing volume.
-  if(dayIndex===0 && (weekIndex===0 || weekIndex===5)){
+  if(day.key==='tue' && (weekIndex===5 || (archived && weekIndex===0))){
     const p=entries.findIndex(x=>x.id==='pushup');const [test]=entries.splice(p,1);
     entries.splice(entries.findIndex(x=>x.id==='strict_pull')+1,0,test);
   }
-  return { ...day, week:weekIndex+1, dayIndex, date:dateKey(weekIndex,dayIndex), dateObj:displayDate(weekIndex,dayIndex), items:entries.map(entry=>specFor(entry,weekIndex)) };
+  return { ...day, week:weekIndex+1, dayIndex, date:dateKey(weekIndex,dayIndex,archived), dateObj:displayDate(weekIndex,dayIndex,archived), items:entries.map(entry=>specFor(entry,weekIndex,archived)) };
 }
 function formattedDate(d) {return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});}
-function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>sessionFor(w,d)));}
+function allSessions(archived=false) {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>sessionFor(w,d,archived)));}
+
+/* Approximate nutrition per 100 g (or 100 mL for liquids): kcal, protein, carbs, fat.
+   Prices are indicative November 2026 INR per kg or litre. */
+const FOOD = {
+  oats: ['Rolled oats (dry)', 389, 17, 66, 7, 165],
+  atta: ['Whole-wheat atta (dry)', 340, 13, 72, 2.5, 43],
+  rice: ['Rice (dry)', 360, 7, 80, 0.7, 55],
+  poha: ['Poha (dry)', 350, 7, 78, 1, 75],
+  besan: ['Besan (dry)', 387, 22, 58, 6.7, 105],
+  moong: ['Moong dal (dry)', 347, 24, 63, 1.2, 130],
+  masoor: ['Masoor dal (dry)', 352, 25, 63, 1.1, 110],
+  rajma: ['Rajma (dry)', 333, 24, 60, 0.8, 155],
+  chana: ['Kabuli chana (dry)', 364, 19, 61, 6, 140],
+  roasted: ['Roasted chana', 370, 22, 60, 6, 155],
+  soya: ['Soya chunks (dry)', 345, 52, 33, 0.5, 210],
+  tofu: ['Firm tofu (drained)', 112, 14, 7, 3, 350],
+  paneer: ['Low-fat paneer', 160, 21, 4, 7, 500],
+  curd: ['Plain low-fat curd', 61, 3.5, 4.7, 3.3, 100],
+  milk: ['Toned milk', 58, 3.1, 4.8, 3, 63, 'mL'],
+  banana: ['Banana (peeled)', 89, 1.1, 23, 0.3, 60],
+  guava: ['Guava', 68, 2.6, 14, 1, 90],
+  orange: ['Orange (peeled)', 47, 0.9, 12, 0.1, 105],
+  carrot: ['Carrot', 41, 0.9, 10, 0.2, 60],
+  spinach: ['Spinach', 23, 2.9, 3.6, 0.4, 90],
+  veg: ['Mixed veg (beans, cabbage, capsicum)', 40, 2, 8, 0.3, 75],
+  onion: ['Onion', 40, 1.1, 9.3, 0.1, 35],
+  tomato: ['Tomato', 18, 0.9, 3.9, 0.2, 50],
+  flax: ['Ground flaxseed', 534, 18, 29, 42, 240],
+  peanut: ['Peanuts', 567, 26, 16, 49, 170],
+  pumpkin: ['Pumpkin seeds', 559, 30, 11, 49, 600],
+  oil: ['Mustard or groundnut oil (weighed)', 884, 0, 0, 100, 180]
+};
+const MEAL_PLAN = [
+  [
+    ['Curd and banana oats', {oats:65, curd:200, banana:100, flax:10, peanut:15}],
+    ['Masoor dal, rice and soya bhurji', {masoor:65, rice:45, soya:50, carrot:100, onion:50, tomato:80, oil:10}],
+    ['Guava and roasted chana', {guava:130, roasted:45}],
+    ['Toned milk', {milk:250}],
+    ['Palak tofu with roti', {tofu:220, atta:60, spinach:100, tomato:60, oil:10, pumpkin:15}]
+  ],[
+    ['Besan chilla with tofu filling', {besan:80, tofu:160, onion:40, spinach:50, oil:8, curd:120}],
+    ['Rajma chawal and soya', {rajma:75, rice:55, soya:40, tomato:100, onion:40, oil:10}],
+    ['Banana and peanuts', {banana:100, peanut:15}],
+    ['Curd, flax and orange', {curd:200, flax:10, orange:150}],
+    ['Paneer and vegetable roti wraps', {paneer:150, atta:55, veg:180, oil:10}]
+  ],[
+    ['Soya and peanut poha', {poha:60, soya:45, peanut:20, carrot:70, onion:40, oil:8}],
+    ['Chole, roti and curd', {chana:70, atta:60, curd:200, tomato:100, onion:45, oil:10}],
+    ['Banana and roasted chana', {banana:90, roasted:40}],
+    ['Toned milk with ground flax', {milk:250, flax:10}],
+    ['Tofu, moong dal and spinach', {tofu:250, moong:60, spinach:140, carrot:80, oil:10}]
+  ],[
+    ['Moong chilla with curd', {moong:80, curd:220, spinach:75, tomato:70, oil:8}],
+    ['Soya vegetable pulao', {rice:55, soya:65, veg:180, onion:40, oil:10, curd:130}],
+    ['Orange and peanuts', {orange:150, peanut:15}],
+    ['Banana flax oats', {oats:30, milk:250, banana:100, flax:10}],
+    ['Paneer bhurji and roti', {paneer:155, atta:50, tomato:100, onion:50, carrot:100, oil:8}]
+  ],[
+    ['Banana and peanut oats', {oats:55, milk:250, banana:110, peanut:20, flax:10}],
+    ['Moong dal, soya sabzi and roti', {moong:65, soya:45, atta:60, veg:170, oil:10, curd:150}],
+    ['Guava and roasted chana', {guava:130, roasted:35}],
+    ['Curd and pumpkin seeds', {curd:170, pumpkin:10}],
+    ['Tofu tikka bowl with rice', {tofu:230, rice:45, tomato:80, onion:50, spinach:100, oil:10}]
+  ],[
+    ['Paneer-stuffed besan chilla', {besan:65, paneer:135, onion:40, spinach:60, oil:8}],
+    ['Masoor rice bowl with soya', {masoor:65, soya:45, rice:50, tomato:100, carrot:100, oil:10}],
+    ['Banana and roasted chana', {banana:90, roasted:35}],
+    ['Toned milk and flax', {milk:250, flax:10}],
+    ['Chana, curd and vegetable roti', {chana:55, curd:200, atta:55, veg:170, oil:9}]
+  ],[
+    ['Tofu scramble with roti', {tofu:160, atta:60, tomato:90, onion:45, oil:8}],
+    ['Rajma, soya and rice', {rajma:65, soya:45, rice:50, veg:150, tomato:80, oil:10}],
+    ['Guava and peanuts', {guava:150, peanut:25}],
+    ['Banana, curd and flax oats', {banana:100, curd:180, oats:35, flax:10}],
+    ['Palak masoor and paneer', {masoor:60, paneer:135, spinach:130, carrot:100, oil:8}]
+  ]
+];
+const MEAL_SLOTS = ['Breakfast','Lunch','Pre-workout / snack','Post-workout / snack','Dinner'];
+const NUTRIENTS = [['kcal','Calories','kcal',6000],['protein','Protein','g',500],['carbs','Carbs','g',1000],['fat','Fat','g',500]];
+const DEFAULT_TARGET = {kcal:2350, protein:140, carbs:295, fat:68};
+const SKIN_WEEKS = [
+  {through:2, adapalene:[2,5], azelaic:[]},
+  {through:4, adapalene:[1,3,5], azelaic:[]},
+  {through:8, adapalene:[1,4,6], azelaic:[2,5]}
+];
+const dayFormat = new Intl.DateTimeFormat('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+const dayMillis = 86400000;
+const parseDay = key => new Date(key+'T00:00:00Z');
+const keyFrom = date => date.toISOString().slice(0,10);
+const offsetDay = (key, amount) => keyFrom(new Date(+parseDay(key)+amount*dayMillis));
+const daysBetween = (a,b) => Math.round((parseDay(a)-parseDay(b))/dayMillis);
+const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+parseDay(key)) && keyFrom(parseDay(key))===key;
+
 
 </script>
   <script>
@@ -266,7 +428,8 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     {id:'dashboard',label:'Overview',icon:'◈'},
     {id:'workout',label:'Workout',icon:'⚡'},
     {id:'calendar',label:'42 Days',icon:'▦'},
-    {id:'library',label:'Exercises',icon:'▤'},
+    {id:'nutrition',label:'Nutrition',icon:'◉'},
+    {id:'recovery',label:'Recovery',icon:'☾'},
     {id:'progress',label:'Progress',icon:'↗'}
   ];
   // These values are the user's recorded measurements on 10 November 2026, in cm except weight.
@@ -279,6 +442,7 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     {key:'weight', label:'Weight', unit:'kg', min:30, max:300},
     {key:'chest', label:'Chest', unit:'cm', min:30, max:200},
     {key:'waist', label:'Waist', unit:'cm', min:30, max:200},
+    {key:'bodyFat', label:'Body fat estimate', unit:'%', min:1, max:75},
     {key:'bicepL', label:'Left biceps', unit:'cm', min:10, max:100},
     {key:'bicepR', label:'Right biceps', unit:'cm', min:10, max:100},
     {key:'thighL', label:'Left thigh', unit:'cm', min:15, max:150},
@@ -286,7 +450,11 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     {key:'calfL', label:'Left calf', unit:'cm', min:10, max:100},
     {key:'calfR', label:'Right calf', unit:'cm', min:10, max:100}
   ];
-  const fresh = () => ({version:2, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{}, baseline:{pullW1:'',pushW1:'',pullW6:'',pushW6:''}});
+  const fresh = () => ({
+    version:3, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{},
+    baseline:{pullW1:'',pushW1:'',pullW6:'',pushW6:''},
+    nutrition:{}, nutritionTarget:{}, recovery:{}, skin:{}, skinStart:PLAN.start, photos:{}, archiveDates:[]
+  });
   function normalize(raw){
     const input=raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{};
     const state={...fresh(),...input,
@@ -298,7 +466,20 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     if(Number(input.version||0)<2){
       state.checkins[0]={...WEEK1_MEASUREMENTS,...(state.checkins[0]||{})};
       state.doneDates['2026-11-10']=true;
-      state.version=2;
+    }
+    if(Number(input.version||0)<3){
+      state.checkins[0]={bodyFat:String(PLAN.profile.estimatedBodyFat),...(state.checkins[0]||{})};
+      state.doneDates['2026-11-10']=true;
+      state.archiveDates=[...new Set([
+        ...Object.keys(state.logs).map(key=>key.split('|')[0]),
+        ...Object.keys(state.warmups).map(key=>key.split('|')[0]),
+        ...Object.keys(state.notes),
+        ...Object.keys(state.doneDates).filter(key=>state.doneDates[key])
+      ])].filter(validDay);
+      state.version=3;
+    }
+    for(const key of ['nutrition','nutritionTarget','recovery','skin','photos']){
+      if(!state[key]||typeof state[key]!=='object'||Array.isArray(state[key]))state[key]={};
     }
     return state;
   }
@@ -307,15 +488,35 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
       const raw=localStorage.getItem(STORAGE);
       const parsed=raw?JSON.parse(raw):null;
       const state=normalize(parsed);
-      if(!parsed||Number(parsed.version||0)<2)localStorage.setItem(STORAGE,JSON.stringify(state));
+      if(!parsed||Number(parsed.version||0)<3){
+        try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch{/* Keep the prior saved state if storage is full. */}
+      }
       return state;
     } catch(e){return normalize(null);}
   }
-  let db=load(), activeView='dashboard', selectedWeek=0, selectedDay=0, categoryFilter='ALL', searchTerm='', timerEnd=null, timerInterval=null, toastTimeout=null;
+  let db=load(), activeView='dashboard', archivedSession=null, selectedWeek=0, selectedDay=0, categoryFilter='ALL', searchTerm='', timerEnd=null, timerInterval=null, toastTimeout=null;
   const currentDate = (()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;})();
+  const initialLogDate=currentDate<PLAN.start?PLAN.start:currentDate;
+  const wellnessDates={nutrition:initialLogDate,recovery:initialLogDate,photos:currentDate};
   const indexedToday=allSessions().find(s=>s.date===currentDate);
   if(indexedToday){selectedWeek=indexedToday.week-1;selectedDay=indexedToday.dayIndex;}
-  const save=()=>{try{localStorage.setItem(STORAGE,JSON.stringify(db));}catch(e){toast('Browser storage unavailable. Export a backup to save progress.');}};
+  function save(state=db){
+    try{
+      localStorage.setItem(STORAGE,JSON.stringify(state));
+      db=state;
+      return true;
+    }catch{
+      toast('Could not save. Browser storage may be full or unavailable.');
+      return false;
+    }
+  }
+  function archivedSessions(){
+    const dates=new Set(Array.isArray(db.archiveDates)?db.archiveDates:[]);
+    return allSessions(true).filter(s=>s.date==='2026-11-10'||dates.has(s.date));
+  }
+  function archiveButton(session){
+    return `<button class="button button-sm button-secondary" data-action="archive" data-date="${session.date}">${fmtDateShort(session.dateObj)} · ${esc(session.short)}${dayIsDone(session)?' · ✓ Complete':''}</button>`;
+  }
   function esc(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
   function fmtDateShort(d){return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});}
   function element(id){return document.getElementById(id);}
@@ -343,13 +544,15 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     if(activeView==='calendar')renderCalendar();
     if(activeView==='library')renderLibrary();
     if(activeView==='progress')renderProgress();
+    if(activeView==='nutrition')renderNutrition();
+    if(activeView==='recovery')renderRecovery();
   }
   function weekPicker(){return `<select class="week-select" aria-label="Choose training week" data-action="select-week">${PLAN.phases.map((w,i)=>`<option value="${i}"${i===selectedWeek?' selected':''}>WEEK ${i+1} · ${w.name}</option>`).join('')}</select>`;}
   function weekTiles(){const short=["FOUND.","VOLUME","PROGRESS","DELOAD","INTENSIFY","TEST"];return `<div class="week-steps">${PLAN.phases.map((w,i)=>`<button type="button" class="week-step${i===selectedWeek?' active':''}" data-action="week" data-week="${i}"><small class="muted">WEEK</small><strong>${String(i+1).padStart(2,'0')}</strong><span>${short[i]}</span></button>`).join('')}</div>`;}
   function bodyMeasurementsSummary(){
     const v=db.checkins[0]||{};
     const tiles=[
-      ['WEIGHT',v.weight,'kg'],['CHEST',v.chest,'cm'],['WAIST',v.waist,'cm'],
+      ['WEIGHT',v.weight,'kg'],['CHEST',v.chest,'cm'],['WAIST',v.waist,'cm'],['BODY FAT EST.',v.bodyFat,'%'],
       ['BICEPS',`L ${v.bicepL??'—'} / R ${v.bicepR??'—'}`,'cm'],
       ['THIGHS',`L ${v.thighL??'—'} / R ${v.thighR??'—'}`,'cm'],
       ['CALVES',`L ${v.calfL??'—'} / R ${v.calfR??'—'}`,'cm']
@@ -364,11 +567,14 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     <div class="hero">
       <div class="section-topline"><span class="rule"></span>THE HERIA × NIPPARD INSPIRED HYBRID</div>
       <h1>BUILD THE BODY.<br><span class="accent">EARN THE SKILL.</span></h1>
-      <p class="subtitle">Your complete 42-day training system — calisthenics fundamentals, evidence-informed hypertrophy, structured recovery, and every set logged.</p>
-      <div class="hero-actions"><button type="button" class="button button-primary" data-action="nav" data-view="workout">START TODAY'S PLAN <span>→</span></button><button type="button" class="button button-outline" data-action="nav" data-view="calendar">VIEW ALL 42 DAYS</button></div>
+      <p class="subtitle">Your six-week gym and calisthenics block starts Wednesday, 11 November. Train four days a week and keep meals, recovery and body measurements in the same log.</p>
+      <div class="hero-actions"><button type="button" class="button button-primary" data-action="nav" data-view="workout">OPEN TRAINING <span>→</span></button><button type="button" class="button button-outline" data-action="nav" data-view="calendar">VIEW ALL 42 DAYS</button></div>
       <div class="hero-profile"><span class="chip lime">84.3 KG</span><span class="chip">181.1 CM</span><span class="chip">11–20 PUSH-UPS</span><span class="chip">1–3 PULL-UPS</span><span class="chip">6 WEEKS</span></div>
     </div>
-    ${dayIsDone(sessionFor(0,0))?'<div class="surface-note" style="margin-bottom:16px"><strong>✓ TUESDAY 10 NOVEMBER — COMPLETE</strong><br>Day 1 has been marked completed as requested. Individual sets and weights were not invented; add them to the workout log whenever you have the numbers.</div>':''}
+    <div class="panel">
+      <div class="panel-title-row"><div><div class="section-label">PREVIOUS BLOCK</div><h3>Tuesday, 10 November</h3></div>${archiveButton(sessionFor(0,0,true))}</div>
+      <p class="caption">Your original workout and any saved sets, loads and notes are in the session archive.</p>
+    </div>
     <div class="metrics-grid">
       <div class="metric"><div class="label">SESSIONS MARKED</div><div class="value">${finished}<span class="muted">/42</span></div><small>Includes programmed recovery</small></div>
       <div class="metric"><div class="label">WORKING SETS LOGGED</div><div class="value">${total}</div><small>Of ${required} prescribed sets</small></div>
@@ -393,7 +599,7 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
        <div class="panel"><div class="section-label">02 / HYPERTROPHY</div><h3 style="margin-top:10px">Progressive overload</h3><p class="subtitle">Track weights, reps and sets on gym lifts; raise load when top-range reps are clean.</p><span class="chip blue">NIPPARD-INSPIRED</span></div>
        <div class="panel"><div class="section-label">03 / RECOVERY</div><h3 style="margin-top:10px">Adaptation is training</h3><p class="subtitle">Four substantial training days, one low-fatigue skill day, one active recovery day, and full rest.</p><span class="chip amber">SUSTAINABLE</span></div>
     </div>
-    <div class="spacer"></div><div class="surface-note amber">Seven days are planned, but <b>not seven hard workouts</b>. Thursday and Monday deliberately protect recovery. Your exact gym weights depend on your logged ability; select loads with 1–3 repetitions left in reserve and progress conditionally.</div>
+    <div class="spacer"></div><div class="surface-note amber">Thursday is easy recovery and Monday is full rest. Saturday skills are optional. Select training loads with 1–3 repetitions left in reserve and progress when the movement is controlled.</div>
     `;
   }
   function dayTab(s,i){
@@ -428,18 +634,18 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     </div></article>`;
   }
   function renderWorkout(){
-    const s=sessionFor(selectedWeek,selectedDay), w=PLAN.phases[selectedWeek], pct=sessionPct(s), total=requiredSets(s), count=doneSets(s), finished=dayIsDone(s);
+    const s=archivedSession||sessionFor(selectedWeek,selectedDay), w=PLAN.phases[s.week-1], pct=sessionPct(s), total=requiredSets(s), count=doneSets(s), finished=dayIsDone(s);
     const activeSetCount=s.items.reduce((n,it)=>n+it.sets,0);
     element('view-workout').innerHTML=`
-      <div class="section-head"><div class="section-topline"><span class="rule"></span>YOUR PERSONAL TRAINING LOG</div><h1>THE <span class="accent">WORKOUT.</span></h1><p class="subtitle">Every day. Every set. Every progression. Select any of the six weeks and all seven days.</p></div>
-      <div class="workout-navigation">${weekPicker()}<button class="button button-ghost" data-action="prev-week" ${selectedWeek===0?'disabled':''}>← Previous</button><button class="button button-ghost" data-action="next-week" ${selectedWeek===5?'disabled':''}>Next week →</button></div>
-      <div class="day-tabs">${PLAN.days.map((_,i)=>dayTab(sessionFor(selectedWeek,i),i)).join('')}</div>
-      <div class="session-hero"><div class="session-top"><div class="overline">WEEK ${String(selectedWeek+1).padStart(2,'0')} / ${esc(w.name)} · ${esc(s.theme)}</div><span class="chip ${s.accent==='lime'?'lime':s.accent==='blue'?'blue':s.accent==='purple'?'purple':'amber'}">${esc(dayLabel(s))}</span></div>
+      <div class="section-head"><div class="section-topline"><span class="rule"></span>YOUR PERSONAL TRAINING LOG</div><h1>THE <span class="accent">WORKOUT.</span></h1><p class="subtitle">Select a date to see the prescribed sets and your saved log.</p><button class="button button-sm button-ghost" data-action="nav" data-view="library">Exercise library →</button></div>
+      ${archivedSession?`<div class="panel"><div class="panel-title-row"><div><div class="section-label">ORIGINAL SESSION</div><h3>${formattedDate(s.dateObj)}</h3></div><button class="button button-ghost" data-action="close-archive">Back to revised plan</button></div></div>`:`<div class="workout-navigation">${weekPicker()}<button class="button button-ghost" data-action="prev-week" ${selectedWeek===0?'disabled':''}>← Previous</button><button class="button button-ghost" data-action="next-week" ${selectedWeek===5?'disabled':''}>Next week →</button></div>
+      <div class="day-tabs">${PLAN.days.map((_,i)=>dayTab(sessionFor(selectedWeek,i),i)).join('')}</div>`}
+      <div class="session-hero"><div class="session-top"><div class="overline">${archivedSession?'ORIGINAL PLAN':`WEEK ${String(s.week).padStart(2,'0')} / ${esc(w.name)}`} · ${esc(s.theme)}</div><span class="chip ${s.accent==='lime'?'lime':s.accent==='blue'?'blue':s.accent==='purple'?'purple':'amber'}">${esc(dayLabel(s))}</span></div>
         <h2>${esc(s.name)}</h2><p class="subtitle">${esc(s.objective)}</p>
         <div class="session-stats"><span class="stat-pill"><strong>◷</strong> ${s.duration}</span><span class="stat-pill"><strong>${activeSetCount}</strong> prescribed sets</span><span class="stat-pill"><strong>${fmtDateShort(s.dateObj)}</strong> ${s.dateObj.getFullYear()}</span><span class="stat-pill"><strong>${s.intensity}</strong> effort</span></div>
-        <div style="margin-top:21px"><div class="row between" style="margin-bottom:8px"><span class="mini strong">SET COMPLETION</span><span class="mini strong accent">${s.kind==='rest'?'REST DAY':`${count}/${total} · ${pct}%`}</span></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div></div>
+        <div style="margin-top:21px"><div class="row between" style="margin-bottom:8px"><span class="mini strong">SET COMPLETION</span><span class="mini strong accent">${total===0?'OPTIONAL SESSION':`${count}/${total} · ${pct}%`}</span></div><div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div></div>
       </div>
-      <div class="surface-note"><strong>WEEK ${selectedWeek+1} PROGRESSION:</strong> ${esc(w.focus)}<br><strong>YOUR DAILY TARGET:</strong> ${esc(s.target)}</div>
+      <div class="surface-note">${archivedSession?'':`<strong>WEEK ${s.week} PROGRESSION:</strong> ${esc(w.focus)}<br>`}<strong>YOUR DAILY TARGET:</strong> ${esc(s.target)}</div>
       ${s.warmup.length?`<div class="group-title"><h3>01 <span class="accent">/</span> Warm-up</h3><small>5–10 minutes · before work sets</small></div>${workoutChecklist(s,s.warmup,'warmup')}`:''}
       <div class="group-title"><h3>${s.warmup.length?'02':'01'} <span class="accent">/</span> ${s.kind==='rest'?'Optional recovery tasks':s.kind==='recovery'?'Recovery movement': 'Training blocks'}</h3><small>${s.items.length} exercises · exact week-specific targets</small></div>
       ${s.kind==='rest'?'<div class="surface-note amber" style="margin-bottom:12px"><strong>FULL REST IS THE DEFAULT.</strong> Everything below is optional and may be skipped. There is no strength workout today.</div>':''}
@@ -449,16 +655,16 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
       <div class="group-title"><h3>04 <span class="accent">/</span> Session notes</h3><small>Saved automatically on this device</small></div>
       <textarea class="note-textarea" data-action="notes" data-date="${esc(s.date)}" placeholder="What loads did you use? How did your pull-ups feel? Any stiffness, pain, or substitutions?">${esc(db.notes[s.date]||'')}</textarea>
       <div class="workout-foot"><div><span class="chip ${finished?'complete':'dim'}">${finished?'✓ DAY COMPLETED':'DAY NOT YET MARKED'}</span><p class="caption" style="margin:8px 0 0">${s.kind==='rest'?'Mark when you have taken your rest day.':'You control when a day is marked complete. Unchecked sets remain visible.'}</p></div><button class="button ${finished?'button-secondary':'button-primary'} finish-button" data-action="finish-day">${finished?'↶ Undo day completion':'✓ Mark day complete'}</button></div>
-      <div class="spacer"></div><div class="surface-note amber"><strong>SAFE LOADING RULE:</strong> Your exact dumbbell/barbell kilograms cannot be safely inferred from body weight. Choose a working weight that leaves about ${selectedWeek===3?'3–4':'1–3'} reps in reserve (RIR). Log the actual kilograms above; increase only after you own the prescribed range.</div>
+      <div class="spacer"></div><div class="surface-note amber"><strong>SAFE LOADING RULE:</strong> Your exact dumbbell/barbell kilograms cannot be safely inferred from body weight. Choose a working weight that leaves about ${s.week===4?'3–4':'1–3'} reps in reserve (RIR). Log the actual kilograms above; increase only after you own the prescribed range.</div>
     `;
   }
   function renderCalendar(){
     const all=allSessions(), complete=all.filter(dayIsDone).length;
     element('view-calendar').innerHTML=`
-    <div class="section-head"><div class="section-topline"><span class="rule"></span>42 DAYS / ZERO GUESSWORK</div><h1>YOUR <span class="accent">ROADMAP.</span></h1><p class="subtitle">Six complete weeks from Tuesday 10 November through Monday 21 December 2026. Tap any day to view all exercises, sets, cues, progressions and logs.</p></div>
-    <div class="panel"><div class="calendar-head"><div><div class="section-label">MASTER SCHEDULE</div><h2 style="margin-top:6px">All 42 days</h2><p class="muted mini" style="margin:9px 0 0">Four primary lifting days + one technique day + one recovery day + one rest day weekly.</p></div><div class="row"><span class="chip complete">${complete} completed</span><span class="chip dim">${42-complete} remaining</span></div></div>
+    <div class="section-head"><div class="section-topline"><span class="rule"></span>42 DAYS / ZERO GUESSWORK</div><h1>YOUR <span class="accent">ROADMAP.</span></h1><p class="subtitle">Six complete weeks from Wednesday 11 November through Tuesday 22 December 2026. Tap any day to view all exercises, sets, cues, progressions and logs.</p></div>
+    <div class="panel"><div class="calendar-head"><div><div class="section-label">MASTER SCHEDULE</div><h2 style="margin-top:6px">All 42 days</h2><p class="muted mini" style="margin:9px 0 0">Four primary lifting days, one optional skill day, one recovery day and one rest day each week.</p></div><div class="row"><span class="chip complete">${complete} completed</span><span class="chip dim">${42-complete} remaining</span></div></div>
       <div class="calendar-grid">${PLAN.weekdays.map(day=>`<div class="calendar-colhead">${day}</div>`).join('')}${all.map(s=>`<button type="button" class="calendar-cell${dayIsDone(s)?' completed':''}${s.date===currentDate?' today':''}" data-action="goto-session" data-week="${s.week-1}" data-day="${s.dayIndex}"><span class="row between"><span class="cal-week">W${s.week}</span><span class="cal-progress">${dayIsDone(s)?'✓ DONE':s.kind==='rest'?'REST':s.kind==='recovery'?'EASY':`${sessionPct(s)}%`}</span></span><span class="cal-num">${String(s.dateObj.getDate()).padStart(2,'0')}</span><span class="cal-title">${esc(s.short)}</span><span class="calendar-week-label">${PLAN.weekdays[s.dayIndex]} · ${fmtDateShort(s.dateObj)}</span></button>`).join('')}</div>
-    </div><div class="spacer"></div><div class="panel"><div class="panel-title-row"><h3>Progression rules by week</h3><span class="chip lime">6 PHASES</span></div><div class="grid-3">${PLAN.phases.map((w,i)=>`<div style="padding:13px;border-radius:11px;border:1px solid var(--line);background:#182019"><div class="section-label">WEEK ${String(i+1).padStart(2,'0')} · ${esc(w.name)}</div><h3 style="margin:8px 0">${esc(w.title)}</h3><p class="caption" style="margin:0">${esc(w.focus)}</p></div>`).join('')}</div></div>`;
+    </div><div class="panel"><div class="section-label">PREVIOUS PLAN</div><h3>Original sessions with saved activity</h3><div class="archived-sessions">${archivedSessions().map(archiveButton).join('')}</div></div><div class="spacer"></div><div class="panel"><div class="panel-title-row"><h3>Progression rules by week</h3><span class="chip lime">6 PHASES</span></div><div class="grid-3">${PLAN.phases.map((w,i)=>`<div style="padding:13px;border-radius:11px;border:1px solid var(--line);background:#182019"><div class="section-label">WEEK ${String(i+1).padStart(2,'0')} · ${esc(w.name)}</div><h3 style="margin:8px 0">${esc(w.title)}</h3><p class="caption" style="margin:0">${esc(w.focus)}</p></div>`).join('')}</div></div>`;
   }
   function libraryCards(){
     const els=Object.entries(EXERCISES).filter(([id,e])=>{
@@ -504,7 +710,9 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     <div class="spacer"></div><div class="panel"><div class="panel-title-row"><div><div class="section-label">CALISTHENICS PROGRESS</div><h3 style="margin-top:7px">Two comparable tests</h3></div><span class="chip amber">FORM FIRST</span></div><p class="caption">Record maximum clean reps after the same warm-up. Aim to improve, but there are no guaranteed results.</p><div class="grid-2"><div><h3>Week 1 baseline</h3><div class="baseline-list">${[['pullW1','Strict pull-ups'],['pushW1','Strict push-ups']].map(([key,label])=>`<div class="baseline-row"><label for="${key}">${label}</label><input id="${key}" type="number" min="0" max="150" step="1" class="checkin-input" data-action="baseline" data-field="${key}" value="${esc(baseline[key]??'')}" placeholder="Reps"></div>`).join('')}</div></div><div><h3>Week 6 assessment</h3><div class="baseline-list">${[['pullW6','Strict pull-ups'],['pushW6','Strict push-ups']].map(([key,label])=>`<div class="baseline-row"><label for="${key}">${label}</label><input id="${key}" type="number" min="0" max="150" step="1" class="checkin-input" data-action="baseline" data-field="${key}" value="${esc(baseline[key]??'')}" placeholder="Reps"></div>`).join('')}</div></div></div>
       <div class="soft-divider"></div><div class="grid-2"><div class="surface-note">Pull-up difference: <strong>${baseline.pullW1!==''&&baseline.pullW6!==''?`${Number(baseline.pullW6)-Number(baseline.pullW1)>0?'+':''}${Number(baseline.pullW6)-Number(baseline.pullW1)} reps`:'Awaiting both tests'}</strong></div><div class="surface-note">Push-up difference: <strong>${baseline.pushW1!==''&&baseline.pushW6!==''?`${Number(baseline.pushW6)-Number(baseline.pushW1)>0?'+':''}${Number(baseline.pushW6)-Number(baseline.pushW1)} reps`:'Awaiting both tests'}</strong></div></div>
     </div>
-    <div class="spacer"></div><div class="panel"><div class="section-label">OWN YOUR DATA</div><h3 style="margin:8px 0">Backup & portability</h3><p class="subtitle">Progress is saved in local browser storage. It does <strong>not</strong> automatically synchronize between your iPhone and MacBook. Export a JSON backup on one device, then import it on the other. Opening the page in a different browser can create a separate log.</p><div class="row wrap"><button class="button button-primary" data-action="export">↗ Export progress JSON</button><button class="button button-secondary" data-action="import">↙ Import backup</button></div><div class="danger-zone"><button class="button button-danger button-sm" data-action="reset">Reset ALL saved training data</button><span class="caption">Reset cannot be undone without an exported backup.</span></div></div>`;
+    <div class="spacer"></div><div class="surface-note"><strong>Body composition</strong><p>Track weight, waist and chest under the same conditions. The starting 19.7% body-fat figure is an estimate. A small overall calorie deficit can reduce body fat over time, but individual exercises cannot choose where you lose it. Use waist and relaxed photos to track your belly, chest, love handles and lower back alongside strength.</p></div>
+    <div class="spacer"></div>${photosPanel()}
+    <div class="spacer"></div><div class="panel"><div class="section-label">OWN YOUR DATA</div><h3 style="margin:8px 0">Backup & portability</h3><p class="subtitle">Progress is saved in local browser storage. It does <strong>not</strong> automatically synchronize between your iPhone and MacBook. Export a JSON backup on one device, then import it on the other. Opening the page in a different browser can create a separate log.</p><div class="row wrap"><button class="button button-primary" data-action="export">↗ Export progress JSON</button><button class="button button-secondary" data-action="import">↙ Import backup</button></div><div class="danger-zone"><button class="button button-danger button-sm" data-action="reset">Reset all saved data</button><span class="caption">Reset cannot be undone without an exported backup.</span></div></div>`;
   }
   function showGuide(id){
     const e=EXERCISES[id];if(!e)return;
@@ -526,13 +734,13 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
   }
   function handleFile(file){
     if(!file)return;
-    if(file.size>3_000_000){toast('Backup too large (max 3 MB).');return;}
+    if(file.size>12_000_000){toast('Backup too large (max 12 MB).');return;}
     const reader=new FileReader();reader.onload=()=>{
       try{
         const data=JSON.parse(reader.result);
         if(!data||data.app!=='HYBRID / 42'||!data.progress||typeof data.progress.logs!=='object'||!data.progress.logs||Array.isArray(data.progress.logs))throw Error('Not a valid HYBRID / 42 backup');
         if(!confirm('Import this backup? It will replace all progress saved in this browser.'))return;
-        const raw=data.progress;db=normalize(raw);save();renderView();toast('Progress backup imported.');
+        if(save(normalize(data.progress))){renderView();toast('Progress backup imported.');}
       }catch(e){toast('This file is not a valid HYBRID / 42 backup.');}
     };reader.readAsText(file);
   }
@@ -544,11 +752,17 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     el.hidden=false;el.innerHTML=`<div class="timer-top"><div><div style="font-size:10px;font-weight:850;letter-spacing:.12em">REST TIMER</div><div class="timer-digit">${clock}</div></div><button data-action="stop-timer">Stop ×</button></div>`;
   }
   function startTimer(sec){timerEnd=Date.now()+sec*1000;clearInterval(timerInterval);renderTimer();timerInterval=setInterval(renderTimer,250);}
-  function navigateSession(w,d){selectedWeek=Math.min(5,Math.max(0,w));selectedDay=Math.min(6,Math.max(0,d));showView('workout');}
+  function navigateSession(w,d){archivedSession=null;selectedWeek=Math.min(5,Math.max(0,w));selectedDay=Math.min(6,Math.max(0,d));showView('workout');}
   function handleClick(event){
     const b=event.target.closest('[data-action]');if(!b)return;
     const act=b.dataset.action;
-    if(act==='nav')return showView(b.dataset.view);
+    if(act==='nav'){archivedSession=null;return showView(b.dataset.view);}
+    if(act==='archive'){
+      archivedSession=archivedSessions().find(s=>s.date===b.dataset.date)||null;
+      return showView('workout');
+    }
+    if(act==='close-archive'){archivedSession=null;return showView('workout');}
+    if(['wellness-date-step','meal-day','food-remove','photo-remove'].includes(act))return wellnessClick(b);
     if(act==='goto-session')return navigateSession(+b.dataset.week,+b.dataset.day);
     if(act==='day'){selectedDay=+b.dataset.day;return keepScroll(renderWorkout);}
     if(act==='week'){selectedWeek=+b.dataset.week;renderView();return;}
@@ -561,12 +775,12 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     if(act==='export')return exportData();
     if(act==='import')return element('importFile').click();
     if(act==='reset'){
-      if(!confirm('Erase ALL exercise logs, weekly measurements and notes saved in this browser? This cannot be undone without an exported backup.'))return;
+      if(!confirm('Erase all workouts, measurements, nutrition, recovery, skincare and photos in this browser? Export a backup first if you want to keep them.'))return;
       if(!confirm('Confirm again: reset all six weeks of saved data?'))return;
-      db=fresh();save();renderView();toast('Saved progress reset.');return;
+      if(save(fresh())){renderView();toast('Saved progress reset.');}return;
     }
     if(act==='finish-day'){
-      const s=sessionFor(selectedWeek,selectedDay);
+      const s=archivedSession||sessionFor(selectedWeek,selectedDay);
       if(!db.doneDates[s.date]&&s.kind==='strength'&&sessionPct(s)<75&&!confirm('Fewer than 75% of prescribed sets are checked. Mark this day completed anyway?'))return;
       db.doneDates[s.date]=!db.doneDates[s.date];save();keepScroll(renderWorkout);toast(db.doneDates[s.date]?'Day saved as complete.':'Day completion undone.');return;
     }
@@ -574,6 +788,7 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
   function handleChange(event){
     const target=event.target;
     const act=target.dataset.action;
+    if(['wellness-date','meal-check','meal-portion','photo-add'].includes(act))return wellnessChange(target);
     if(act==='select-week'){selectedWeek=+target.value;return renderWorkout();}
     if(act==='set-complete'){
       const key=target.dataset.key;db.logs[key]={...(db.logs[key]||{}),done:target.checked};save();keepScroll(renderWorkout);return;
@@ -595,6 +810,237 @@ function allSessions() {return PLAN.phases.flatMap((_,w)=>PLAN.days.map((_,d)=>s
     if(el.dataset.action==='notes'){db.notes[el.dataset.date]=el.value;save();return;}
     if(['checkin','baseline','log-field'].includes(el.dataset.action))handleChange(event);
   }
+  const mealDay = date => MEAL_PLAN[((daysBetween(date,PLAN.start)%7)+7)%7];
+  const zeros = () => Object.fromEntries(NUTRIENTS.map(([key])=>[key,0]));
+  function addMacros(total, values, factor=1){
+    for(const [key] of NUTRIENTS)total[key]+=(Number(values[key])||0)*factor;
+    return total;
+  }
+  function mealMacros(ingredients, portion=100){
+    const total=zeros();
+    for(const [food,grams] of Object.entries(ingredients)){
+      NUTRIENTS.forEach(([key],i)=>total[key]+=FOOD[food][i+1]*grams*portion/10000);
+    }
+    return total;
+  }
+  const macroLine = total => NUTRIENTS.map(([key,label,unit])=>key==='kcal'
+    ? `${Math.round(total[key])} kcal` : `${Math.round(total[key])} g ${label.toLowerCase()}`).join(' · ');
+  const numberField = (key,label,unit,value,max,step=1,min=0) =>
+    `<label class="field-label">${esc(label)} (${esc(unit)})<input class="field-input" type="number" name="${key}" min="${min}" max="${max}" step="${step}" value="${esc(value??'')}"></label>`;
+  const formRecord = form => Object.fromEntries(new FormData(form));
+  const fmtDay = key => dayFormat.format(parseDay(key));
+  function dateControl(area,date){
+    return `<div class="wellness-date"><button class="button button-ghost" data-action="wellness-date-step" data-area="${area}" data-step="-1" aria-label="Previous day">←</button><label class="field-label">Log date<input class="field-input" type="date" min="1900-01-01" max="2200-01-01" data-action="wellness-date" data-area="${area}" value="${date}"></label><button class="button button-ghost" data-action="wellness-date-step" data-area="${area}" data-step="1" aria-label="Next day">→</button></div>`;
+  }
+  function pageHead(kicker,title,accent,description){
+    return `<div class="section-head"><div class="section-topline"><span class="rule"></span>${kicker}</div><h1>${title} <span class="accent">${accent}</span></h1><p class="subtitle">${description}</p></div>`;
+  }
+  function groceries(){
+    const totals={};
+    for(const day of MEAL_PLAN)for(const [,ingredients] of day)for(const [food,grams] of Object.entries(ingredients))totals[food]=(totals[food]||0)+grams;
+    const rows=Object.entries(FOOD).map(([key,[name,,,,,rate,unit]])=>{
+      const grams=totals[key];
+      return {name,amount:`${grams} ${unit||'g'}`,rate,cost:grams*rate/1000};
+    });
+    const cost=rows.reduce((sum,row)=>sum+row.cost,0);
+    return `<details class="panel"><summary>Seven-day grocery list · about ₹${Math.round(cost/10)*10} used</summary><p class="caption">One person, all default portions. Quantities are edible amounts. Buy a little extra for peels and trimming. Estimates use November 2026 Indian retail rates and exclude spices, delivery and pack-size rounding.</p><div class="grocery-list">${rows.map(row=>`<div><span>${esc(row.name)}<small>${row.amount} · ₹${row.rate}/${row.amount.endsWith('mL')?'L':'kg'}</small></span><strong>~₹${Math.round(row.cost)}</strong></div>`).join('')}</div><p class="caption">Price references · <a href="https://fcainfoweb.nic.in/Default.aspx">Consumer Affairs price monitor</a> · <a href="https://www.bigbasket.com/pd/40003518/nutrela-soya-chunks-200-g-carton/">Example soya price</a></p></details>`;
+  }
+  function renderNutrition(){
+    const date=wellnessDates.nutrition;
+    const meals=mealDay(date), daily=db.nutrition[date]||{}, target={...DEFAULT_TARGET,...db.nutritionTarget};
+    const plan=zeros(), eaten=zeros();
+    const cards=meals.map(([name,ingredients],i)=>{
+      const record=daily.meals?.[i]||{}, portion=record.portion||100;
+      const planned=mealMacros(ingredients,portion);
+      addMacros(plan,planned);
+      if(record.done)addMacros(eaten,planned);
+      return `<article class="meal-card"><label class="meal-check"><input type="checkbox" data-action="meal-check" data-slot="${i}"${record.done?' checked':''}><span><small class="section-label">${MEAL_SLOTS[i]}</small><strong>${esc(name)}</strong></span></label><p>${Object.entries(ingredients).map(([id,g])=>`${esc(FOOD[id][0])} ${Number((g*portion/100).toFixed(1))} ${FOOD[id][6]||'g'}`).join(' · ')}</p><div class="meal-bottom"><strong class="accent">${macroLine(planned)}</strong><label class="field-label">Serving<select class="field-input" data-action="meal-portion" data-slot="${i}">${[50,75,100,125,150,200].map(n=>`<option value="${n}"${n===portion?' selected':''}>${n}%</option>`).join('')}</select></label></div></article>`;
+    }).join('');
+    const extras=Array.isArray(daily.extras)?daily.extras:[];
+    extras.forEach(entry=>addMacros(eaten,entry));
+    element('view-nutrition').innerHTML=`
+      ${pageHead('FUEL / SEVEN-DAY ROTATION','EAT FOR','THE WORK.','Indian lacto-vegetarian meals with no eggs, meat or whey by default. The menu repeats each Wednesday.')}
+      <div class="panel">
+        <div class="panel-title-row"><div><div class="section-label">DAILY NUTRITION</div><h2>${fmtDay(date)}</h2></div>${dateControl('nutrition',date)}</div>
+        <div class="meal-days" aria-label="This week's menu">${MEAL_PLAN.map((_,i)=>{const key=offsetDay(date,i-((daysBetween(date,PLAN.start)%7+7)%7));return `<button class="button ${key===date?'button-primary':'button-ghost'}" data-action="meal-day" data-date="${key}" aria-pressed="${key===date}">${dayFormat.formatToParts(parseDay(key)).find(p=>p.type==='weekday').value}</button>`;}).join('')}</div>
+        <div class="metrics-grid nutrition-metrics">${NUTRIENTS.map(([key,label,unit])=>`<div class="metric"><div class="label">${label} LOGGED</div><div class="value">${Math.round(eaten[key])}<small> ${unit}</small></div><small>Target ${esc(target[key])} · Menu ${Math.round(plan[key])}</small></div>`).join('')}</div>
+        <p class="caption">Check a meal to count its macros. Adjust its serving or leave it unchecked and log what you ate below. Dry weights apply to grains and pulses. Oil is included. Calories and macros vary by label, recipe and rounding.</p>
+        <div class="meal-grid">${cards}</div>
+      </div>
+      <details class="panel" ${extras.length?'open':''}><summary>Log a substitution or extra food</summary>
+        <p class="caption">Use the label or recipe totals for the amount you actually ate.</p>
+        ${extras.map((entry,i)=>`<div class="logged-food"><span><strong>${esc(entry.name)}</strong><br><small>${macroLine(entry)}</small></span><button class="button button-sm button-danger" data-action="food-remove" data-index="${i}" aria-label="Remove ${esc(entry.name)}">Remove</button></div>`).join('')}
+        <form data-form="food"><label class="field-label">Food or meal name<input class="field-input" required name="name" maxlength="80"></label><div class="wellness-fields">${NUTRIENTS.map(([key,label,unit,max])=>numberField(key,label,unit,'',max,1)).join('')}</div><button class="button button-secondary">Add to ${fmtDay(date)}</button></form>
+      </details>
+      <details class="panel"><summary>Adjust daily nutrition targets</summary>
+        <p class="caption">Starting estimate for 84.3 kg and four weekly lifts. Around 140 g of protein is 1.66 g/kg. Adjust calories after 2–3 weeks using average weight, waist, hunger and gym performance. If energy or strength drops persistently, increase intake.</p>
+        <form data-form="nutrition-target"><div class="wellness-fields">${NUTRIENTS.map(([key,label,unit,max])=>numberField(key,label,unit,target[key],max,1,1)).join('')}</div><button class="button button-secondary">Save targets</button></form>
+      </details>
+      ${groceries()}
+      <details class="panel"><summary>Meal timing, food swaps and skin</summary>
+        <p>Have the pre-workout snack about 1–2 hours before lifting if useful. Move meals around your schedule. A regular protein-containing meal within a few hours after training works. Use the snack slots normally on rest days and drink water around activity.</p>
+        <p>The menu assumes dairy, soy, wheat and nuts are tolerated. If avoiding dairy, try unsweetened fortified soy milk or yogurt and use your label to log the difference. Firm tofu or dry soya chunks can replace paneer. For example, 100 g of the listed paneer provides 21 g protein, roughly the same as 150 g of this tofu or 40 g dry soya chunks. Prices vary and soy chunks are the cheaper option here.</p>
+        <p>Flax adds plant omega-3, guava and orange add vitamin C, carrots and spinach add carotenoids, and peanuts and seeds add vitamin E and zinc. Pair starches with dal, protein and vegetables. If you suspect a food affects your skin, track one change at a time in Recovery. Evidence varies by dairy product and individual. No supplement is needed for this menu.</p>
+        <p class="caption"><a href="https://pubmed.ncbi.nlm.nih.gov/28698222/">Protein and resistance training</a> · <a href="https://www.aad.org/public/diseases/acne/causes/diet">AAD on diet and acne</a></p>
+      </details>`;
+  }
+  const recoveryFields=[['sleep','Sleep','hours',24,0.1],['water','Water','L',15,0.1],['steps','Steps','count',100000,1],['readiness','Readiness (1 low, 5 high)','score',5,1,1]];
+  const skinTreatments=['Moisturizer only','Adapalene 0.1%','Azelaic acid','Skipped'];
+  function skinPlan(date,start){
+    const week=Math.floor(daysBetween(date,start)/7)+1, dow=parseDay(date).getUTCDay();
+    const phase=week>0&&SKIN_WEEKS.find(p=>week<=p.through);
+    const index=phase?.adapalene.includes(dow)?1:phase?.azelaic.includes(dow)?2:0;
+    return {week,phase,index};
+  }
+  function renderRecovery(){
+    const date=wellnessDates.recovery, log=db.recovery[date]||{}, skin=db.skin[date]||{};
+    const start=validDay(db.skinStart)?db.skinStart:PLAN.start;
+    const {week,phase,index}=skinPlan(date,start);
+    const recent=Array.from({length:7},(_,i)=>db.recovery[offsetDay(date,-i)]?.sleep).filter(v=>v!==''&&v!=null).map(Number).filter(Number.isFinite);
+    const average=recent.length?(recent.reduce((sum,n)=>sum+n,0)/recent.length).toFixed(1)+' h':'—';
+    element('view-recovery').innerHTML=`
+      ${pageHead('SLEEP / HYDRATION / SKIN','MAKE TIME','TO RECOVER.','Record sleep, readiness, hydration and skin changes alongside training.')}
+      <div class="panel"><div class="panel-title-row"><div><div class="section-label">RECOVERY LOG</div><h2>${fmtDay(date)}</h2></div>${dateControl('recovery',date)}</div>
+        <form data-form="recovery"><div class="wellness-fields">${recoveryFields.map(([key,label,unit,max,step,min])=>numberField(key,label,unit,log[key],max,step,min)).join('')}</div>
+        <label class="field-label">Recovery, digestion or skin notes<textarea class="note-textarea" name="notes" maxlength="1000" placeholder="Soreness, energy, breakouts or changes to food">${esc(log.notes)}</textarea></label>
+        <p class="caption">Seven-day sleep average ${average} · ${recent.length} nights logged. Aim for a consistent bedtime and around 7–9 hours of sleep.</p>
+        <button class="button button-secondary">Save recovery log</button></form>
+      </div>
+      <div class="panel">
+        <div class="panel-title-row"><div><div class="section-label">EIGHT-WEEK SKINCARE</div><h2>${phase?'Week '+week:week<1?'Before routine start':'Eight weeks complete'}</h2></div><span class="chip lime">${phase?skinTreatments[index]:'Review routine'}</span></div>
+        <p class="caption">${fmtDay(start)} – ${fmtDay(offsetDay(start,55))}. Confirm reintroduction with your dermatologist or pharmacist and pause active products if irritation persists. Vitamin C + E + Ferulic 16% and tranexamic acid stay paused per your plan.</p>
+        <div class="grid-2"><div class="surface-note"><strong>AM</strong><p>Cetaphil Gentle Skin Cleanser → The Ordinary Niacinamide 10% + Zinc 1% if tolerated → Minimalist Vitamin B5 10% Moisturizer if needed → Deconstruct Gel Sunscreen SPF 50 PA++++ → Deconstruct Brightening Lip Balm SPF 50.</p></div><div class="surface-note"><strong>PM</strong><p>Cetaphil Gentle Skin Cleanser → ${phase&&index?skinTreatments[index]+' → ':''}Minimalist Vitamin B5 10% Moisturizer.</p></div></div>
+        <div class="spacer"></div>
+        <form data-form="skin">
+          <label class="checkline"><input type="checkbox" name="am"${skin.am?' checked':''}> Morning routine done</label>
+          <div class="wellness-fields"><label class="field-label">Evening routine used<select class="field-input" name="pm"><option value="">Unlogged</option>${skinTreatments.map(value=>`<option${skin.pm===value?' selected':''}>${value}</option>`).join('')}</select></label><label class="field-label">Skin response<input class="field-input" name="response" value="${esc(skin.response)}" maxlength="140" placeholder="Dryness, irritation, breakouts"></label></div>
+          <button class="button button-secondary">Save skincare log</button>
+        </form>
+        <details class="checkin-week skin-schedule"><summary>View all eight weeks or change start date</summary>
+          <ul><li>Weeks 1–2 · Adapalene Tuesday and Friday. Moisturizer on other nights.</li><li>Weeks 3–4 · Adapalene Monday, Wednesday and Friday. Moisturizer on other nights.</li><li>Weeks 5–8 · Adapalene Monday, Thursday and Saturday. Azelaic acid Tuesday and Friday. Moisturizer Wednesday and Sunday.</li></ul>
+          <form data-form="skin-start"><label class="field-label">Skincare start date<input class="field-input" name="start" type="date" min="1900-01-01" max="2200-01-01" value="${start}" required></label><button class="button button-secondary">Save start date</button></form>
+        </details>
+        <p class="caption"><a href="https://www.aad.org/public/diseases/acne/derm-treat/treat/">AAD acne treatment guidance</a></p>
+      </div>`;
+  }
+  const photoAngles=['Front','Side','Back'];
+  const isPhoto = value => typeof value==='string' && value.length<150000 && /^data:image\/jpeg;base64,[A-Za-z0-9+/]+={0,2}$/.test(value);
+  function photosPanel(){
+    const date=wellnessDates.photos, photos=db.photos[date]||{};
+    const history=Object.keys(db.photos).filter(validDay).sort().reverse();
+    return `<div class="panel"><div class="panel-title-row"><div><div class="section-label">PROGRESS PHOTOS</div><h3>Compare the same angles over time</h3></div>${dateControl('photos',date)}</div>
+      <p class="caption">Relaxed front, side and back, with the same lighting, posture, distance and time of day. Capture every 2–4 weeks. Compressed photos stay in this browser and are included in your exported backup. Keep backups private.</p>
+      <div class="photo-grid">${photoAngles.map(angle=>{
+        const data=photos[angle];
+        return `<div class="photo-card"><h4>${angle}</h4>${isPhoto(data)?`<img src="${data}" loading="lazy" alt="${angle} progress photo, ${fmtDay(date)}">`:'<p class="caption">No photo for this angle</p>'}<label class="field-label">${isPhoto(data)?'Replace':'Add'} ${angle.toLowerCase()} photo<input class="field-input" type="file" accept="image/*" data-action="photo-add" data-angle="${angle}"></label>${isPhoto(data)?`<button class="button button-sm button-danger" data-action="photo-remove" data-angle="${angle}">Remove ${angle.toLowerCase()}</button>`:''}</div>`;
+      }).join('')}</div>
+      ${history.length?`<label class="field-label photo-history">Saved photo dates<select class="field-input" data-action="wellness-date" data-area="photos"><option value="">Choose a saved date</option>${history.map(key=>`<option value="${key}"${key===date?' selected':''}>${fmtDay(key)}</option>`).join('')}</select></label>`:''}
+    </div>`;
+  }
+  async function compressPhoto(file){
+    const url=URL.createObjectURL(file);
+    try{
+      const img=new Image();
+      img.src=url;
+      await img.decode();
+      const canvas=document.createElement('canvas'), ctx=canvas.getContext('2d');
+      let edge=850;
+      for(const quality of [.8,.72,.65,.58]){
+        const scale=Math.min(1,edge/Math.max(img.naturalWidth,img.naturalHeight));
+        canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+        canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+        ctx.fillStyle='#fff';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        const result=canvas.toDataURL('image/jpeg',quality);
+        if(isPhoto(result))return result;
+        edge*=.8;
+      }
+      throw Error('Could not compress photo');
+    }finally{URL.revokeObjectURL(url);}
+  }
+  function persistUpdate(fields,message,render=renderView){
+    if(!save({...db,...fields}))return false;
+    if(render)keepScroll(render);
+    if(message)toast(message);
+    return true;
+  }
+  function updateRecord(collection,date,record,message,render){
+    const updated={...db[collection]};
+    if(Object.keys(record).length)updated[date]=record;
+    else delete updated[date];
+    return persistUpdate({[collection]:updated},message,render);
+  }
+  function changeWellnessDate(area,key){
+    if(!Object.hasOwn(wellnessDates,area)||!validDay(key)||key<'1900-01-01'||key>'2200-01-01')return;
+    wellnessDates[area]=key;
+    keepScroll(renderView);
+  }
+  function wellnessClick(button){
+    const {action,area,step,date,angle,index}=button.dataset;
+    if(action==='wellness-date-step')return changeWellnessDate(area,offsetDay(wellnessDates[area],Number(step)));
+    if(action==='meal-day')return changeWellnessDate('nutrition',date);
+    if(action==='food-remove'){
+      const date=wellnessDates.nutrition, daily=db.nutrition[date];
+      return updateRecord('nutrition',date,{...daily,extras:daily.extras.filter((_,i)=>i!==Number(index))},'Food removed.');
+    }
+    if(action==='photo-remove' && confirm(`Remove the ${angle.toLowerCase()} photo for this date?`)){
+      const date=wellnessDates.photos, photos={...db.photos[date]};
+      delete photos[angle];
+      return updateRecord('photos',date,photos,'Photo removed.');
+    }
+  }
+  async function wellnessChange(input){
+    const {action,area,slot,angle}=input.dataset;
+    if(action==='wellness-date')return changeWellnessDate(area,input.value);
+    if(action==='meal-check'||action==='meal-portion'){
+      const date=wellnessDates.nutrition, daily=db.nutrition[date]||{};
+      const value=action==='meal-check'?{done:input.checked}:{portion:Number(input.value)};
+      const meals={...daily.meals,[slot]:{...daily.meals?.[slot],...value}};
+      if(updateRecord('nutrition',date,{...daily,meals},'Meal log saved.')){
+        document.querySelector(`[data-action="${action}"][data-slot="${slot}"]`)?.focus({preventScroll:true});
+      }else if(action==='meal-check')input.checked=!!daily.meals?.[slot]?.done;
+      else input.value=daily.meals?.[slot]?.portion||100;
+      return;
+    }
+    if(action==='photo-add'){
+      const file=input.files?.[0], date=wellnessDates.photos;
+      if(!file||!photoAngles.includes(angle))return;
+      if(file.size>25_000_000){input.value='';return toast('Choose an image smaller than 25 MB.');}
+      input.disabled=true;
+      try{
+        const photo=await compressPhoto(file);
+        const photos={...db.photos[date],[angle]:photo};
+        updateRecord('photos',date,photos,'Photo saved.',activeView==='progress'&&wellnessDates.photos===date?renderProgress:null);
+      }catch{
+        toast('Could not open this image. Try a JPG, PNG or WebP file.');
+      }finally{input.disabled=false;input.value='';}
+    }
+  }
+  function handleSubmit(event){
+    const form=event.target, kind=form.dataset.form;
+    if(!kind)return;
+    event.preventDefault();
+    const values=formRecord(form);
+    const date=wellnessDates.recovery;
+    if(kind==='food'){
+      const name=values.name.trim();
+      if(!name||!NUTRIENTS.some(([key])=>values[key]!==''))return toast('Enter a food name and at least one nutrition value.');
+      const date=wellnessDates.nutrition, daily=db.nutrition[date]||{};
+      const extra=Object.fromEntries(NUTRIENTS.map(([key])=>[key,Number(values[key])||0]));
+      return updateRecord('nutrition',date,{...daily,extras:[...(daily.extras||[]),{name,...extra}]},'Food logged.');
+    }
+    if(kind==='nutrition-target'){
+      const target={...DEFAULT_TARGET,...db.nutritionTarget};
+      for(const [key] of NUTRIENTS)if(values[key]!=='')target[key]=Number(values[key]);
+      return persistUpdate({nutritionTarget:target},'Daily targets saved.');
+    }
+    if(kind==='recovery')return updateRecord('recovery',date,values,'Recovery log saved.');
+    if(kind==='skin')return updateRecord('skin',date,{am:values.am==='on',pm:values.pm,response:values.response},'Skincare log saved.');
+    if(kind==='skin-start'&&validDay(values.start)&&values.start>='1900-01-01'&&values.start<='2200-01-01')return persistUpdate({skinStart:values.start},'Skincare start date saved.');
+  }
+
+  document.addEventListener('submit',handleSubmit);
   document.addEventListener('click',handleClick);
   document.addEventListener('change',handleChange);
   document.addEventListener('input',handleInput);
