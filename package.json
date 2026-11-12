@@ -1,0 +1,10 @@
+{
+  "name": "hybrid-42-workout",
+  "private": true,
+  "dependencies": {
+    "@vercel/blob": "2.9.0"
+  },
+  "overrides": {
+    "zod": "4.6.7"
+  }
+}

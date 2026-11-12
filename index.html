@@ -39,6 +39,13 @@
 /* Nutrition, recovery and photo logs */
 .field-input{background:#131a14;border:1px solid #364235;color:var(--ink);border-radius:10px;padding:10px;width:100%;min-width:0;color-scheme:dark}
 .field-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#syncDialog .sync-copy-row{display:flex;gap:8px;align-items:end}
+#syncDialog .sync-copy-row label{flex:1}
+#syncDialog .sync-join-row{display:flex;gap:8px;align-items:end;margin-top:14px}
+#syncDialog .sync-join-row label{flex:1}
+#syncDialog .sync-controls{display:flex;gap:8px;flex-wrap:wrap}
+#syncDialog .sync-status{min-height:22px;margin:12px 0;color:var(--accent)}
+#syncDialog .dialog-padding{padding:clamp(16px,4vw,26px)}
 .wellness-date{display:flex;align-items:flex-end;gap:7px;flex-shrink:0}
 .wellness-date .button{min-width:42px}
 .wellness-date input{width:155px;color-scheme:dark}
@@ -108,6 +115,7 @@
         <div class="topbar-context"><span class="status-dot"></span><span>THE SIX-WEEK HYBRID SYSTEM</span></div>
         <div class="top-actions">
           <span class="live-date" id="liveDate"></span>
+          <button type="button" class="button button-ghost top-button" id="syncButton" aria-label="Device sync" aria-haspopup="dialog">Sync</button>
           <button type="button" class="button button-ghost top-button" data-action="export" title="Export saved progress">Export data <span aria-hidden="true">↗</span></button>
           <button type="button" class="button button-ghost top-button" data-action="import" title="Import a saved JSON backup">Import</button>
         </div>
@@ -126,6 +134,38 @@
   <div class="timer-float" id="timerFloat" hidden aria-live="polite"></div>
   <dialog class="exercise-dialog" id="exerciseDialog" aria-label="Exercise technique guide">
     <div id="dialogBody"></div>
+  </dialog>
+  <dialog class="exercise-dialog" id="syncDialog" aria-labelledby="syncTitle">
+    <div class="dialog-padding">
+      <div class="dialog-top">
+        <h2 id="syncTitle">Device sync</h2>
+        <form method="dialog"><button class="dialog-close" aria-label="Close device sync">×</button></form>
+      </div>
+      <p id="syncStatus" class="sync-status" role="status"></p>
+      <div id="syncStart">
+        <p>Start sync in the browser with your saved results. Then use its private sync code to connect your other devices.</p>
+        <button class="button button-primary" id="syncCreate" data-sync-command>Start sync on this device</button>
+        <form id="syncJoin" class="sync-join-row">
+          <label class="field-label">Code from another device<input id="syncJoinCode" class="field-input" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required></label>
+          <button class="button button-secondary" data-sync-command>Connect</button>
+        </form>
+      </div>
+      <div id="syncConnected" hidden>
+        <p>This browser syncs saved workouts, meals, measurements, recovery logs and progress photos. Use the same code to connect another browser.</p>
+        <div class="sync-controls">
+          <button class="button button-primary" id="syncNow" data-sync-command>Sync now</button>
+          <button class="button button-secondary" id="syncShowCode" data-sync-command>Show sync code</button>
+          <button class="button button-ghost" id="syncDisconnect" data-sync-command>Disconnect device</button>
+        </div>
+        <div id="syncReveal" hidden>
+          <p class="caption" style="margin-top:12px">Keep this code private. Anyone with it can access and change your synced results.</p>
+          <div class="sync-copy-row">
+            <label class="field-label">Private sync code<input class="field-input" id="syncCode" readonly autocomplete="off" spellcheck="false"></label>
+            <button class="button button-secondary" id="syncCopy" type="button">Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </dialog>
   <input type="file" id="importFile" accept="application/json,.json" hidden>
   <div id="toast" role="status" aria-live="polite"></div>
@@ -535,16 +575,33 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
   const wellnessDates={nutrition:initialLogDate,recovery:initialLogDate,photos:currentDate};
   const indexedToday=allSessions().find(s=>s.date===currentDate);
   if(indexedToday){selectedWeek=indexedToday.week-1;selectedDay=indexedToday.dayIndex;}
-  function save(state=db){
+  function save(state=db, sync=true){
     try{
       localStorage.setItem(STORAGE,JSON.stringify(state));
       db=state;
+      if(sync)window.dispatchEvent(new Event('hybrid42:save'));
       return true;
     }catch{
       toast('Could not save. Browser storage may be full or unavailable.');
       return false;
     }
   }
+  const syncEnabled=()=>{try{return !!localStorage.getItem('hybrid42-device-sync-v1');}catch{return false;}};
+  function refreshSavedView(){
+    const focused=document.activeElement;
+    if(focused?.closest('.view') && focused.matches('input,select,textarea'))return;
+    if(element(`view-${activeView}`)?.querySelector('[data-sync-editing]'))return;
+    keepScroll(renderView);
+  }
+  window.addEventListener('hybrid42:apply-sync',event=>{
+    if(!save(normalize(event.detail),false)){event.preventDefault();return;}
+    refreshSavedView();
+  });
+  window.addEventListener('storage',event=>{
+    if(event.key!==STORAGE||!event.newValue)return;
+    db=load();
+    refreshSavedView();
+  });
   function archivedSessions(){
     const dates=new Set(Array.isArray(db.archiveDates)?db.archiveDates:[]);
     return allSessions(true).filter(s=>s.date==='2026-11-10'||dates.has(s.date));
@@ -747,7 +804,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     </div>
     <div class="spacer"></div><div class="surface-note"><strong>Body composition</strong><p>Track weight, waist and chest under the same conditions. The starting 19.7% body-fat figure is an estimate. A small overall calorie deficit can reduce body fat over time, but individual exercises cannot choose where you lose it. Use waist and relaxed photos to track your belly, chest, love handles and lower back alongside strength.</p></div>
     <div class="spacer"></div>${photosPanel()}
-    <div class="spacer"></div><div class="panel"><div class="section-label">OWN YOUR DATA</div><h3 style="margin:8px 0">Backup & portability</h3><p class="subtitle">Progress is saved in local browser storage. It does <strong>not</strong> automatically synchronize between your iPhone and MacBook. Export a JSON backup on one device, then import it on the other. Opening the page in a different browser can create a separate log.</p><div class="row wrap"><button class="button button-primary" data-action="export">↗ Export progress JSON</button><button class="button button-secondary" data-action="import">↙ Import backup</button></div><div class="danger-zone"><button class="button button-danger button-sm" data-action="reset">Reset all saved data</button><span class="caption">Reset cannot be undone without an exported backup.</span></div></div>`;
+    <div class="spacer"></div><div class="panel"><div class="section-label">OWN YOUR DATA</div><h3 style="margin:8px 0">Backup & portability</h3><p class="subtitle">Progress saves in this browser as you log it. Use the Sync button to connect another device and share an encrypted copy, or export a JSON backup for safekeeping.</p><div class="row wrap"><button class="button button-primary" data-action="export">↗ Export progress JSON</button><button class="button button-secondary" data-action="import">↙ Import backup</button></div><div class="danger-zone"><button class="button button-danger button-sm" data-action="reset">Reset all saved data</button><span class="caption">Reset cannot be undone without an exported backup.</span></div></div>`;
   }
   function showGuide(id){
     const e=EXERCISES[id];if(!e)return;
@@ -774,7 +831,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       try{
         const data=JSON.parse(reader.result);
         if(!data||data.app!=='HYBRID / 42'||!data.progress||typeof data.progress.logs!=='object'||!data.progress.logs||Array.isArray(data.progress.logs))throw Error('Not a valid HYBRID / 42 backup');
-        if(!confirm('Import this backup? It will replace all progress saved in this browser.'))return;
+        if(!confirm(syncEnabled()?'Import this backup? It will replace saved progress and sync the changes to connected devices.':'Import this backup? It will replace all progress saved in this browser.'))return;
         if(save(normalize(data.progress))){renderView();toast('Progress backup imported.');}
       }catch(e){toast('This file is not a valid HYBRID / 42 backup.');}
     };reader.readAsText(file);
@@ -810,7 +867,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     if(act==='export')return exportData();
     if(act==='import')return element('importFile').click();
     if(act==='reset'){
-      if(!confirm('Erase all workouts, measurements, nutrition, recovery, skincare and photos in this browser? Export a backup first if you want to keep them.'))return;
+      if(!confirm(syncEnabled()?'Erase saved progress and sync the deletion to connected devices? Export a backup first if you want to keep it.':'Erase all workouts, measurements, nutrition, recovery, skincare and photos in this browser? Export a backup first if you want to keep them.'))return;
       if(!confirm('Confirm again: reset all six weeks of saved data?'))return;
       if(save(fresh())){renderView();toast('Saved progress reset.');}return;
     }
@@ -839,6 +896,8 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
   }
   function handleInput(event){
     const el=event.target;
+    const draft=el.closest('form[data-form]');
+    if(draft)draft.dataset.syncEditing='';
     if(el.id==='librarySearch'){
       searchTerm=el.value.toLowerCase().trim();element('libraryList').innerHTML=libraryCards();return;
     }
@@ -968,7 +1027,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     const date=wellnessDates.photos, photos=db.photos[date]||{};
     const history=Object.keys(db.photos).filter(validDay).sort().reverse();
     return `<div class="panel"><div class="panel-title-row"><div><div class="section-label">PROGRESS PHOTOS</div><h3>Compare the same angles over time</h3></div>${dateControl('photos',date)}</div>
-      <p class="caption">Relaxed front, side and back, with the same lighting, posture, distance and time of day. Capture every 2–4 weeks. Compressed photos stay in this browser and are included in your exported backup. Keep backups private.</p>
+      <p class="caption">Relaxed front, side and back, with the same lighting, posture, distance and time of day. Capture every 2–4 weeks. Compressed photos are included in device sync and JSON backups. Keep your code and backups private.</p>
       <div class="photo-grid">${photoAngles.map(angle=>{
         const data=photos[angle];
         return `<div class="photo-card"><h4>${angle}</h4>${isPhoto(data)?`<img src="${data}" loading="lazy" alt="${angle} progress photo, ${fmtDay(date)}">`:'<p class="caption">No photo for this angle</p>'}<label class="field-label">${isPhoto(data)?'Replace':'Add'} ${angle.toLowerCase()} photo<input class="field-input" type="file" accept="image/*" data-action="photo-add" data-angle="${angle}"></label>${isPhoto(data)?`<button class="button button-sm button-danger" data-action="photo-remove" data-angle="${angle}">Remove ${angle.toLowerCase()}</button>`:''}</div>`;
@@ -1090,5 +1149,6 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
 })();
 
 </script>
+<script src="/sync.js" defer></script>
 </body>
 </html>
