@@ -5,6 +5,9 @@ const maxBytes = 4_000_000;
 const noCache = { 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' };
 const response = (status, body = null, headers = {}) =>
   new Response(body, { status, headers: { ...noCache, ...headers } });
+// The hosting layer can weaken the HTTP ETag on streamed responses. Keep the
+// original Blob version in a dedicated header for compare-and-swap updates.
+const revision = value => (value || '').replace(/^W\//, '');
 const validTag = value => /^"[\x21\x23-\x7e]{1,128}"$/.test(value ?? '');
 
 export default {
@@ -27,7 +30,7 @@ export default {
         });
         if (!blob) return response(404);
         return response(blob.statusCode, blob.stream, {
-          ETag: blob.blob.etag,
+          'X-Hybrid42-Revision': revision(blob.blob.etag),
           'Content-Type': 'application/octet-stream',
         });
       }
@@ -49,7 +52,7 @@ export default {
           ifMatch: create ? undefined : expected,
           contentType: 'application/octet-stream',
         });
-        return response(create ? 201 : 204, null, { ETag: blob.etag });
+        return response(create ? 201 : 204, null, { 'X-Hybrid42-Revision': revision(blob.etag) });
       } catch (error) {
         if (error instanceof BlobPreconditionFailedError) return response(409);
         if (create) {

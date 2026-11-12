@@ -198,7 +198,7 @@
         const missing = download.status === 404;
         if (mode === 'join' && missing) throw new Error('No synced log found. Start sync on the device with your results first.');
         const remote = missing ? null : download.status === 304 ? last.progress : await openPayload(await download.arrayBuffer(), auth.cipher);
-        let etag = missing ? null : download.headers.get('etag') || last?.etag;
+        let etag = missing ? null : download.headers.get('x-hybrid42-revision') || last?.etag;
         if (remote && !etag) throw new Error('The sync service did not return a saved version.');
         const local = readProgress();
         if (!local) throw new Error('This browser has no readable local progress.');
@@ -210,7 +210,7 @@
           else headers['If-None-Match'] = '*';
           const upload = await syncRequest(auth, 'PUT', headers, bytes);
           if (upload.status === 409 || upload.status === 404) continue;
-          etag = upload.headers.get('etag');
+          etag = upload.headers.get('x-hybrid42-revision');
           if (!etag) throw new Error('The sync service did not confirm the saved version.');
         }
         // A form or another tab can save while the upload is in flight.
