@@ -173,7 +173,7 @@
 /* HERIA × NIPPARD — original six-week hybrid plan, inspired by the coaches' publicly discussed training principles; not affiliated. */
 const PLAN = {
   name: 'HYBRID / 42',
-  subtitle: 'Strength you can lift. Skills you can own.',
+  subtitle: 'Lose fat gradually. Preserve muscle. Build skills.',
   start: '2026-11-11',
   end: '2026-12-22',
   profile: { age: 22, height: 181.1, weight: 84.3, estimatedBodyFat: 19.7, pushups: '11–20', pullups: '1–3' },
@@ -250,7 +250,34 @@ PLAN.days = [
     target:'Practice clean strict singles only if you have a rep in reserve. If one strict rep is your max, use assistance for working sets. Use an incline for push-ups if needed.'}
 ];
 
+
+/* Fat-loss-first schedule. Four lifting days retain strength;
+   walking and easy aerobic work support the deficit, not replace recovery. */
+const CUT_STEP_GOALS = [6500,7000,8000,8000,9000,9000];
+const stepGoalForDate = date => CUT_STEP_GOALS[Math.max(0,Math.min(5,Math.floor(daysBetween(date,PLAN.start)/7)))];
+const CUT_WEEK_HINTS = [
+  'Aim for ~6,500 steps/day, with 2,200 kcal and ~155 g protein as starting estimates.',
+  'Aim for ~7,000 steps/day. Add easy cardio gradually; keep 2 repetitions in reserve.',
+  'Aim for ~8,000 steps/day. Progress gym performance while maintaining the calorie deficit.',
+  'Keep ~8,000 steps/day during deload. Do not compensate by adding hard cardio.',
+  'Aim for ~9,000 steps/day if recovery is good. Maintain strength as weight trends down.',
+  'Keep ~9,000 steps/day. Reassess 7-day average weight, waist and strength.'
+];
+PLAN.phases.forEach((phase,i)=>{phase.focus+=' Fat-loss focus: '+CUT_WEEK_HINTS[i]});
+PLAN.days[0].items.push({id:'zone2_walk',sets:1,min:10,max:15,optional:true});
+PLAN.days[1].items=PLAN.days[1].items.map(it=>it.id==='easy_walk'?{...it,min:30,max:40}:it);
+PLAN.days[2].items.push({id:'zone2_walk',sets:1,min:20,max:25});
+PLAN.days[3].items=PLAN.days[3].items.map(it=>it.id==='seated_compression'?{...it,id:'seated_knee_raise',sets:2,min:5,max:8,optional:true}:it);
+PLAN.days[3].items.push({id:'zone2_walk',sets:1,min:25,max:35});
+PLAN.days[3].objective='Optional easy skill technique plus a comfortable brisk walk. If bent-knee leg lifts are too hard, skip them: there is no makeup penalty.';
+PLAN.days[3].target='For seated leg lifts, attempt one bent knee at a time with hand support. Do not force hip flexion or train through pain.';
+PLAN.days[4].items.push({id:'zone2_walk',sets:1,min:10,max:15,optional:true});
+PLAN.days[5].items=PLAN.days[5].items.map(it=>it.id==='optional_walk'?{...it,min:20,max:30}:it);
+PLAN.days[6].items.push({id:'zone2_walk',sets:1,min:20,max:25});
+
 const EXERCISES = {
+  seated_knee_raise:{name:'Supported seated bent-knee leg raises',category:'SKILL',muscle:'Hip flexors / lower abs for L-sit',equipment:'Sturdy chair or floor + yoga blocks',unit:'reps',mode:'body',rest:60,load:'none',how:['Sit upright with your hands beside your hips on a stable chair or blocks.','Bend your knees and lift ONE foot just 1–2 cm off the ground for a brief moment.','Lower with control, alternate sides; only try both feet after single-leg lifts become easy.'],cue:'The leg can lift only a little. 5–8 reps PER SIDE; a supported attempt counts.',avoid:'Do not strain through sharp hip or low-back pain or force straight legs.',swap:'Seated marching or bent-knee lifts while holding a chair.'},
+  zone2_walk:{name:'Brisk walk / easy zone-2 cardio',category:'CARDIO',muscle:'Aerobic fitness / daily activity',equipment:'Comfortable shoes or treadmill',unit:'min',mode:'walk',rest:0,load:'none',how:['Walk at a pace where you can still speak in sentences.','Use flat ground or a gentle incline; avoid running if your legs are sore.','Finish feeling you could have continued.'],cue:'Moderate, sustainable effort. You do not need a heart-rate monitor.',avoid:'Do not chase calorie-burn displays or turn recovery days into hard intervals.',swap:'Easy stationary cycling for the same duration.'},
   scap_pull:{name:'Scapular pull-ups',category:'CALISTHENICS',muscle:'Scapular control / lats',equipment:'Pull-up bar',unit:'reps',mode:'body',rest:60,load:'none',how:['Hang from a bar with arms straight and a comfortable grip.','Pull your shoulder blades down without bending your elbows significantly.','Pause briefly, then return slowly to a passive or neutral hang.'],cue:'Shoulders down, ribs controlled; very small movement is fine.',avoid:'Do not swing or force a painful dead hang.',swap:'Cable scapular pulldown.'},
   strict_pull:{name:'Strict pull-ups',category:'CALISTHENICS',muscle:'Lats / biceps / upper back',equipment:'Pull-up bar',unit:'reps',mode:'body',rest:150,load:'none',how:['Start from a comfortable dead hang with stable shoulders.','Pull elbows toward the ribs, keeping legs quiet.','Bring chin over the bar without jutting neck, then lower under control.'],cue:'Every repetition must look the same; stop before kipping.',avoid:'No swinging or ugly failure reps. Use assistance if only one strict rep is possible.',swap:'Assisted pull-ups or lat pulldowns.'},
   assisted_pull:{name:'Assisted pull-ups',category:'CALISTHENICS',muscle:'Lats / biceps / upper back',equipment:'Assisted pull-up machine or band',unit:'reps',mode:'assist',rest:120,load:'assist',how:['Set the machine assistance so your first reps are smooth.','Start extended, engage shoulders and pull your chin above bar height.','Lower for about 2 seconds; keep the same movement path each rep.'],cue:'As you improve, reduce assistance in small steps.',avoid:'A lighter assistance number means a harder movement. Do not rush this.',swap:'Lat pulldown, neutral grip.'},
@@ -448,6 +475,15 @@ const VEGETARIAN_MENU = [
   ]
 ];
 // Only the tofu and paneer meals change. Old meal records still use the original menu.
+
+/* Fat-loss meals start 14 Nov. Keep the original vegetarian/chicken menus intact
+   for older checked meals so historical calorie logs do not change retroactively. */
+const CUT_PORTIONS = {"Curd and banana oats":{"oats":40},"Masoor dal, rice and soya bhurji":{"rice":25,"soya":95,"oil":3},"Palak tofu with roti":{"atta":35,"oil":8},"Besan chilla with tofu filling":{"besan":70,"oil":3},"Rajma chawal and soya":{"rice":35,"soya":65,"oil":6},"Paneer and vegetable roti wraps":{"atta":35},"Soya and peanut poha":{"poha":35,"soya":90,"oil":3},"Chole, roti and curd":{"atta":35,"oil":3},"Tofu, moong dal and spinach":{"oil":6},"Moong chilla with curd":{"oil":3},"Soya vegetable pulao":{"rice":35,"soya":95,"oil":5},"Banana flax oats":{"oats":20},"Paneer bhurji and roti":{"paneer":175,"atta":35},"Banana and peanut oats":{"oats":35,"peanut":16},"Moong dal, soya sabzi and roti":{"soya":90,"atta":35,"oil":3},"Tofu tikka bowl with rice":{"rice":25,"oil":7},"Paneer-stuffed besan chilla":{"besan":45,"paneer":175,"oil":3},"Masoor rice bowl with soya":{"soya":80,"rice":30,"oil":3},"Chana, curd and vegetable roti":{"atta":35},"Tofu scramble with roti":{"atta":40,"oil":3},"Rajma, soya and rice":{"soya":65,"rice":30,"oil":7},"Banana, curd and flax oats":{"oats":20}};
+const CUT_VEG_MENU = VEGETARIAN_MENU.map(day => day.map(([name,ingredients,recipe]) => {
+  const measured = {...ingredients,...(CUT_PORTIONS[name]||{})};
+  return [name,measured,recipe];
+}));
+
 const CHICKEN_MEALS = {
   'Palak tofu with roti': ['Palak chicken with roti', {chicken:140, atta:75, spinach:100, tomato:60, oil:13, pumpkin:15},
     'Knead the atta with water, roll the rotis and cook on a hot tawa. Sauté tomato in the measured oil, add diced chicken and cook to 74°C in the thickest piece. Fold in chopped spinach until wilted, top with pumpkin seeds and serve with the rotis.'],
@@ -472,7 +508,7 @@ const MEAL_PLAN = VEGETARIAN_MENU.map(day=>day.map(meal=>CHICKEN_MEALS[meal[0]]|
 
 const MEAL_SLOTS = ['Breakfast','Lunch','Pre-workout / snack','Post-workout / snack','Dinner'];
 const NUTRIENTS = [['kcal','Calories','kcal',6000],['protein','Protein','g',500],['carbs','Carbs','g',1000],['fat','Fat','g',500]];
-const DEFAULT_TARGET = {kcal:2350, protein:140, carbs:295, fat:68};
+const DEFAULT_TARGET = {kcal:2200, protein:155, carbs:265, fat:60};
 const SKIN_WEEKS = [
   {through:2, adapalene:[2,5], azelaic:[]},
   {through:4, adapalene:[1,3,5], azelaic:[]},
@@ -520,7 +556,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     {key:'calfR', label:'Right calf', unit:'cm', min:10, max:100}
   ];
   const fresh = () => ({
-    version:4, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{},
+    version:5, logs:{}, warmups:{}, doneDates:{}, notes:{}, checkins:{},
     baseline:{pullW1:'',pushW1:'',pullW6:'',pushW6:''},
     nutrition:{}, nutritionTarget:{}, recovery:{}, skin:{}, skinStart:PLAN.start, photos:{}, archiveDates:[]
   });
@@ -556,6 +592,11 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       ]));
       state.version=4;
     }
+    if(Number(input.version||0)<5){
+      const t=state.nutritionTarget||{};
+      if(Number(t.kcal)===2350&&Number(t.protein)===140&&Number(t.carbs)===295&&Number(t.fat)===68)state.nutritionTarget={};
+      state.version=5;
+    }
     return state;
   }
   function load(){
@@ -563,7 +604,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       const raw=localStorage.getItem(STORAGE);
       const parsed=raw?JSON.parse(raw):null;
       const state=normalize(parsed);
-      if(!parsed||Number(parsed.version||0)<4){
+      if(!parsed||Number(parsed.version||0)<5){
         try{localStorage.setItem(STORAGE,JSON.stringify(state));}catch{/* Keep the prior saved state if storage is full. */}
       }
       return state;
@@ -659,7 +700,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     <div class="hero">
       <div class="section-topline"><span class="rule"></span>THE HERIA × NIPPARD INSPIRED HYBRID</div>
       <h1>BUILD THE BODY.<br><span class="accent">EARN THE SKILL.</span></h1>
-      <p class="subtitle">Your six-week gym and calisthenics block starts Wednesday, 11 November. Train four days a week and keep meals, recovery and body measurements in the same log.</p>
+      <p class="subtitle">Your fat-loss-first six-week program began Wednesday 11 November. Four lifting days preserve muscle; progressive daily walking, easy cardio, and a high-protein vegetarian menu support gradual fat loss.</p>
       <div class="hero-actions"><button type="button" class="button button-primary" data-action="nav" data-view="workout">OPEN TRAINING <span>→</span></button><button type="button" class="button button-outline" data-action="nav" data-view="calendar">VIEW ALL 42 DAYS</button></div>
       <div class="hero-profile"><span class="chip lime">84.3 KG</span><span class="chip">181.1 CM</span><span class="chip">11–20 PUSH-UPS</span><span class="chip">1–3 PULL-UPS</span><span class="chip">6 WEEKS</span></div>
     </div>
@@ -732,6 +773,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       <div class="section-head"><div class="section-topline"><span class="rule"></span>YOUR PERSONAL TRAINING LOG</div><h1>THE <span class="accent">WORKOUT.</span></h1><p class="subtitle">Select a date to see the prescribed sets and your saved log.</p><button class="button button-sm button-ghost" data-action="nav" data-view="library">Exercise library →</button></div>
       ${archivedSession?`<div class="panel"><div class="panel-title-row"><div><div class="section-label">ORIGINAL SESSION</div><h3>${formattedDate(s.dateObj)}</h3></div><button class="button button-ghost" data-action="close-archive">Back to revised plan</button></div></div>`:`<div class="workout-navigation">${weekPicker()}<button class="button button-ghost" data-action="prev-week" ${selectedWeek===0?'disabled':''}>← Previous</button><button class="button button-ghost" data-action="next-week" ${selectedWeek===5?'disabled':''}>Next week →</button></div>
       <div class="day-tabs">${PLAN.days.map((_,i)=>dayTab(sessionFor(selectedWeek,i),i)).join('')}</div>`}
+      <div class="surface-note lime" style="margin-bottom:14px"><strong>FAT-LOSS DAILY GOAL:</strong> ${stepGoalForDate(s.date).toLocaleString('en-IN')} steps, 2,200 kcal starting estimate, ≥155 g protein. Keep lifting challenging; complete only the prescribed cardio and do not chase spot reduction.</div>
       <div class="session-hero"><div class="session-top"><div class="overline">${archivedSession?'ORIGINAL PLAN':`WEEK ${String(s.week).padStart(2,'0')} / ${esc(w.name)}`} · ${esc(s.theme)}</div><span class="chip ${s.accent==='lime'?'lime':s.accent==='blue'?'blue':s.accent==='purple'?'purple':'amber'}">${esc(dayLabel(s))}</span></div>
         <h2>${esc(s.name)}</h2><p class="subtitle">${esc(s.objective)}</p>
         <div class="session-stats"><span class="stat-pill"><strong>◷</strong> ${s.duration}</span><span class="stat-pill"><strong>${activeSetCount}</strong> prescribed sets</span><span class="stat-pill"><strong>${fmtDateShort(s.dateObj)}</strong> ${s.dateObj.getFullYear()}</span><span class="stat-pill"><strong>${s.intensity}</strong> effort</span></div>
@@ -789,7 +831,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     const chests=PLAN.phases.map((_,i)=>db.checkins[i]?.chest??'');
     const baseline=db.baseline||{};
     element('view-progress').innerHTML=`
-    <div class="section-head"><div class="section-topline"><span class="rule"></span>THE SCIENCE OF SHOWING UP</div><h1>TRACK YOUR <span class="accent">PROGRESS.</span></h1><p class="subtitle">Save sets, loads, reps, optional body measurements and your Week 1 / Week 6 skill tests. Your data stays in this browser unless you export it.</p></div>
+    <div class="section-head"><div class="section-topline"><span class="rule"></span>THE SCIENCE OF SHOWING UP</div><h1>TRACK YOUR <span class="accent">PROGRESS.</span></h1><p class="subtitle">Track strength and weekly waist/weight trends. Use the same relaxed front, side and back photos: stomach, chest, love handles and lower back change with overall fat loss, not spot-reduction exercises. Your data stays local unless you enable sync or export.</p></div>
     <div class="metrics-grid"><div class="metric"><div class="label">DAYS MARKED COMPLETE</div><div class="value">${finished}<span class="muted">/42</span></div><small>Includes recovery days</small></div><div class="metric"><div class="label">MAIN TRAINING DAYS</div><div class="value">${sessions.filter(s=>s.kind==='strength'&&dayIsDone(s)).length}<span class="muted">/24</span></div><small>Four primary sessions / week</small></div><div class="metric"><div class="label">WORKING SETS DONE</div><div class="value">${sessions.reduce((v,s)=>v+doneSets(s),0)}</div><small>Across all sessions</small></div><div class="metric"><div class="label">WEEKS IN PLAN</div><div class="value">06</div><small>Deload during Week 4</small></div></div>
     <div class="panel" style="margin-bottom:16px"><div class="panel-title-row"><div><div class="section-label">10 NOV 2026 / WEEK 1</div><h3 style="margin-top:7px">Baseline physique measurements</h3></div><span class="chip complete">RECORDED</span></div>${bodyMeasurementsSummary()}<p class="caption" style="margin-top:12px">All circumferences in cm. Measurements are editable below; this summary follows your Week 1 values.</p></div>
     <div class="progress-layout"><div class="panel"><div class="panel-title-row"><div><div class="section-label">WEEKLY ADHERENCE</div><h3 style="margin-top:6px">Completion by week</h3></div><span class="chip lime">42 DAYS</span></div><div class="week-bar-list">${PLAN.phases.map((w,i)=>{const week=PLAN.days.map((_,d)=>sessionFor(i,d));const done=week.filter(dayIsDone).length;return `<div><div class="week-bar-label"><span>W${i+1} / ${esc(w.name)}</span><span>${done}/7 days</span></div><div class="progress-track"><div class="progress-fill" style="width:${done/7*100}%"></div></div></div>`;}).join('')}</div><div class="soft-divider"></div><div class="section-label">WEIGHT TREND (KG)</div>${tinyChart(weights,'Body weight')}<div class="soft-divider"></div><div class="section-label">WAIST TREND (CM)</div>${tinyChart(waists,'Waist')}<div class="soft-divider"></div><div class="section-label">CHEST TREND (CM)</div>${tinyChart(chests,'Chest')}</div>
@@ -905,7 +947,13 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     if(['checkin','baseline','log-field'].includes(el.dataset.action))handleChange(event);
   }
   const menuIndex = date => ((daysBetween(date,PLAN.start)%7)+7)%7;
-  const mealDay = date => (db.nutrition[date]?.menu==='vegetarian'?VEGETARIAN_MENU:MEAL_PLAN)[menuIndex(date)];
+  const mealDay = date => {
+    const record=db.nutrition[date]||{};
+    const hasOldMeals=Object.keys(record.meals||{}).length>0;
+    const source=record.menu==='chicken'||(!record.menu&&hasOldMeals&&date<'2026-11-14')
+      ?MEAL_PLAN:record.menu==='vegetarian'?VEGETARIAN_MENU:CUT_VEG_MENU;
+    return source[menuIndex(date)];
+  };
   const zeros = () => Object.fromEntries(NUTRIENTS.map(([key])=>[key,0]));
   function addMacros(total, values, factor=1){
     for(const [key] of NUTRIENTS)total[key]+=(Number(values[key])||0)*factor;
@@ -932,13 +980,13 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
   }
   function groceries(){
     const totals={};
-    for(const day of MEAL_PLAN)for(const [,ingredients] of day)for(const [food,grams] of Object.entries(ingredients))totals[food]=(totals[food]||0)+grams;
+    for(const day of CUT_VEG_MENU)for(const [,ingredients] of day)for(const [food,grams] of Object.entries(ingredients))totals[food]=(totals[food]||0)+grams;
     const rows=Object.entries(FOOD).filter(([key])=>totals[key]).map(([key,[name,,,,,rate,unit]])=>{
       const grams=totals[key];
       return {name,amount:`${grams} ${unit||'g'}`,rate,cost:grams*rate/1000};
     });
     const cost=rows.reduce((sum,row)=>sum+row.cost,0);
-    return `<details class="panel"><summary>Seven-day grocery list · about ₹${Math.round(cost/10)*10} used</summary><p class="caption">Current chicken menu for one person, using default portions. Quantities are edible amounts. Weigh the boneless chicken raw. Buy a little extra for peels and trimming. Estimates use November 2026 Indian retail rates and exclude spices, delivery and pack-size rounding.</p><div class="grocery-list">${rows.map(row=>`<div><span>${esc(row.name)}<small>${row.amount} · ₹${row.rate}/${row.amount.endsWith('mL')?'L':'kg'}</small></span><strong>~₹${Math.round(row.cost)}</strong></div>`).join('')}</div><p class="caption">Price references · <a href="https://fcainfoweb.nic.in/Default.aspx">Consumer Affairs price monitor</a> · <a href="https://www.bigbasket.com/pd/40003518/nutrela-soya-chunks-200-g-carton/">Example soya price</a> · <a href="https://meatcompany.in/product/chicken-breast-boneless-500gm/">Example chicken price</a></p></details>`;
+    return `<details class="panel"><summary>Seven-day grocery list · about ₹${Math.round(cost/10)*10} used</summary><p class="caption">Current primarily vegetarian fat-loss menu for one person, using 100% portions. Grains, pulses and soya are weighed dry; tofu and paneer are weighed as served. Buy a little extra for peels and trimming. Estimates use November 2026 Indian retail rates and exclude spices, delivery and pack-size rounding.</p><div class="grocery-list">${rows.map(row=>`<div><span>${esc(row.name)}<small>${row.amount} · ₹${row.rate}/${row.amount.endsWith('mL')?'L':'kg'}</small></span><strong>~₹${Math.round(row.cost)}</strong></div>`).join('')}</div><p class="caption">Price references · <a href="https://fcainfoweb.nic.in/Default.aspx">Consumer Affairs price monitor</a> · <a href="https://www.bigbasket.com/pd/40003518/nutrela-soya-chunks-200-g-carton/">Example soya price</a> · <a href="https://meatcompany.in/product/chicken-breast-boneless-500gm/">Example chicken price</a></p></details>`;
   }
   function renderNutrition(){
     const date=wellnessDates.nutrition;
@@ -956,13 +1004,13 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
     const extras=Array.isArray(daily.extras)?daily.extras:[];
     extras.forEach(entry=>addMacros(eaten,entry));
     view.innerHTML=`
-      ${pageHead('FUEL / SEVEN-DAY ROTATION','EAT FOR','THE WORK.','Indian meals built around dal, vegetables and boneless chicken. This seven-day menu repeats each Wednesday. Open “How to make” on any meal card for a short recipe.')}
+      ${pageHead('FUEL / SEVEN-DAY ROTATION','EAT FOR','THE WORK.','Indian vegetarian fat-loss meals built around pulses, soya, tofu and paneer. The seven-day menu repeats each Wednesday. Ingredient weights are approximate and labels vary.')}
       <div class="panel">
         <div class="panel-title-row"><div><div class="section-label">DAILY NUTRITION</div><h2>${fmtDay(date)}</h2></div>${dateControl('nutrition',date)}</div>
-        ${daily.menu==='vegetarian'?'<p class="caption">This date uses the original vegetarian menu so your logged meals and macros stay the same.</p>':''}
+        ${daily.menu==='vegetarian'?'<p class="caption">This date retains previously logged vegetarian meal quantities.</p>':daily.menu==='chicken'||(!daily.menu&&daily.meals&&date<'2026-11-14')?'<p class="caption">Previously logged chicken menu preserved; new days use the vegetarian cut menu.</p>':'<p class="caption">Fat-loss menu: about 2,200 kcal and 153–155 g protein in each full day. Portions are adjustable to match the food you actually eat.</p>'}
         <div class="meal-days" aria-label="This week's menu">${MEAL_PLAN.map((_,i)=>{const key=offsetDay(date,i-menuIndex(date));return `<button class="button ${key===date?'button-primary':'button-ghost'}" data-action="meal-day" data-date="${key}" aria-pressed="${key===date}">${dayFormat.formatToParts(parseDay(key)).find(p=>p.type==='weekday').value}</button>`;}).join('')}</div>
         <div class="metrics-grid nutrition-metrics">${NUTRIENTS.map(([key,label,unit])=>`<div class="metric"><div class="label">${label} LOGGED</div><div class="value">${Math.round(eaten[key])}<small> ${unit}</small></div><small>Target ${esc(target[key])} · Menu ${Math.round(plan[key])}</small></div>`).join('')}</div>
-        <p class="caption">Check a meal to count its macros. Adjust its serving or leave it unchecked and log what you ate below. Weigh grains, pulses and soya dry, and chicken raw. Oil is included. Calories and macros vary by label, recipe and rounding.</p>
+        <p class="caption">Check a meal to count its macros. Adjust its serving or leave it unchecked and log what you ate below. Weigh grains, pulses and soya dry; count oil. Use your tofu/paneer label when available. Calories and macros vary by label, recipe and rounding.</p>
         <div class="meal-grid">${cards}</div>
       </div>
       <details class="panel" ${extras.length?'open':''}><summary>Log a substitution or extra food</summary>
@@ -971,13 +1019,13 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
         <form data-form="food"><label class="field-label">Food or meal name<input class="field-input" required name="name" maxlength="80"></label><div class="wellness-fields">${NUTRIENTS.map(([key,label,unit,max])=>numberField(key,label,unit,'',max,1)).join('')}</div><button class="button button-secondary">Add to ${fmtDay(date)}</button></form>
       </details>
       <details class="panel"><summary>Adjust daily nutrition targets</summary>
-        <p class="caption">Starting estimate for 84.3 kg and four weekly lifts. Around 140 g of protein is 1.66 g/kg. Adjust calories after 2–3 weeks using average weight, waist, hunger and gym performance. If energy or strength drops persistently, increase intake.</p>
+        <p class="caption">Starting fat-loss estimate: 2,200 kcal/day and at least 155 g protein (~1.84 g/kg) for 84.3 kg. Track 7-day morning weight averages. After 14 days, if loss is under ~0.2 kg/week, reduce ~100–150 kcal or add easy walking; if losing over ~0.7 kg/week or strength/energy falls, increase intake ~100–200 kcal. Do not skip meals to compensate.</p>
         <form data-form="nutrition-target"><div class="wellness-fields">${NUTRIENTS.map(([key,label,unit,max])=>numberField(key,label,unit,target[key],max,1,1)).join('')}</div><button class="button button-secondary">Save targets</button></form>
       </details>
       ${groceries()}
       <details class="panel"><summary>Meal timing, food swaps and skin</summary>
         <p>Have the pre-workout snack about 1–2 hours before lifting if useful. Move meals around your schedule. A regular protein-containing meal within a few hours after training works. Use the snack slots normally on rest days and drink water around activity.</p>
-        <p>The menu assumes dairy, soy, wheat and nuts are tolerated. If avoiding dairy, try unsweetened fortified soy milk or yogurt and use your label to log the difference. For a lower-cost swap, 45 g dry soya chunks provides roughly the same protein as 100 g raw boneless chicken breast. Leave the planned meal unchecked and log your adjusted meal using the ingredients you ate.</p>
+        <p>The vegetarian menu assumes dairy, soy, wheat and nuts are tolerated. If avoiding dairy, try unsweetened fortified soy milk or yogurt and use your label to log the difference. For a lower-cost protein swap, use soya chunks; introduce larger portions gradually if they cause bloating. You can also replace dairy with labelled soy alternatives. Leave the planned meal unchecked and log your adjusted meal using the ingredients you ate.</p>
         <p>Flax adds plant omega-3, guava and orange add vitamin C, carrots and spinach add carotenoids, and peanuts and seeds add vitamin E and zinc. Pair starches with dal, protein and vegetables. If you suspect a food affects your skin, track one change at a time in Recovery. Evidence varies by dairy product and individual. No supplement is needed for this menu.</p>
         <p class="caption"><a href="https://pubmed.ncbi.nlm.nih.gov/28698222/">Protein and resistance training</a> · <a href="https://www.aad.org/public/diseases/acne/causes/diet">AAD on diet and acne</a> · <a href="https://www.foodsafety.gov/food-safety-charts/safe-minimum-internal-temperatures">Safe cooking temperatures</a></p>
       </details>`;
@@ -1001,6 +1049,7 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       <div class="panel"><div class="panel-title-row"><div><div class="section-label">RECOVERY LOG</div><h2>${fmtDay(date)}</h2></div>${dateControl('recovery',date)}</div>
         <form data-form="recovery"><div class="wellness-fields">${recoveryFields.map(([key,label,unit,max,step,min])=>numberField(key,label,unit,log[key],max,step,min)).join('')}</div>
         <label class="field-label">Recovery, digestion or skin notes<textarea class="note-textarea" name="notes" maxlength="1000" placeholder="Soreness, energy, breakouts or changes to food">${esc(log.notes)}</textarea></label>
+        <p class="caption"><strong>Walking target: ${stepGoalForDate(date).toLocaleString('en-IN')} steps</strong> (progress gradually if starting lower). Logged today: ${log.steps||'—'} steps. A modest calorie deficit drives fat loss; easy walks support recovery.</p>
         <p class="caption">Seven-day sleep average ${average} · ${recent.length} nights logged. Aim for a consistent bedtime and around 7–9 hours of sleep.</p>
         <button class="button button-secondary">Save recovery log</button></form>
       </div>
@@ -1095,7 +1144,8 @@ const validDay = key => /^\d{4}-\d{2}-\d{2}$/.test(key) && Number.isFinite(+pars
       const date=wellnessDates.nutrition, daily=db.nutrition[date]||{};
       const value=action==='meal-check'?{done:input.checked}:{portion:Number(input.value)};
       const meals={...daily.meals,[slot]:{...daily.meals?.[slot],...value}};
-      if(updateRecord('nutrition',date,{...daily,meals},'Meal log saved.')){
+      const menu=daily.menu||(date<'2026-11-14'&&Object.keys(daily.meals||{}).length?'chicken':'cut');
+      if(updateRecord('nutrition',date,{...daily,menu,meals},'Meal log saved.')){
         document.querySelector(`[data-action="${action}"][data-slot="${slot}"]`)?.focus({preventScroll:true});
       }else if(action==='meal-check')input.checked=!!daily.meals?.[slot]?.done;
       else input.value=daily.meals?.[slot]?.portion||100;
